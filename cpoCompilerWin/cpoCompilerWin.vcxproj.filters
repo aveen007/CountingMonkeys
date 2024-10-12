@@ -18,13 +18,13 @@
     <ClCompile Include="..\main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\MyGrammarParser.c">
+    <ClCompile Include="..\parser.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\MyGrammarLexer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\parser.c">
+    <ClCompile Include="..\MyGrammarParser.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,15 +32,16 @@
     <None Include="..\generate.bat">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="..\MyGrammar.tokens" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\MyGrammarLexer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\MyGrammarParser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -14,7 +14,7 @@ ParseResult parse(char* text, size_t size, char* name) {
 
 	pMyGrammarParser p = MyGrammarParserNew(tstream);
 
-	MyGrammarParser_translation_unit_return tu = p->translation_unit(p);
+	//pMyGrammarParser_translation_unit_return tu = p->translation_unit(p);
 
 	// tu.tree.
 

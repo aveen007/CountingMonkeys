@@ -97,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="MyGrammar.g" />
+    <None Include="MyGrammar.tokens" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyGrammarLexer.h" />
