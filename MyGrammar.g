@@ -8,6 +8,7 @@ options {
     k=3; 
 }
 tokens{
+Sourcer;
 Source;
 FuncDef;
 FuncSignature;
@@ -17,8 +18,8 @@ While;
 Do;
 Break;
 Expression;
-Argdef;
-List_Argdef;
+ArgDef;
+ListArgdef;
 Element;
 TypeRef;
 Array;
@@ -26,12 +27,12 @@ Builtin;
 Custom;
 
 }
+sourcer	:	 source  EOF -> ^(Sourcer source);
+source: funcDef*  ->^(Source funcDef*);
 
-source: funcDef*;
+funcDef: 'function' funcSignature statement* 'end' 'function' -> ^(FuncDef funcSignature);
 
-funcDef: 'function' funcSignature statement* 'end' 'function';
-
-funcSignature: ID '(' listArgdef? ')' ( 'as' typeRef )?;
+funcSignature: ID '(' listArgdef? ')' ( 'as' typeRef )? ->^(FuncSignature ^(ID listArgdef?) );
 
 statement:
     varStatement
@@ -47,17 +48,17 @@ doStatement: 'do' statement* 'loop' ('while' | 'until') expr;
 breakStatement: 'break';
 expressionStatement: expr ';';
 
-argDef: ID ( 'as' typeRef )?;
+argDef: ID ( 'as' typeRef )? ->^(ArgDef ( 'as' typeRef )?) ;
 
-listArgdef: argDef ( ',' argDef )*;
+listArgdef: argDef ( ',' argDef )* ->^(ListArgdef argDef) ;
 
 element : typeRef | array; // Allows elements to be typeRefs or nested arrays
 typeRef : builtinArray // it could also be customArray
          | customArray
          ;
 
-builtinArray : builtin (array);
-customArray  : custom array;
+builtinArray : builtin (array)?;
+customArray  : custom array?;
 
 array : '(' (element (',' element)*)? ')' ;
 
@@ -72,7 +73,8 @@ expr 	:
        | literal  lexpr
      ;     
 lexpr :  (binOp expr lexpr)
-       | ('(' listExpr? ')' lexpr)  |  
+       | ('(' listExpr? ')' lexpr)  
+       |
         ;
 listExpr:
     expr (',' expr)*;
@@ -108,7 +110,7 @@ binOp:
     | LEQ      
     | GEQ;
 // Lexical tokens
-WS : ' ' | '\n' { $channel=HIDDEN; };
+WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') { $channel=HIDDEN; };
 fragment Number: '0'..'9';
 fragment HexDigit: ('0'..'9'|'a'..'f'|'A'..'F');
 fragment Letter: ('a'..'z')|('A'..'Z')|'_';

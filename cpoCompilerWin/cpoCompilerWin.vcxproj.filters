@@ -33,6 +33,8 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="..\MyGrammar.tokens" />
+    <None Include="packages.config" />
+    <None Include="tree.dot" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\parser.h">
@@ -44,5 +46,10 @@
     <ClInclude Include="..\MyGrammarParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="output.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
