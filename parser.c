@@ -38,7 +38,8 @@ ParseResult parse(char* text, size_t size, char* name) {
 
     // Close the file
     fclose(file);
-
+    const char* makeTreeGraph = "dot -Tpng ../cpoCompilerWin/tree.dot -o ../cpoCompilerWin/output.png";
+    system(makeTreeGraph);
 	p->free(p);
 	tstream->free(tstream);
 	l->free(l);
