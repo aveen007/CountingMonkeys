@@ -7,39 +7,51 @@ digraph {
 
 	edge [arrowsize=.5, color="black", style="bold"]
 
-	n0000019E21FCCC20[label="Sourcer"]
-	n0000019E21FCCAE8[label="Source"]
-	n0000019E21FCC9B0[label="FuncDef"]
-	n0000019E21FCC740[label="FuncSignature"]
-	n0000019E21FCC878[label="a2"]
-	n0000019E21FCC608[label="ListArgdef"]
-	n0000019E21FCB768[label="ArgDef"]
-	n0000019E21FCB630[label="a1"]
-	n0000019E21FCC398[label="ArgDef"]
-	n0000019E21FCBB10[label="a2"]
-	n0000019E21FCC128[label="TypeRef"]
-	n0000019E21FCC260[label="BuiltinArray"]
-	n0000019E21FCB9D8[label="bool"]
-	n0000019E21FCBC48[label="Array"]
-	n0000019E21FCBEB8[label="TypeRef"]
-	n0000019E21FCBFF0[label="BuiltinArray"]
-	n0000019E21FCBD80[label="bool"]
+	n0000018966312AA0[label="Sourcer"]
+	n0000018966312968[label="Source"]
+	n0000018966311FA8[label="FuncDef"]
+	n000001896630C7E8[label="FuncSignature"]
+	n000001896630C920[label="processArray"]
+	n000001896630C1D0[label="ListArgdef"]
+	n000001896630BF60[label="ArgDef"]
+	n000001896630B948[label="arr"]
+	n000001896630BCF0[label="TypeRef"]
+	n000001896630BE28[label="BuiltinArray"]
+	n000001896630BBB8[label="Builtin"]
+	n000001896630BA80[label="Array"]
+	n000001896630C578[label="TypeRef"]
+	n000001896630C6B0[label="BuiltinArray"]
+	n000001896630C440[label="Builtin"]
+	n000001896630CE00[label="VarStatement"]
+	n000001896630D550[label="VarStatement"]
+	n000001896630E528[label="Expression"]
+	n000001896630F158[label="Expression"]
+	n0000018966312350[label="WhileStatement"]
+	n000001896630FD88[label="Expression"]
+	n0000018966311378[label="Expression"]
+	n0000018966312830[label="Expression"]
 
-		n0000019E21FCCC20 -> n0000019E21FCCAE8		// Sourcer -> Source
-		n0000019E21FCCAE8 -> n0000019E21FCC9B0		// Source -> FuncDef
-		n0000019E21FCC9B0 -> n0000019E21FCC740		// FuncDef -> FuncSignature
-		n0000019E21FCC740 -> n0000019E21FCC878		// FuncSignature -> a2
-		n0000019E21FCC878 -> n0000019E21FCC608		// a2 -> ListArgdef
-		n0000019E21FCC608 -> n0000019E21FCB768		// ListArgdef -> ArgDef
-		n0000019E21FCB768 -> n0000019E21FCB630		// ArgDef -> a1
-		n0000019E21FCC608 -> n0000019E21FCC398		// ListArgdef -> ArgDef
-		n0000019E21FCC398 -> n0000019E21FCBB10		// ArgDef -> a2
-		n0000019E21FCC398 -> n0000019E21FCC128		// ArgDef -> TypeRef
-		n0000019E21FCC128 -> n0000019E21FCC260		// TypeRef -> BuiltinArray
-		n0000019E21FCC260 -> n0000019E21FCB9D8		// BuiltinArray -> bool
-		n0000019E21FCC260 -> n0000019E21FCBC48		// BuiltinArray -> Array
-		n0000019E21FCBC48 -> n0000019E21FCBEB8		// Array -> TypeRef
-		n0000019E21FCBEB8 -> n0000019E21FCBFF0		// TypeRef -> BuiltinArray
-		n0000019E21FCBFF0 -> n0000019E21FCBD80		// BuiltinArray -> bool
+		n0000018966312AA0 -> n0000018966312968		// Sourcer -> Source
+		n0000018966312968 -> n0000018966311FA8		// Source -> FuncDef
+		n0000018966311FA8 -> n000001896630C7E8		// FuncDef -> FuncSignature
+		n000001896630C7E8 -> n000001896630C920		// FuncSignature -> processArray
+		n000001896630C920 -> n000001896630C1D0		// processArray -> ListArgdef
+		n000001896630C1D0 -> n000001896630BF60		// ListArgdef -> ArgDef
+		n000001896630BF60 -> n000001896630B948		// ArgDef -> arr
+		n000001896630BF60 -> n000001896630BCF0		// ArgDef -> TypeRef
+		n000001896630BCF0 -> n000001896630BE28		// TypeRef -> BuiltinArray
+		n000001896630BE28 -> n000001896630BBB8		// BuiltinArray -> Builtin
+		n000001896630BBB8 -> n000001896630BA80		// Builtin -> Array
+		n000001896630C7E8 -> n000001896630C578		// FuncSignature -> TypeRef
+		n000001896630C578 -> n000001896630C6B0		// TypeRef -> BuiltinArray
+		n000001896630C6B0 -> n000001896630C440		// BuiltinArray -> Builtin
+		n0000018966311FA8 -> n000001896630CE00		// FuncDef -> VarStatement
+		n0000018966311FA8 -> n000001896630D550		// FuncDef -> VarStatement
+		n0000018966311FA8 -> n000001896630E528		// FuncDef -> Expression
+		n0000018966311FA8 -> n000001896630F158		// FuncDef -> Expression
+		n0000018966311FA8 -> n0000018966312350		// FuncDef -> WhileStatement
+		n0000018966312350 -> n000001896630FD88		// WhileStatement -> Expression
+		n0000018966312350 -> n0000018966311378		// WhileStatement -> Expression
+		n0000018966312350 -> n0000018966312830		// WhileStatement -> Expression
 
 }

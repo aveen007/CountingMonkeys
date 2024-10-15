@@ -1,0 +1,10 @@
+function processArray(arr as int()) as int
+    dim sum as int 
+    dim i as int
+    sum = 0;
+    i = 0;
+    while i < 9 
+        sum = sum + i;
+        i = i + 1;
+        wend
+end function

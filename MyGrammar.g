@@ -34,9 +34,9 @@ ListExpr;
 sourcer	:	 source  EOF -> ^(Sourcer source);
 source: funcDef*  ->^(Source funcDef*);
 
-funcDef: 'function' funcSignature statement* 'end' 'function' -> ^(FuncDef funcSignature);
+funcDef: 'function' funcSignature statement* 'end' 'function' -> ^(FuncDef funcSignature statement*);
 
-funcSignature: ID '(' listArgdef? ')' ( 'as' typeRef )? ->^(FuncSignature ^(ID listArgdef?) );
+funcSignature: ID '(' listArgdef? ')' ( 'as' typeRef )? ->^(FuncSignature ^(ID listArgdef?) (typeRef)? );
 
 statement:
     varStatement 
@@ -47,7 +47,7 @@ statement:
     | expressionStatement;
 varStatement: 'dim' listIdentifier? 'as' element-> ^(VarStatement); // for static typing
 ifStatement: 'if' expr 'then' statement* ('else' statement*)? 'end' 'if'-> ^(IfStatement);
-whileStatement: 'while' expr statement* 'wend'-> ^(WhileStatement);
+whileStatement: 'while' expr statement* 'wend'-> ^(WhileStatement expr statement*);
 doStatement: 'do' statement* 'loop' ('while' | 'until') expr->^(DoStatement);
 breakStatement: 'break' ->^(BreakStatement);
 expressionStatement: expr ';'->^(Expression);
@@ -61,25 +61,25 @@ typeRef : (builtinArray // it could also be customArray
          | customArray)-> ^(TypeRef ^(BuiltinArray builtinArray)? ^(CustomArray customArray)?)
          ;
 
-builtinArray : builtin (array)?;
-customArray  : custom array?;
+builtinArray : builtin (array)?->^(Builtin  array?);
+customArray  : custom (array)?->^(Custom  array?);
 
-array : '(' (element (',' element)*)? ')' ->^(Array element+);
+array : '(' (',' )* ')' typeRef* ->^(Array typeRef*);
 
 
 builtin: 'bool' | 'byte' | 'int' | 'uint' | 'long' | 'ulong' | 'char' | 'string';
 custom: ID;
 
 expr 	:	
-       (unary   lexpr
-       | braces  lexpr
-       | place  lexpr
-       | literal  lexpr) ->^(Expression)
+       (unary   | braces  | place  | atom)(assignmentExpr?) ->^(Expression)
      ;     
-lexpr :  (binOp expr lexpr)
-       | ('(' listExpr? ')' lexpr)  
-       |
-        ;
+
+assignmentExpr
+	:	 (AssignmentOp  |binOp |'(' listExpr? ')') expr ;
+	
+ AssignmentOp
+  :  ('+'|'-'|'*'|'/'|'%'|'<<'|'>>'|'&'|'^'|'|')? '='
+  ;    
 listExpr:
     expr (',' expr)* ->^(ListExpr expr+);
 listIdentifier:
@@ -118,24 +118,33 @@ WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') { $channel=HIDDEN; };
 fragment Number: '0'..'9';
 fragment HexDigit: ('0'..'9'|'a'..'f'|'A'..'F');
 fragment Letter: ('a'..'z')|('A'..'Z')|'_';
-fragment PLUS: '+' ;
-fragment MINUS: '-' ;
-fragment MULT: '*' ;
-fragment DIV: '/' ;
-fragment AND: '&&' ;
-fragment OR: '||' ;
-fragment EQ: '==' ;
-fragment NEQ: '!=' ;
-fragment LARGT: '<' ;
-fragment GT: '>' ;
-fragment LEQ: '<=' ;
-fragment GEQ: '>=' ;
+ PLUS: '+' ;
+ MINUS: '-' ;
+ MULT: '*' ;
+ DIV: '/' ;
+ AND: '&&' ;
+ OR: '||' ;
+ EQ: '==' ;
+ NEQ: '!=' ;
+ LARGT: '<' ;
+ GT: '>' ;
+ LEQ: '<=' ;
+ GEQ: '>=' ;
 fragment Str: '"' (~('"' | '\\'))* '"'; // string surrounded by double quotes
-fragment Char: '\'' (EscapeSequence | ~('\'' | '\\')) '\''; // single character in single quotes
+fragment Char: '\'' (  ~('\'' | '\\')) '\''; // single character in single quotes
 fragment Hex: '0' ('x' | 'X') HexDigit+; // hexadecimal literal
 fragment Bits: '0' ('b' | 'B') ('0' | '1')+; // binary literal
 fragment Dec: Number+; // decimal literal
 fragment Bool: 'true'|'false';
+Literal
+  :  Bool
+  |  Bits
+  |  Hex
+  |  Dec
+  |  Char
+  |  Str
+  ;
+atom  :  ID|Literal|
+  ;
 ID: Letter(Letter|Number)*; // identifier
-EscapeSequence: '\\' ('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\');
-OctalEscape: '\\' ('0'..'3') ('0'..'7') ('0'..'7') | '\\' ('0'..'7') ('0'..'7') | '\\' ('0'..'7');
+

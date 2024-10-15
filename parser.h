@@ -7,6 +7,8 @@ typedef struct ParseTree {
 
 typedef struct ErrorInfo {
 	char* message;
+	int line;
+	int position;
 	struct ErrorInfo* next;
 } ErrorInfo;
 

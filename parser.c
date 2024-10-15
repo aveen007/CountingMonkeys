@@ -51,7 +51,7 @@ static void  MyreportError(pANTLR3_BASE_RECOGNIZER rec) {
     rec->state->errorCount++;
 
 
-    ErrorInfo *newError = createErrorInfoNode (rec->state->exception->message );
+    ErrorInfo *newError = createErrorInfoNode (rec->state->exception->message,rec->state->exception->line, rec->state->exception->charPositionInLine  );
    
     addError(&errors, newError);
 
@@ -77,7 +77,7 @@ void addError(ErrorInfo** errors, ErrorInfo* newError) {
     return;
 }
 // Function to create a new node
-ErrorInfo* createErrorInfoNode(const char* message) {
+ErrorInfo* createErrorInfoNode(const char* message, int line, int position) {
     ErrorInfo* newNode = (ErrorInfo*)malloc(sizeof(ErrorInfo));
     if (newNode == NULL) {
         // Handle memory allocation failure
@@ -85,6 +85,8 @@ ErrorInfo* createErrorInfoNode(const char* message) {
         exit(EXIT_FAILURE);
     }
     newNode->message = strdup(message); // Duplicate the message string
+    newNode->line = line;
+    newNode->position = position;
     newNode->next = NULL;
     return newNode;
 }
