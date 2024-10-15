@@ -16,5 +16,6 @@ typedef struct ParseResult {
 } ParseResult;
 
 ParseResult parse(char* text, size_t size, char* name);
+void freeErrorInfo(ErrorInfo* head);
 
 

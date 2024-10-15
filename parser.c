@@ -2,6 +2,7 @@
 #include<antlr3basetree.h>
 #include "MyGrammarLexer.h"
 #include "MyGrammarParser.h"
+#include<antlr3baserecognizer.h>
 
 
 
@@ -11,7 +12,13 @@
 
 const char* getText(pANTLR3_BASE_TREE tree);
 pANTLR3_BASE_TREE getChild(pANTLR3_BASE_TREE tree, unsigned i);
+ErrorInfo* createErrorInfoNode(const char* message);
+ErrorInfo* errors;
+
+static void  MyreportError(pANTLR3_BASE_RECOGNIZER rec);
+void addError(ErrorInfo* errors, ErrorInfo* newError);
 ParseResult parse(char* text, size_t size, char* name) {
+    FILE* file;
 	pANTLR3_INPUT_STREAM inputStream = antlr3StringStreamNew(text, ANTLR3_ENC_UTF8, size, name);
 	pMyGrammarLexer l = MyGrammarLexerNew(inputStream);
 
@@ -19,27 +26,75 @@ ParseResult parse(char* text, size_t size, char* name) {
 
 	pMyGrammarParser p = MyGrammarParserNew(tstream);
     
+    errors = NULL;
+    p->pParser->rec->reportError = MyreportError;
 	MyGrammarParser_sourcer_return tu = p->sourcer(p);
     
-    // Open a file in writing mode
-    FILE* file = fopen("tree.dot", "w");
 
+    file = fopen("tree.dot", "w");
+   
     // Write some text to the file
     fprintf(file, p->adaptor->makeDot(p->adaptor, tu.tree)->chars);
 
     // Close the file
     fclose(file);
-	//int rr = run(tu.tree, p);
-    //DottreeGenerator 
-   // printf("Evaluator result: " + rr + '\n');
-    
+
 	p->free(p);
 	tstream->free(tstream);
 	l->free(l);
 	inputStream->free(inputStream);
-	return (ParseResult) {0,tu.tree};
+	return (ParseResult) {errors,tu.tree};
 }
+static void  MyreportError(pANTLR3_BASE_RECOGNIZER rec) {
+    rec->state->errorCount++;
 
+
+    ErrorInfo *newError = createErrorInfoNode (rec->state->exception->message );
+   
+    addError(&errors, newError);
+
+    return ;
+
+
+}
+void addError(ErrorInfo** errors, ErrorInfo* newError) {
+    
+    if (*errors == NULL) {
+        // If the list is empty, add the new error as the head
+        *errors = newError;
+    }
+    else {
+        // Otherwise, append the new error at the end
+        ErrorInfo* current = *errors;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = newError; // Add the new error to the end
+    }
+    
+    return;
+}
+// Function to create a new node
+ErrorInfo* createErrorInfoNode(const char* message) {
+    ErrorInfo* newNode = (ErrorInfo*)malloc(sizeof(ErrorInfo));
+    if (newNode == NULL) {
+        // Handle memory allocation failure
+        perror("Failed to allocate memory for ErrorInfo");
+        exit(EXIT_FAILURE);
+    }
+    newNode->message = strdup(message); // Duplicate the message string
+    newNode->next = NULL;
+    return newNode;
+}
+// Function to free the ErrorInfo linked list
+void freeErrorInfo(ErrorInfo* head) {
+    while (head != NULL) {
+        ErrorInfo* temp = head;
+        head = head->next;
+        free(temp->message); // Free the string
+        free(temp);          // Free the node
+    }
+}
 
 int run(pANTLR3_BASE_TREE tree, pMyGrammarParser p)
 {
@@ -129,3 +184,8 @@ const char* getText(pANTLR3_BASE_TREE tree) {
     return (const char*)tree->getText(tree)->chars;
 }
 
+static void
+displayRecognitionErrorNew(pANTLR3_BASE_RECOGNIZER recognizer,
+    pANTLR3_UINT8* tokenNames)
+{
+}
