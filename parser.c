@@ -16,7 +16,7 @@ ErrorInfo* createErrorInfoNode(const char* message);
 ErrorInfo* errors;
 
 static void  MyreportError(pANTLR3_BASE_RECOGNIZER rec);
-void addError(ErrorInfo* errors, ErrorInfo* newError);
+void addError(ErrorInfo** errors, ErrorInfo* newError);
 ParseResult parse(char* text, size_t size, char* name) {
     FILE* file;
 	pANTLR3_INPUT_STREAM inputStream = antlr3StringStreamNew(text, ANTLR3_ENC_UTF8, size, name);
@@ -39,6 +39,7 @@ ParseResult parse(char* text, size_t size, char* name) {
     // Close the file
     fclose(file);
     const char* makeTreeGraph = "dot -Tpng ../cpoCompilerWin/tree.dot -o ../cpoCompilerWin/output.png";
+    //const char* makeTreeGraph = "dot -Tpng ./tree.dot -o ./output.png";
     system(makeTreeGraph);
 	p->free(p);
 	tstream->free(tstream);

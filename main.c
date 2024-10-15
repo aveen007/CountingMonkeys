@@ -5,7 +5,7 @@
 
 int main(int argc, char** argv) {
 
-	char* testText = "function a2 ( a1,a2 as bool (bool)) end function";
+	char* testText = "function a2 ( a1, a2 as bool (bool)) end function";
 
 	ParseResult result = parse(testText, strlen(testText), "test.c");
 

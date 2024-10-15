@@ -12,11 +12,11 @@ Sourcer;
 Source;
 FuncDef;
 FuncSignature;
-Var;
-If;
-While;
-Do;
-Break;
+VarStatement;
+IfStatement;
+WhileStatement;
+DoStatement;
+BreakStatement;
 Expression;
 ArgDef;
 ListArgdef;
@@ -25,6 +25,10 @@ TypeRef;
 Array;
 Builtin;
 Custom;
+ID;
+BuiltinArray;
+CustomArray;
+ListExpr;
 
 }
 sourcer	:	 source  EOF -> ^(Sourcer source);
@@ -35,49 +39,49 @@ funcDef: 'function' funcSignature statement* 'end' 'function' -> ^(FuncDef funcS
 funcSignature: ID '(' listArgdef? ')' ( 'as' typeRef )? ->^(FuncSignature ^(ID listArgdef?) );
 
 statement:
-    varStatement
+    varStatement 
     | ifStatement
     | whileStatement
     | doStatement
     | breakStatement
     | expressionStatement;
-varStatement: 'dim' listIdentifier? 'as' element; // for static typing
-ifStatement: 'if' expr 'then' statement* ('else' statement*)? 'end' 'if';
-whileStatement: 'while' expr statement* 'wend';
-doStatement: 'do' statement* 'loop' ('while' | 'until') expr;
-breakStatement: 'break';
-expressionStatement: expr ';';
+varStatement: 'dim' listIdentifier? 'as' element-> ^(VarStatement); // for static typing
+ifStatement: 'if' expr 'then' statement* ('else' statement*)? 'end' 'if'-> ^(IfStatement);
+whileStatement: 'while' expr statement* 'wend'-> ^(WhileStatement);
+doStatement: 'do' statement* 'loop' ('while' | 'until') expr->^(DoStatement);
+breakStatement: 'break' ->^(BreakStatement);
+expressionStatement: expr ';'->^(Expression);
 
-argDef: ID ( 'as' typeRef )? ->^(ArgDef ( 'as' typeRef )?) ;
+argDef: ID ( 'as' typeRef )? ->^(ArgDef ID (typeRef)?) ;
 
-listArgdef: argDef ( ',' argDef )* ->^(ListArgdef argDef) ;
+listArgdef: argDef ( ',' argDef )* ->^(ListArgdef argDef+) ;
 
 element : typeRef | array; // Allows elements to be typeRefs or nested arrays
-typeRef : builtinArray // it could also be customArray
-         | customArray
+typeRef : (builtinArray // it could also be customArray
+         | customArray)-> ^(TypeRef ^(BuiltinArray builtinArray)? ^(CustomArray customArray)?)
          ;
 
 builtinArray : builtin (array)?;
 customArray  : custom array?;
 
-array : '(' (element (',' element)*)? ')' ;
+array : '(' (element (',' element)*)? ')' ->^(Array element+);
 
 
 builtin: 'bool' | 'byte' | 'int' | 'uint' | 'long' | 'ulong' | 'char' | 'string';
 custom: ID;
 
 expr 	:	
-       unary   lexpr
+       (unary   lexpr
        | braces  lexpr
        | place  lexpr
-       | literal  lexpr
+       | literal  lexpr) ->^(Expression)
      ;     
 lexpr :  (binOp expr lexpr)
        | ('(' listExpr? ')' lexpr)  
        |
         ;
 listExpr:
-    expr (',' expr)*;
+    expr (',' expr)* ->^(ListExpr expr+);
 listIdentifier:
     (ID (',' ID)*)
     ;
