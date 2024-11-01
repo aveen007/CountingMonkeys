@@ -1,4 +1,4 @@
-grammar MyGrammar;
+﻿grammar MyGrammar;
 
 options {
     output=AST;
@@ -29,7 +29,14 @@ ID;
 BuiltinArray;
 CustomArray;
 ListExpr;
-
+ElseStatement;
+UntilExpr;
+ListIdentifier;
+Unary;
+Braces;
+BinaryExpr;
+AssignmentExpr;
+Elements;
 }
 sourcer	:	 source  EOF -> ^(Sourcer source);
 source: funcDef*  ->^(Source funcDef*);
@@ -45,51 +52,59 @@ statement:
     | doStatement
     | breakStatement
     | expressionStatement;
-varStatement: 'dim' listIdentifier? 'as' element-> ^(VarStatement); // for static typing
-ifStatement: 'if' expr 'then' statement* ('else' statement*)? 'end' 'if'-> ^(IfStatement);
-whileStatement: 'while' expr statement* 'wend'-> ^(WhileStatement expr statement*);
-doStatement: 'do' statement* 'loop' ('while' | 'until') expr->^(DoStatement);
+varStatement: 'dim' listIdentifier? 'as' element-> ^(VarStatement listIdentifier? element); // for static typing
+ifStatement: 'if' expr 'then' statement* elseStatement? 'end' 'if'-> ^(IfStatement ^(Expression expr) statement* elseStatement?);
+elseStatement
+	:	 ('else' statement*)->^( ElseStatement statement*);
+whileStatement: 'while' expr statement* 'wend'-> ^(WhileStatement ^(Expression expr) statement*);
+doStatement: 'do' statement* 'loop' ('while' | 'until') expr->^(DoStatement statement* ^(UntilExpr ^(Expression expr))  );
 breakStatement: 'break' ->^(BreakStatement);
-expressionStatement: expr ';'->^(Expression);
+expressionStatement: expr ';'->^(Expression expr);
 
 argDef: ID ( 'as' typeRef )? ->^(ArgDef ID (typeRef)?) ;
 
-listArgdef: argDef ( ',' argDef )* ->^(ListArgdef argDef+) ;
+listArgdef: argDef ( ',' argDef )* ->^(ListArgdef ',' argDef+) ;
 
-element : typeRef | array; // Allows elements to be typeRefs or nested arrays
-typeRef : (builtinArray // it could also be customArray
-         | customArray)-> ^(TypeRef ^(BuiltinArray builtinArray)? ^(CustomArray customArray)?)
+element : typeRef | array; 
+typeRef : builtin (array )? -> ^(TypeRef array? builtin)
+         | custom (array )?->^(TypeRef array?  custom   )
+         |array (array )?-> ^(TypeRef  array   array?     )
          ;
 
-builtinArray : builtin (array)?->^(Builtin  array?);
-customArray  : custom (array)?->^(Custom  array?);
-
-array : '(' (',' )* ')' typeRef* ->^(Array typeRef*);
+array : '(' (',' )* ')' typeRef* ->^(Array ^(typeRef)* ^(Elements  (',')*) );
 
 
 builtin: 'bool' | 'byte' | 'int' | 'uint' | 'long' | 'ulong' | 'char' | 'string';
 custom: ID;
 
 expr 	:	
-       (unary   | braces  | place  | atom)(assignmentExpr?) ->^(Expression)
-     ;     
-
+       (expr0) expr4 ->^(expr4 expr0)
+     ; 
+expr0	:	(unary   | braces  | place  | atom);
+expr1	:	 (assignmentExpr);
+expr2	:	 (binaryExpression);
+expr3	:	 (listExpr);
+expr4	:	(expr1|expr2|expr3)? ;
 assignmentExpr
-	:	 (AssignmentOp  |binOp |'(' listExpr? ')') expr ;
-	
+	:	 (AssignmentOp  ) expr -> ^(AssignmentOp expr);
+
+binaryExpression
+	:	binOp expr->^(binOp expr);
+
  AssignmentOp
   :  ('+'|'-'|'*'|'/'|'%'|'<<'|'>>'|'&'|'^'|'|')? '='
   ;    
 listExpr:
-    expr (',' expr)* ->^(ListExpr expr+);
-listIdentifier:
-    (ID (',' ID)*)
-    ;
-unary: unOp expr; // where unOp is a unary operator
+  '(' ( expr (',' expr)* )?')' expr->^(ListExpr '(' expr+ ')' Expression expr );
 
-place: ID;
+listIdentifier:
+    (ID (',' ID)*)-> ^(ListIdentifier ID+)
+    ;
+unary: unOp expr ->^(Unary unOp expr); // where unOp is a unary operator
+
+place: ID ;
 literal: Bool|Str|Char|Hex|Bits|Dec;
-braces: '(' expr ')';
+braces: '(' expr ')'->^(Braces expr);
   
 
 unOp:
@@ -113,6 +128,8 @@ binOp:
     | GT       
     | LEQ      
     | GEQ;
+    atom  :  ID|Literal|
+  ;
 // Lexical tokens
 WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') { $channel=HIDDEN; };
 fragment Number: '0'..'9';
@@ -144,7 +161,5 @@ Literal
   |  Char
   |  Str
   ;
-atom  :  ID|Literal|
-  ;
-ID: Letter(Letter|Number)*; // identifier
 
+ID: Letter(Letter|Number)*; // identifier

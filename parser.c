@@ -9,6 +9,7 @@
 
 #include "parser.h"
 
+#pragma region definitions
 
 const char* getText(pANTLR3_BASE_TREE tree);
 pANTLR3_BASE_TREE getChild(pANTLR3_BASE_TREE tree, unsigned i);
@@ -17,6 +18,8 @@ ErrorInfo* errors;
 
 static void  MyreportError(pANTLR3_BASE_RECOGNIZER rec);
 void addError(ErrorInfo** errors, ErrorInfo* newError);
+#pragma endregion
+
 ParseResult parse(char* text, size_t size, char* name) {
     FILE* file;
 	pANTLR3_INPUT_STREAM inputStream = antlr3StringStreamNew(text, ANTLR3_ENC_UTF8, size, name);
@@ -30,6 +33,7 @@ ParseResult parse(char* text, size_t size, char* name) {
     p->pParser->rec->reportError = MyreportError;
 	MyGrammarParser_sourcer_return tu = p->sourcer(p);
     
+    run2(tu.tree, p);
 
     file = fopen("tree.dot", "w");
    
@@ -47,20 +51,23 @@ ParseResult parse(char* text, size_t size, char* name) {
 	inputStream->free(inputStream);
 	return (ParseResult) {errors,tu.tree};
 }
+
+
+
+#pragma region  errors
 static void  MyreportError(pANTLR3_BASE_RECOGNIZER rec) {
     rec->state->errorCount++;
 
 
-    ErrorInfo *newError = createErrorInfoNode (rec->state->exception->message,rec->state->exception->line, rec->state->exception->charPositionInLine  );
-   
+    ErrorInfo* newError = createErrorInfoNode(rec->state->exception->message, rec->state->exception->line, rec->state->exception->charPositionInLine);
+
     addError(&errors, newError);
 
-    return ;
-
-
+    return;
 }
+
 void addError(ErrorInfo** errors, ErrorInfo* newError) {
-    
+
     if (*errors == NULL) {
         // If the list is empty, add the new error as the head
         *errors = newError;
@@ -73,7 +80,7 @@ void addError(ErrorInfo** errors, ErrorInfo* newError) {
         }
         current->next = newError; // Add the new error to the end
     }
-    
+
     return;
 }
 // Function to create a new node
@@ -99,6 +106,71 @@ void freeErrorInfo(ErrorInfo* head) {
         free(temp);          // Free the node
     }
 }
+#pragma endregion
+
+
+void runChildren(pANTLR3_BASE_TREE tree, pMyGrammarParser p) {
+    if (tree->children != NULL) {
+        for (int i = 0; i < tree->getChildCount(tree); i++) {
+            run2(getChild(tree, i), p);
+
+        }
+    }
+    else {
+        return 0;
+    }
+}
+int run2(pANTLR3_BASE_TREE tree, pMyGrammarParser p)
+{
+    if (tree) {
+        pANTLR3_COMMON_TOKEN tok = tree->getToken(tree);
+
+
+        if (tok) {
+            pANTLR3_BASE_TREE full_tree=antlr3BaseTreeNew;
+            switch (tok->type) {
+
+           
+            case TypeRef: {
+                if (tree->children != NULL) {
+                    if (tree->children->count>1) {
+                        pANTLR3_BASE_TREE type_node = getChild(tree, 1);
+                        tree->deleteChild(tree, 1);
+                        pANTLR3_BASE_TREE type_tree = tree->dupNode(tree);
+                        type_tree->addChild(type_tree, type_node);
+                        int flag = 0;
+                    while (tree->getChildCount(tree) > 0) {
+                        
+                         tree = tree->getChild(tree, 0);
+                         pANTLR3_COMMON_TOKEN tok1 = tree->getToken(tree);
+                         if (tok1->type == Array&& tree->getChildCount(tree) ==1) {
+                                 break;
+                         }
+                         
+                    }
+                    pANTLR3_BASE_TREE array_tree=tree;
+                    array_tree->addChild(array_tree,type_tree);
+
+                    return 0;
+
+                    }
+                    runChildren(tree, p);
+                    return 0;
+                }
+
+            }
+            
+            default: {
+                          runChildren(tree, p);
+                          break;
+            }
+            }
+        }
+    }
+        return 0;
+
+}
+#pragma region unsuccessful attempts
 
 int run(pANTLR3_BASE_TREE tree, pMyGrammarParser p)
 {
@@ -107,7 +179,7 @@ int run(pANTLR3_BASE_TREE tree, pMyGrammarParser p)
         switch (tok->type) {
         case Sourcer: {
             printf(p->adaptor->makeDot(p->adaptor, tree));
-            return run(getChild(tree, 0),p) ;
+            return run(getChild(tree, 0), p);
         }
         case Source: {
             printf(p->adaptor->makeDot(p->adaptor, tree));
@@ -117,7 +189,7 @@ int run(pANTLR3_BASE_TREE tree, pMyGrammarParser p)
         case FuncDef: {
             printf(p->adaptor->makeDot(p->adaptor, tree));
 
-            return run(getChild(tree, 0),p);
+            return run(getChild(tree, 0), p);
 
 
         }
@@ -125,13 +197,13 @@ int run(pANTLR3_BASE_TREE tree, pMyGrammarParser p)
             printf(p->adaptor->makeDot(p->adaptor, tree));
 
             printf(getText(getChild(tree, 0)));
-            return run(getChild(tree, 0),p);
+            return run(getChild(tree, 0), p);
 
         }
         case ListArgdef: {
             printf(p->adaptor->makeDot(p->adaptor, tree));
 
-            return run(getChild(tree, 0),p);
+            return run(getChild(tree, 0), p);
 
         }
         case ArgDef: {
@@ -145,42 +217,42 @@ int run(pANTLR3_BASE_TREE tree, pMyGrammarParser p)
         }
     }
     return 0;
-     /*   case ID: {
-            string var(getText(tree));
-            return memory[var];
-        }
-        case PLUS:
-            return run(getChild(tree, 0)) + run(getChild(tree, 1));
-        case MINUS:
-            return run(getChild(tree, 0)) - run(getChild(tree, 1));
-        case TIMES:
-            return run(getChild(tree, 0)) * run(getChild(tree, 1));
-        case ASSIGN: {
-            string var(getText(getChild(tree, 0)));
-            int val = run(getChild(tree, 1));
-            memory[var] = val;
-            return val;
-        }
-        default:
-            cout << "Unhandled token: #" << tok->type << '\n';
-            return -1;
-        }
-    }
-    else {
-        int k = tree->getChildCount(tree);
-        int r = 0;
-        for (int i = 0; i < k; i++) {
-            r = run(getChild(tree, i));
-        }
-        return r;
-    }*/
+    /*   case ID: {
+           string var(getText(tree));
+           return memory[var];
+       }
+       case PLUS:
+           return run(getChild(tree, 0)) + run(getChild(tree, 1));
+       case MINUS:
+           return run(getChild(tree, 0)) - run(getChild(tree, 1));
+       case TIMES:
+           return run(getChild(tree, 0)) * run(getChild(tree, 1));
+       case ASSIGN: {
+           string var(getText(getChild(tree, 0)));
+           int val = run(getChild(tree, 1));
+           memory[var] = val;
+           return val;
+       }
+       default:
+           cout << "Unhandled token: #" << tok->type << '\n';
+           return -1;
+       }
+   }
+   else {
+       int k = tree->getChildCount(tree);
+       int r = 0;
+       for (int i = 0; i < k; i++) {
+           r = run(getChild(tree, i));
+       }
+       return r;
+   }*/
 }
 
 
 
 pANTLR3_BASE_TREE getChild(pANTLR3_BASE_TREE tree, unsigned i) {
-//    assert(i < tree->getChildCount(tree));
-    return (pANTLR3_BASE_TREE)tree->getChild(tree, i);
+    //    assert(i < tree->getChildCount(tree));
+    return (pANTLR3_BASE_TREE)tree->children->get(tree->children, i);
 }
 
 const char* getText(pANTLR3_BASE_TREE tree) {
@@ -193,3 +265,4 @@ displayRecognitionErrorNew(pANTLR3_BASE_RECOGNIZER recognizer,
     pANTLR3_UINT8* tokenNames)
 {
 }
+#pragma endregion
