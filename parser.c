@@ -136,14 +136,17 @@ int run2(pANTLR3_BASE_TREE tree)
                 if (tree->children != NULL) {
                     pANTLR3_BASE_TREE elements = tree;
                     if (tree->children->count > 1) {
-                        //queue<pANTLR3_BASE_TREE> typerefs;
+
+                        //to get the type node with its type ref dad
                         pANTLR3_BASE_TREE type_node = getChild(tree, 1);
                         tree->deleteChild(tree, 1);
-                        //tree->getParent(tree)->addChild(tree->getParent(tree), type_node);
                         pANTLR3_BASE_TREE type_tree_base = tree;
+                         //type_tree_base = tree;
 
                         pANTLR3_BASE_TREE type_tree = tree->dupNode(tree);
                         type_tree->addChild(type_tree, type_node);
+                        ///
+
                         int complexity = 0;
                         while (tree->getChildCount(tree) > 0) {
 
@@ -155,53 +158,30 @@ int run2(pANTLR3_BASE_TREE tree)
                                 break;
                             }
                             if (tok1->type == Array && tree->children->count > 1) {
-                                if (elements && tok3->type == Elements) {
-                                    tree->addChild(tree, elements);
-
-                                }
-                                elements = getChild(tree, 1);
-                                tree->deleteChild(tree, 1);
-                                //pANTLR3_BASE_TREE array_tree = tree;
+                               
                                 complexity++;
                             }
 
                         }
-                        //pANTLR3_BASE_TREE typeRefs=(pANTLR3_BASE_TREE)malloc(complexity * sizeof(pANTLR3_BASE_TREE));
-                        // 
-                        // 
+                  
                         // making the elements node of the last child on the left
                         pANTLR3_BASE_TREE array_tree = tree;
                         array_tree->addChild(array_tree, type_tree);
                         pANTLR3_BASE_TREE elements_tree = getChild(array_tree, 0);
                         array_tree->deleteChild(array_tree, 0);
                         array_tree->addChild(array_tree, elements_tree);
-                        // adding the last elements to the top of the tree
-
-                        array_tree->addChild(array_tree, elements);
-                        elements = getChild(array_tree, 1);
-                        array_tree->deleteChild(array_tree, 1);
-
-                        pANTLR3_BASE_TREE first_array = getChild(type_tree_base, 0);
-                        first_array->addChild(first_array, elements);
+                      
 
 
-
-
-
-                     
-                        /// looping over the rest of the arrays
-                     
-
-                        tree = getChild(first_array, 0);
-                        type_tree_base = tree;
+                        //looping to flip the elements order 
                         int complexity2 = complexity;
-                        while (complexity2>1){
+                        while (complexity2>0){
                         elements = type_tree_base;
                         array_tree = getChild(type_tree_base, 0);
                         
                         
                         
-                        while (complexity > 0) {
+                        while (complexity > -1) {
 
                             pANTLR3_COMMON_TOKEN tok3 = elements->getToken(elements);
 
@@ -255,86 +235,10 @@ int run2(pANTLR3_BASE_TREE tree)
 }
 #pragma region unsuccessful attempts
 
-int run(pANTLR3_BASE_TREE tree, pMyGrammarParser p)
-{
-    pANTLR3_COMMON_TOKEN tok = tree->getToken(tree);
-    if (tok) {
-        switch (tok->type) {
-        case Sourcer: {
-            printf(p->adaptor->makeDot(p->adaptor, tree));
-            return run(getChild(tree, 0), p);
-        }
-        case Source: {
-            printf(p->adaptor->makeDot(p->adaptor, tree));
-
-            return run(getChild(tree, 0), p);
-        }
-        case FuncDef: {
-            printf(p->adaptor->makeDot(p->adaptor, tree));
-
-            return run(getChild(tree, 0), p);
-
-
-        }
-        case FuncSignature: {
-            printf(p->adaptor->makeDot(p->adaptor, tree));
-
-            printf(getText(getChild(tree, 0)));
-            return run(getChild(tree, 0), p);
-
-        }
-        case ListArgdef: {
-            printf(p->adaptor->makeDot(p->adaptor, tree));
-
-            return run(getChild(tree, 0), p);
-
-        }
-        case ArgDef: {
-            printf(p->adaptor->makeDot(p->adaptor, tree));
-
-        }
-        case ID: {
-            printf(p->adaptor->makeDot(p->adaptor, tree));
-
-        }
-        }
-    }
-    return 0;
-    /*   case ID: {
-           string var(getText(tree));
-           return memory[var];
-       }
-       case PLUS:
-           return run(getChild(tree, 0)) + run(getChild(tree, 1));
-       case MINUS:
-           return run(getChild(tree, 0)) - run(getChild(tree, 1));
-       case TIMES:
-           return run(getChild(tree, 0)) * run(getChild(tree, 1));
-       case ASSIGN: {
-           string var(getText(getChild(tree, 0)));
-           int val = run(getChild(tree, 1));
-           memory[var] = val;
-           return val;
-       }
-       default:
-           cout << "Unhandled token: #" << tok->type << '\n';
-           return -1;
-       }
-   }
-   else {
-       int k = tree->getChildCount(tree);
-       int r = 0;
-       for (int i = 0; i < k; i++) {
-           r = run(getChild(tree, i));
-       }
-       return r;
-   }*/
-}
 
 
 
 pANTLR3_BASE_TREE getChild(pANTLR3_BASE_TREE tree, unsigned i) {
-    //    assert(i < tree->getChildCount(tree));
     return (pANTLR3_BASE_TREE)tree->children->get(tree->children, i);
 }
 
