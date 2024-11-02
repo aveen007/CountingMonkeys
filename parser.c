@@ -128,64 +128,23 @@ int run2(pANTLR3_BASE_TREE tree)
 
 
         if (tok) {
-            pANTLR3_BASE_TREE full_tree=antlr3BaseTreeNew;
+            pANTLR3_BASE_TREE full_tree = antlr3BaseTreeNew;
             switch (tok->type) {
 
-           
+
             case TypeRef: {
                 if (tree->children != NULL) {
-                    pANTLR3_BASE_TREE elements=tree;
-                    if (tree->children->count>1) {
+                    pANTLR3_BASE_TREE elements = tree;
+                    if (tree->children->count > 1) {
                         //queue<pANTLR3_BASE_TREE> typerefs;
                         pANTLR3_BASE_TREE type_node = getChild(tree, 1);
                         tree->deleteChild(tree, 1);
                         //tree->getParent(tree)->addChild(tree->getParent(tree), type_node);
                         pANTLR3_BASE_TREE type_tree_base = tree;
-                         
+
                         pANTLR3_BASE_TREE type_tree = tree->dupNode(tree);
                         type_tree->addChild(type_tree, type_node);
                         int complexity = 0;
-                    while (tree->getChildCount(tree) > 0) {
-                        
-                         tree = tree->getChild(tree, 0);
-                         pANTLR3_COMMON_TOKEN tok1 = tree->getToken(tree);
-                         pANTLR3_COMMON_TOKEN tok3 = elements->getToken(elements);
-
-                         if (tok1->type == Array&& tree->getChildCount(tree) ==1) {
-                                 break;
-                         }
-                         if (tok1->type == Array&&tree->children->count > 1) {
-                             if (elements &&tok3->type==Elements) {
-                                 tree->addChild(tree, elements);
-
-                             }
-                             elements = getChild(tree, 1);
-                             tree->deleteChild(tree, 1);
-                             //pANTLR3_BASE_TREE array_tree = tree;
-                             complexity++;
-                         }
-                         
-                    }
-                    //pANTLR3_BASE_TREE typeRefs=(pANTLR3_BASE_TREE)malloc(complexity * sizeof(pANTLR3_BASE_TREE));
-                    
-                    pANTLR3_BASE_TREE array_tree=tree;
-                    array_tree->addChild(array_tree,type_tree);
-                    pANTLR3_BASE_TREE elements_tree = getChild(array_tree, 0);
-                    array_tree->deleteChild(array_tree, 0);
-                    array_tree->addChild(array_tree, elements_tree);
-                    //
-                    array_tree->addChild(array_tree, elements);
-                    elements = getChild(array_tree, 1);
-                    array_tree->deleteChild(array_tree, 1);
-
-                    pANTLR3_BASE_TREE first_array = getChild(type_tree_base, 0);
-                    first_array->addChild(first_array, elements);
-
-                    tree = getChild(first_array, 0);
-                    type_tree_base = tree;
-                    while (complexity > 1) {
-                        elements = tree;
-
                         while (tree->getChildCount(tree) > 0) {
 
                             tree = tree->getChild(tree, 0);
@@ -202,19 +161,78 @@ int run2(pANTLR3_BASE_TREE tree)
                                 }
                                 elements = getChild(tree, 1);
                                 tree->deleteChild(tree, 1);
-                         
+                                //pANTLR3_BASE_TREE array_tree = tree;
+                                complexity++;
                             }
 
                         }
-             
-                        array_tree = getChild(type_tree_base, 0);
+                        //pANTLR3_BASE_TREE typeRefs=(pANTLR3_BASE_TREE)malloc(complexity * sizeof(pANTLR3_BASE_TREE));
+                        // 
+                        // 
+                        // making the elements node of the last child on the left
+                        pANTLR3_BASE_TREE array_tree = tree;
+                        array_tree->addChild(array_tree, type_tree);
+                        pANTLR3_BASE_TREE elements_tree = getChild(array_tree, 0);
+                        array_tree->deleteChild(array_tree, 0);
+                        array_tree->addChild(array_tree, elements_tree);
+                        // adding the last elements to the top of the tree
+
                         array_tree->addChild(array_tree, elements);
-               
-                        complexity--;
+                        elements = getChild(array_tree, 1);
+                        array_tree->deleteChild(array_tree, 1);
 
-                    }
+                        pANTLR3_BASE_TREE first_array = getChild(type_tree_base, 0);
+                        first_array->addChild(first_array, elements);
 
-                    return 0;
+
+
+
+
+                     
+                        /// looping over the rest of the arrays
+                     
+
+                        tree = getChild(first_array, 0);
+                        type_tree_base = tree;
+                        int complexity2 = complexity;
+                        while (complexity2>1){
+                        elements = type_tree_base;
+                        array_tree = getChild(type_tree_base, 0);
+                        
+                        
+                        
+                        while (complexity > 0) {
+
+                            pANTLR3_COMMON_TOKEN tok3 = elements->getToken(elements);
+
+                            if (elements && tok3->type == Elements) {
+                                array_tree->addChild(array_tree, elements);
+
+                            }
+                            elements = getChild(array_tree, 1);
+                            array_tree->deleteChild(array_tree, 1);
+                            array_tree = getChild(getChild(array_tree, 0), 0);
+
+
+
+
+                            complexity--;
+
+
+                        }
+                            array_tree = getChild(type_tree_base, 0);
+                            array_tree->addChild(array_tree, elements);
+                            if (complexity2!=1) {
+                                type_tree_base = getChild(getChild(type_tree_base, 0), 0);
+                            }
+                            complexity2--;
+                            complexity = complexity2;
+
+                        }
+
+
+
+                        return 0;
 
                     }
                     runChildren(tree);
@@ -222,11 +240,13 @@ int run2(pANTLR3_BASE_TREE tree)
                 }
 
             }
-            
+
             default: {
-                          runChildren(tree);
-                          break;
+                runChildren(tree);
+                break;
             }
+
+
             }
         }
     }
