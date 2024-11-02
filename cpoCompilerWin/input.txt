@@ -1,4 +1,4 @@
-function processArray(arr as int(,)(,,)(,,,)) as int
+function processArray(arr as int(,)(,,)(,,,)(,,,,)) as int
     dim sum as int 
     dim i as bool
     sum = 0;

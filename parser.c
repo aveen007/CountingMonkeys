@@ -3,8 +3,9 @@
 #include "MyGrammarLexer.h"
 #include "MyGrammarParser.h"
 #include<antlr3baserecognizer.h>
+//#include <antlr3base>
 
-
+//#include <queue>
 
 
 #include "parser.h"
@@ -33,7 +34,7 @@ ParseResult parse(char* text, size_t size, char* name) {
     p->pParser->rec->reportError = MyreportError;
 	MyGrammarParser_sourcer_return tu = p->sourcer(p);
     
-    run2(tu.tree, p);
+    run2(tu.tree);
 
     file = fopen("tree.dot", "w");
    
@@ -109,10 +110,10 @@ void freeErrorInfo(ErrorInfo* head) {
 #pragma endregion
 
 
-void runChildren(pANTLR3_BASE_TREE tree, pMyGrammarParser p) {
+void runChildren(pANTLR3_BASE_TREE tree) {
     if (tree->children != NULL) {
         for (int i = 0; i < tree->getChildCount(tree); i++) {
-            run2(getChild(tree, i), p);
+            run2(getChild(tree, i));
 
         }
     }
@@ -120,7 +121,7 @@ void runChildren(pANTLR3_BASE_TREE tree, pMyGrammarParser p) {
         return 0;
     }
 }
-int run2(pANTLR3_BASE_TREE tree, pMyGrammarParser p)
+int run2(pANTLR3_BASE_TREE tree)
 {
     if (tree) {
         pANTLR3_COMMON_TOKEN tok = tree->getToken(tree);
@@ -133,35 +134,97 @@ int run2(pANTLR3_BASE_TREE tree, pMyGrammarParser p)
            
             case TypeRef: {
                 if (tree->children != NULL) {
+                    pANTLR3_BASE_TREE elements=tree;
                     if (tree->children->count>1) {
+                        //queue<pANTLR3_BASE_TREE> typerefs;
                         pANTLR3_BASE_TREE type_node = getChild(tree, 1);
                         tree->deleteChild(tree, 1);
+                        //tree->getParent(tree)->addChild(tree->getParent(tree), type_node);
+                        pANTLR3_BASE_TREE type_tree_base = tree;
+                         
                         pANTLR3_BASE_TREE type_tree = tree->dupNode(tree);
                         type_tree->addChild(type_tree, type_node);
-                        int flag = 0;
+                        int complexity = 0;
                     while (tree->getChildCount(tree) > 0) {
                         
                          tree = tree->getChild(tree, 0);
                          pANTLR3_COMMON_TOKEN tok1 = tree->getToken(tree);
+                         pANTLR3_COMMON_TOKEN tok3 = elements->getToken(elements);
+
                          if (tok1->type == Array&& tree->getChildCount(tree) ==1) {
                                  break;
                          }
+                         if (tok1->type == Array&&tree->children->count > 1) {
+                             if (elements &&tok3->type==Elements) {
+                                 tree->addChild(tree, elements);
+
+                             }
+                             elements = getChild(tree, 1);
+                             tree->deleteChild(tree, 1);
+                             //pANTLR3_BASE_TREE array_tree = tree;
+                             complexity++;
+                         }
                          
                     }
+                    //pANTLR3_BASE_TREE typeRefs=(pANTLR3_BASE_TREE)malloc(complexity * sizeof(pANTLR3_BASE_TREE));
+                    
                     pANTLR3_BASE_TREE array_tree=tree;
                     array_tree->addChild(array_tree,type_tree);
+                    pANTLR3_BASE_TREE elements_tree = getChild(array_tree, 0);
+                    array_tree->deleteChild(array_tree, 0);
+                    array_tree->addChild(array_tree, elements_tree);
+                    //
+                    array_tree->addChild(array_tree, elements);
+                    elements = getChild(array_tree, 1);
+                    array_tree->deleteChild(array_tree, 1);
+
+                    pANTLR3_BASE_TREE first_array = getChild(type_tree_base, 0);
+                    first_array->addChild(first_array, elements);
+
+                    tree = getChild(first_array, 0);
+                    type_tree_base = tree;
+                    while (complexity > 1) {
+                        elements = tree;
+
+                        while (tree->getChildCount(tree) > 0) {
+
+                            tree = tree->getChild(tree, 0);
+                            pANTLR3_COMMON_TOKEN tok1 = tree->getToken(tree);
+                            pANTLR3_COMMON_TOKEN tok3 = elements->getToken(elements);
+
+                            if (tok1->type == Array && tree->getChildCount(tree) == 1) {
+                                break;
+                            }
+                            if (tok1->type == Array && tree->children->count > 1) {
+                                if (elements && tok3->type == Elements) {
+                                    tree->addChild(tree, elements);
+
+                                }
+                                elements = getChild(tree, 1);
+                                tree->deleteChild(tree, 1);
+                         
+                            }
+
+                        }
+             
+                        array_tree = getChild(type_tree_base, 0);
+                        array_tree->addChild(array_tree, elements);
+               
+                        complexity--;
+
+                    }
 
                     return 0;
 
                     }
-                    runChildren(tree, p);
+                    runChildren(tree);
                     return 0;
                 }
 
             }
             
             default: {
-                          runChildren(tree, p);
+                          runChildren(tree);
                           break;
             }
             }
