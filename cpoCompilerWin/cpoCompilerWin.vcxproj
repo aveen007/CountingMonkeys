@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\ControlGraph.c" />
     <ClCompile Include="..\main.c" />
     <ClCompile Include="..\MyGrammarLexer.c" />
     <ClCompile Include="..\MyGrammarParser.c" />
@@ -142,6 +143,7 @@
     <None Include="tree.dot" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\ControlGraph.h" />
     <ClInclude Include="..\MyGrammarLexer.h" />
     <ClInclude Include="..\MyGrammarParser.h" />
     <ClInclude Include="..\parser.h" />

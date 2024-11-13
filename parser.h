@@ -1,8 +1,16 @@
 #pragma once
-
+//typedef struct ParseTreeNode {
+//
+//	char* token;
+//	int line;
+//	int position;
+//}ParseTreeNode, *pParseTreeNode;
 typedef struct ParseTree {
-	struct ParseTree* children;
+	 struct ParseTree **  children;
 	int childrenCount;
+		char* token;
+	int line;
+	int position;
 } ParseTree;
 
 typedef struct ErrorInfo {

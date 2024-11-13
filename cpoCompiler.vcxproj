@@ -89,6 +89,7 @@
     <NMakeIncludeSearchPath>D:\cpoCompiler\libantlr3c-3.4\include</NMakeIncludeSearchPath>
   </PropertyGroup>
   <ItemGroup>
+    <ClCompile Include="ControlGraph.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="Makefile" />
     <ClCompile Include="MyGrammarLexer.c" />
@@ -100,9 +101,13 @@
     <None Include="MyGrammar.tokens" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ControlGraph.h" />
     <ClInclude Include="MyGrammarLexer.h" />
     <ClInclude Include="MyGrammarParser.h" />
     <ClInclude Include="parser.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="input.txt" />
   </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

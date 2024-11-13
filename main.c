@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "parser.h"
+#include "ControlGraph.h"
 #define _CRT_SECURE_NO_WARNINGS
 char* read_file_to_string(const char* filename);
 int main(int argc, char** argv) {
@@ -12,8 +13,11 @@ int main(int argc, char** argv) {
 
 	//char* testText = "function a2 ( a1, a2 as bool (bool)) end function";
     char* testText = read_file_to_string("input.txt");
-	ParseResult result = parse(testText, strlen(testText), "test.c");
+	ParseResult result = parse(testText, strlen(testText), "input.txt");
+    ParseTree * myTree = result.tree->children[0]->children[0];
 
+
+    CreateCFG("input.txt", result.tree);
 	ErrorInfo* current = result.errors;
 	while (current != NULL) {
 		printf("%s", current->message, " at line: ", current->line, " and pos: ", current->position);

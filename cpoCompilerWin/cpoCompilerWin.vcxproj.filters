@@ -27,6 +27,9 @@
     <ClCompile Include="..\MyGrammarParser.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\ControlGraph.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\generate.bat">
@@ -37,13 +40,16 @@
     <None Include="tree.dot" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\parser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\MyGrammarLexer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\MyGrammarParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ControlGraph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,6 +59,8 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="input.txt" />
+    <Text Include="input.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

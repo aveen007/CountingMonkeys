@@ -14,11 +14,16 @@
 
 const char* getText(pANTLR3_BASE_TREE tree);
 pANTLR3_BASE_TREE getChild(pANTLR3_BASE_TREE tree, unsigned i);
-ErrorInfo* createErrorInfoNode(const char* message);
-ErrorInfo* errors;
+ErrorInfo* createErrorInfoNode(const char* message, int line, int position);
 
+
+ErrorInfo* errors;
 static void  MyreportError(pANTLR3_BASE_RECOGNIZER rec);
 void addError(ErrorInfo** errors, ErrorInfo* newError);
+
+ParseTree* CreateMyTreeNode(char* token, int line, int position);
+ParseTree* MyTree(pANTLR3_BASE_TREE tree);
+void addMyTreeChild(ParseTree* parent, ParseTree* child);
 #pragma endregion
 
 ParseResult parse(char* text, size_t size, char* name) {
@@ -36,6 +41,7 @@ ParseResult parse(char* text, size_t size, char* name) {
     
     run2(tu.tree);
 
+    ParseTree * myTree = MyTree(tu.tree);
     file = fopen("tree.dot", "w");
    
     // Write some text to the file
@@ -50,7 +56,7 @@ ParseResult parse(char* text, size_t size, char* name) {
 	tstream->free(tstream);
 	l->free(l);
 	inputStream->free(inputStream);
-	return (ParseResult) {errors,tu.tree};
+	return (ParseResult) {errors,myTree};
 }
 
 
@@ -60,7 +66,7 @@ static void  MyreportError(pANTLR3_BASE_RECOGNIZER rec) {
     rec->state->errorCount++;
 
 
-    ErrorInfo* newError = createErrorInfoNode(rec->state->exception->message, rec->state->exception->line, rec->state->exception->charPositionInLine);
+    ErrorInfo* newError = createErrorInfoNode(rec->state->exception->message,(int) rec->state->exception->line,(int) rec->state->exception->charPositionInLine);
 
     addError(&errors, newError);
 
@@ -108,6 +114,95 @@ void freeErrorInfo(ErrorInfo* head) {
     }
 }
 #pragma endregion
+
+#pragma region give me tree, give you tree
+void addMyTreeChild(ParseTree* parent, ParseTree* child) {
+    if (parent == NULL || child == NULL) {
+        return; // Ensure parent and child are not NULL
+    }
+
+    // Reallocate memory for the children array
+    parent->childrenCount++;
+    //ParseTree** temp =
+    //if (temp == NULL) {
+
+    //    return;
+    //}
+    //else {
+  
+    // Step 2: Allocate memory for the new children array
+    ParseTree** temp = (ParseTree**)realloc(parent->children,
+        parent->childrenCount * sizeof(ParseTree*));
+
+    // Step 3: Handle realloc failure
+    if (temp == NULL) {
+        // Handle memory allocation failure (possible memory leak if original pointer is not freed)
+        fprintf(stderr, "Memory allocation failed!\n");
+        exit(EXIT_FAILURE); // or handle according to your application's needs
+    }
+
+    // Step 4: Assign the new pointer back to parent->children
+    parent->children = temp;
+
+    // Step 5: Assign the new child to the new position in the children array
+    parent->children[parent->childrenCount - 1] = child; // Add the new child
+
+}
+           
+ParseTree* MyTree(pANTLR3_BASE_TREE tree) {
+   
+
+        pANTLR3_COMMON_TOKEN tok = tree->getToken(tree);
+
+        int line = (int)tok->line;
+        int position = (int)tok->charPosition;
+        char *token = (char *)tok->tokText.chars;
+        //int childCount = ;
+
+        ParseTree* myTree = CreateMyTreeNode(token, line, position);
+        if (tree->children != NULL) {
+            for (int i = 0; i < tree->children->count; i++) {
+               
+
+                addMyTreeChild(myTree, MyTree(getChild(tree, i)));
+           
+            
+            }
+        }
+
+            return myTree;
+ 
+
+}
+ParseTree* CreateMyTreeNode( char*token, int line, int position) {
+    ParseTree* node = (ParseTree*)malloc(sizeof(ParseTree));
+    node->children = NULL;
+    node->childrenCount = 0;
+    node->token = strdup(token); // Duplicate the token string
+    node->line = line;
+    node->position = position;
+    return node;
+}
+// Function to free a ParseTree node and its children
+void freeParseTree(ParseTree* node) {
+    if (node == NULL) {
+        return;
+    }
+
+    // Recursively free children
+    for (int i = 0; i < node->childrenCount; i++) {
+        freeParseTree(&node->children[i]);
+    }
+
+    free(node->children); // Free the array of children
+    free(node->token);    // Free the token string
+    free(node);           // Free the node itself
+}
+
+
+#pragma endregion
+
+#pragma region  reconstructing the tree
 
 
 void runChildren(pANTLR3_BASE_TREE tree) {
@@ -233,7 +328,7 @@ int run2(pANTLR3_BASE_TREE tree)
         return 0;
 
 }
-#pragma region unsuccessful attempts
+
 
 
 
@@ -245,11 +340,5 @@ pANTLR3_BASE_TREE getChild(pANTLR3_BASE_TREE tree, unsigned i) {
 const char* getText(pANTLR3_BASE_TREE tree) {
 
     return (const char*)tree->getText(tree)->chars;
-}
-
-static void
-displayRecognitionErrorNew(pANTLR3_BASE_RECOGNIZER recognizer,
-    pANTLR3_UINT8* tokenNames)
-{
 }
 #pragma endregion
