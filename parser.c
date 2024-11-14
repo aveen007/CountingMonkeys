@@ -3,11 +3,6 @@
 #include "MyGrammarLexer.h"
 #include "MyGrammarParser.h"
 #include<antlr3baserecognizer.h>
-//#include <antlr3base>
-
-//#include <queue>
-
-
 #include "parser.h"
 
 #pragma region definitions
@@ -156,7 +151,8 @@ ParseTree* MyTree(pANTLR3_BASE_TREE tree) {
 
         int line = (int)tok->line;
         int position = (int)tok->charPosition;
-        char *token = (char *)tok->tokText.chars;
+        char *token = (char *)tok->getText(tok)->chars;
+     
         //int childCount = ;
 
         ParseTree* myTree = CreateMyTreeNode(token, line, position);
