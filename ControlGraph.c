@@ -47,7 +47,7 @@ Subroutine DefineSubprogram(char* fileName, ParseTree * tree) {
                            }
 
                          
-                           // TODO: Create the CFG
+                           // TODO: Create the CFG???
                            // go about the creating a .dot file, I can check the makedot function and do something similar
                            // create a block for every statement (or child) of the funcDef, these blocks will depend on the type
                            // if the type is an if , then it will have two childeren, and if it is a while it will have a return
@@ -88,7 +88,9 @@ Subroutine DefineSubprogram(char* fileName, ParseTree * tree) {
                            // 
                            // I also need to rewatch his answer in the class
                            //
-
+                           //TODO: also make the nodes connect to one another, and figure a way to define the re
+                           //relationship between the nodes, so that you can make it work for while as well.
+                           // since it's a more complicated task
 
                        }
                        /*  = args;*/
@@ -219,20 +221,54 @@ void freeTree(OTNode* root) {
 }
 
 // Function to print the tree in a readable format (in-order traversal)
-void printTree(OTNode* node) {
-    if (node == NULL)
-        return;
+char* printTree(char* treeText, OTNode* node) {
+    if (node == NULL) {
+        return treeText;
+    }
 
     if (node->type == NODE_TYPE_OPERATOR) {
-        printf("(");
-        printTree(node->left);
-        printf(" %c ", node->value.operator);
-        printTree(node->right);
-        printf(")");
+
+        //int newSize = currentSize + strlen(node->value.operator)+2; // for " " + operator + " "
+        //treeText = (char*)realloc(treeText, newSize);
+
+        //char operatorStr[2] = { , '\0' };
+        strcat(treeText, " ");
+        strcat(treeText, node->value.operator);
+        strcat(treeText, "\0");
+
+        // Add opening parenthesis
+        //newSize = currentSize + 2; // for "(" and space
+        //treeText = (char*)realloc(treeText, sizeof(char)*newSize);
+        strcat(treeText, "(");
+        //currentSize += 1;
+
+        // Print the left child
+        treeText = printTree(treeText, node->left);
+
+        // Add operator
+        //currentSize += 2;
+        strcat(treeText, " , ");
+
+        // Print the right child
+        treeText = printTree(treeText, node->right);
+
+        // Add closing parenthesis
+        //newSize = currentSize + 2; // for ")"
+        //treeText = (char*)realloc(treeText, sizeof(char) * newSize);
+        strcat(treeText, ")");
+        //currentSize += 1;
     }
     else {
-        printf("%d", node->value.operand);
+        // It's an operand
+        //char operandStr; // Assuming operand won't exceed 20 digits
+        //snprintf(operandStr, sizeof(operandStr), "%d", node->value.operand);
+        //int newSize = currentSize + strlen(node->value.operand)+1; // size needed for the operand
+        //treeText = (char*)realloc(treeText,sizeof(char)* newSize);
+        strcat(treeText, (char*)node->value.operand);
+        //currentSize += strlen(node->value.operand);
     }
+
+    return treeText;
 }
 varDeclaration * CreateVarDeclaration(char** Ids, Type* type) {
     varDeclaration* var = (varDeclaration*)malloc(sizeof(varDeclaration));
@@ -443,6 +479,29 @@ void ConstructCFG(controlFlowGraphBlock *cfg, ParseTree* tree, BlockType  blockT
 
 void writeDotGraph(controlFlowGraphBlock* cfg, FILE* file) {
     if (!cfg || !file) return;
+    // Begin the dot file
+    
+        char* treeText = (char*)malloc(1);
+        treeText[0] = '\0'; // Initialize with an empty string
+        //int currentSize = 1; // To hold the size of the dynamic string
+    if (cfg->instructions)
+    {
+
+        for (int i = 0; i < (cfg->instructions->size); i++) {
+
+            cfgBlockContent* instruction = cfg->instructions->content[i]; // Assuming the node holds a pointer to a block
+            if (instruction->type == TYPE_OTNODE) {
+               //
+                strcat(treeText, "OT: [");
+
+                treeText = printTree(treeText, instruction->ot);
+                strcat(treeText,"]\n");
+            }
+            //fprintf(file, "    %p -> %p;\n", cfg, outBlock);
+            // TODO: here I want to create some special code to write the operations tree and the var statements inside
+            // the block
+        }
+    }
 
     // Print the current block
     //WhileBlock,        ///< A block representing a while loop.
@@ -450,47 +509,56 @@ void writeDotGraph(controlFlowGraphBlock* cfg, FILE* file) {
     //    BreakBlock,
     //    ElseBlock,
     //    ThenBlock
-    fprintf(file, "    %p [label=\"%s\"];\n", cfg, (cfg->blocktype == BaseBlock ? 
-        "BaseBlock" : (cfg->blocktype == IfBlock ? "IfBlock" : (cfg->blocktype == WhileBlock ? "WhileBlock":
-            (cfg->blocktype == ElseBlock ? "ElseBlock": (cfg->blocktype == ThenBlock ? "ThenBlock" :"BreakBlock"))))));
-
+    fprintf(file, "    n%p [label=\"%s\\n %s\"]\n", cfg,
+        (cfg->blocktype == BaseBlock ? "BaseBlock" :
+            (cfg->blocktype == IfBlock ? "IfBlock" :
+                (cfg->blocktype == WhileBlock ? "WhileBlock" :
+                    (cfg->blocktype == ElseBlock ? "ElseBlock" :
+                        (cfg->blocktype == ThenBlock ? "ThenBlock" : "BreakBlock"))))),
+       treeText);
      //Traverse out nodes and create edges
-    if (cfg->nodes) {
-       for (int  i=0; i<(cfg->instructions->size);i++){
-           
-            cfgBlockContent* outBlock = cfg->instructions->content[i]; // Assuming the node holds a pointer to a block
-            fprintf(file, "    %p -> %p;\n", cfg, outBlock);
-            //writeDotGraph(outBlock, file); // Recursively process out node
-            //current = current->next; // Move to next linked list node
+    if (cfg->outNodeCount>0) {
+        if (cfg->blocktype!=IfBlock){
+        
+        fprintf(file, "    n%p -> n%p\n", cfg, cfg->nodes[0]);
         }
+
        for (int i = 0; i < cfg->outNodeCount; i++)
        {
            controlFlowGraphBlock* outBlock = cfg->nodes[i]; // Assuming the node holds a pointer to a block
-           fprintf(file, "    %p -> %p;\n", cfg, outBlock);
            writeDotGraph(outBlock, file); // Recursively process out node
+           if (outBlock->blocktype == IfBlock) {
+               for (int j = 0; j < outBlock->outNodeCount;j++) {
+                   fprintf(file, "    n%p -> n%p\n", outBlock, outBlock->nodes[j]);
+               /*    if (i != cfg->outNodeCount - 1) {
+                       fprintf(file, "    %p -> %p;\n", outBlock->nodes[j], cfg->nodes[i+1]);
+
+                   }*/
+               }
+           }
+           else {
+               if (i != cfg->outNodeCount - 1) {
+                   //fprintf(file, "    %p -> %p;\n", cfg->nodes[i], cfg->nodes[i + 1]);
+               }
+           }
        }
     }
+    // End the dot file
 }
 
-void CFGToDotFile(controlFlowGraphBlock* cfgs, char* fileName) {
+void CFGToDotFile(controlFlowGraphBlock* cfg, char* fileName) {
     FILE* file = fopen(fileName, "w");
     if (!file) {
         perror("Error opening file");
         return;
     }
-
-    // Begin the dot file
     fprintf(file, "digraph G {\n");
-
+    writeDotGraph(cfg, file);
     // Write each control flow graph to the dot file
-   for (int i=0; i<cfgs->outNodeCount;i++){
-        controlFlowGraphBlock* cfg =cfgs->nodes[i]; // Assuming the node holds a pointer to a block
-        writeDotGraph(cfg, file);
-        //current = current->next; // Move to next linked list node
-    }
-
-    // End the dot file
     fprintf(file, "}\n");
+
+
+
     fclose(file);
 }
 

@@ -140,7 +140,6 @@
   <ItemGroup>
     <None Include="..\generate.bat" />
     <None Include="..\MyGrammar.tokens" />
-    <None Include="cfg.dot" />
     <None Include="cfgi0.dot" />
     <None Include="cfgi1.dot" />
     <None Include="packages.config" />

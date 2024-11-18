@@ -41,7 +41,6 @@
     <None Include="..\MyGrammar.tokens" />
     <None Include="packages.config" />
     <None Include="tree.dot" />
-    <None Include="cfg.dot" />
     <None Include="cfgi0.dot" />
     <None Include="cfgi1.dot" />
   </ItemGroup>
@@ -68,14 +67,14 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="output.png">
-      <Filter>Source Files</Filter>
-    </Image>
     <Image Include="cfgi0.dot.png">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files</Filter>
     </Image>
     <Image Include="cfgi1.dot.png">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="output.png">
+      <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
 </Project>

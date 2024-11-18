@@ -171,4 +171,4 @@ void CFGToDotFile(controlFlowGraphBlock* cfgs,  char* fileName);
 OTNode* createOperatorNode(char* operator);
 OTNode* createOperandNode(char* operand);
 void freeTree(OTNode* root);
-void printTree(OTNode* node);
+char* printTree(char* treeText,OTNode* node);
