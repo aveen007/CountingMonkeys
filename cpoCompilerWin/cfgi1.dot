@@ -1,3 +1,5 @@
 digraph G {
-    n000001BA8D60AC50 [label="BaseBlock\n "]
+    n000002377810ACC0 [label="BaseBlock\n "]
+    n000002377810ACC0 -> n000002377810B0B0
+    n000002377810B0B0 [label="BaseBlock\n "]
 }
