@@ -47,53 +47,20 @@ Subroutine DefineSubprogram(char* fileName, ParseTree * tree) {
                            }
 
                          
-                           // TODO: Create the CFG???
-                           // go about the creating a .dot file, I can check the makedot function and do something similar
-                           // create a block for every statement (or child) of the funcDef, these blocks will depend on the type
-                           // if the type is an if , then it will have two childeren, and if it is a while it will have a return
-                           // if it is a break it ...
-                           // in short, the types of blocks (or nodes in the cfg are 
-                           //1. if
-                           //2. while
-                           //3. basic
-                           //4. break
-                           //5. do while
-                           // every cfg has the following info
-                           // it's type
-                           // a list of intstructions (operations)
-                           //and so the first step is MAKE A GRAPH -> func 1
-                           //2: traverse it  and produce a .dot file -> func 2
-                           // TODO: make this work for multiple files instead of 1
-                           // TODO: after creating the CFG graph, then create a corresponding operations tree for each block
-                           // this step just gives the l value and r value if there is an expr
+                         
+                           //TODO : while blocks
+                           //TODO : break blocks 
+                           //TODO: make this work for multiple files instead of 1
                            //TODO: capture the errors
-                           //the error types are ->
-                           //1. break into nothing
-                           //2. assign into a literal, (literal is an lvalue in code)
-                           //3. use a function that is not initialized (not in the cfg already)
-                            // return the errors as well 
+                               //the error types are ->
+                                       //1. break into nothing
+                                       //2. assign into a literal, (literal is an lvalue in code)
+                                       //3. use a function that is not initialized (not in the cfg already)
+                               // return the errors as well 
                            ///Questions
-                           //   1
-                           // what information should the cfg store about each instruction
-                           // should we stor it as it is , plain text 
-                           // or should I handle the different types?
-                           // there could be a variable decleration or an expression
-                           // and expressions have many types
-                           // which of those info need to be stored 
-                           // 
-                           //   2
-                           //in the example that he showed in the class it was a mix of
-                           //an operations tree and a cfg, and there is also a mention of a call graph, so 
-                           // which should we do ?
-                           // 
-                           // I also need to rewatch his answer in the class
-                           //
-                           //TODO: also make the nodes connect to one another, and figure a way to define the re
-                           //relationship between the nodes, so that you can make it work for while as well.
-                           // since it's a more complicated task
+                           // TODO:  debug the strange errors that keep coming up
 
                        }
-                       /*  = args;*/
                    }
                }
                subprograms[i]->signatureDetails->position = pos;
@@ -421,7 +388,7 @@ void ConstructCFG(controlFlowGraphBlock *cfg, ParseTree* tree, BlockType  blockT
 
 
                     //
-                    int k = 0;
+                    int k = 1;
                     IfStatementCfg->nodes= createCFGBlock(IfStatementCfg);
                     IfStatementCfg->blocktype = IfBlock;
                     IfStatementCfg->ast = instructionTree;
@@ -463,9 +430,40 @@ void ConstructCFG(controlFlowGraphBlock *cfg, ParseTree* tree, BlockType  blockT
                 }
                 else if (strcmp( instructionTree->token , "WhileStatement")==0) {
                 
-                    //TODO: 
+                    // initialize a new cfg node
 
+                    controlFlowGraphBlock* WhileBlockCfg = (controlFlowGraphBlock*)malloc(sizeof(controlFlowGraphBlock));
+                    WhileBlockCfg->blocktype = WhileBlock;
+
+                    //here we just add the condition to the if blocks 
+
+                    WhileBlockCfg->ast = instructionTree;
+                    WhileBlockCfg->instructions = CreateInstructions();
+                    cfgBlockContent instructionContent;
+
+                    OTNode* otNode = HandleOperationsTree(instructionTree->children[0]->children[0]);
+                    instructionContent.ot = otNode;
+                    instructionContent.type = TYPE_OTNODE;
+                    InsertInstruction(WhileBlockCfg->instructions, instructionContent);
+
+
+                
+                    //TODO: 
+                    controlFlowGraphBlock* baseBlock = malloc(sizeof(controlFlowGraphBlock));
+
+                    baseBlock->instructions = CreateInstructions();
+                    baseBlock->blocktype = WhileBodyBlock;
+                    baseBlock->ast = instructionTree;
+                    for (int j = 1; j < instructionTree->childrenCount; j++) {
+                        ConstructCFG(baseBlock, instructionTree->children[j], WhileBodyBlock);
+                    }
+                    WhileBlockCfg->nodes = createCFGBlock(WhileBlockCfg);
+                  
+                    insertCFGBlock(WhileBlockCfg, baseBlock);
+                    insertCFGBlock(cfg, WhileBlockCfg);
                 }
+
+                
             }
 
 #pragma endregion
@@ -507,11 +505,12 @@ void writeDotGraph(controlFlowGraphBlock* cfg, FILE* file) {
             (cfg->blocktype == IfBlock ? "IfBlock" :
                 (cfg->blocktype == WhileBlock ? "WhileBlock" :
                     (cfg->blocktype == ElseBlock ? "ElseBlock" :
-                        (cfg->blocktype == ThenBlock ? "ThenBlock" : "BreakBlock"))))),
+                        (cfg->blocktype == ThenBlock ? "ThenBlock" : (cfg->blocktype == WhileBodyBlock ? "WhileBodyBlock" :
+                            "BreakBlock")))))),
        treeText);
      //Traverse out nodes and create edges
     if (cfg->outNodeCount>0) {
-        if (cfg->blocktype!=IfBlock){
+        if (cfg->blocktype!=IfBlock&& cfg->blocktype!=WhileBodyBlock){
         
         fprintf(file, "    n%p -> n%p\n", cfg, cfg->nodes[0]);
         }
@@ -541,9 +540,17 @@ void writeDotGraph(controlFlowGraphBlock* cfg, FILE* file) {
                    }
                }
            }
-           else {
+           else if (outBlock->blocktype==WhileBlock) {
+               if (outBlock->outNodeCount > 0) {
+
+                   writeDotGraph(outBlock->nodes[0], file);
+                   fprintf(file, "    n%p -> n%p [label=\"True\" color=\"black\"]\n", outBlock->nodes[0], outBlock);
+
+               
+               }
                if (i != cfg->outNodeCount - 1) {
-              //TODO : 
+
+                   fprintf(file, "    n%p -> n%p [label=\"False\" color=\"black\"]\n", outBlock, cfg->nodes[i + 1]);
                }
            }
        }

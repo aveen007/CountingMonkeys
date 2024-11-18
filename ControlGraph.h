@@ -29,7 +29,8 @@ typedef enum BlockType {
     IfBlock,      ///< A block representing an if statement.
     BreakBlock,   ///< A block representing a break statement.
     ElseBlock,
-    ThenBlock
+    ThenBlock,
+    WhileBodyBlock
 } BlockType;
 
 typedef enum {
