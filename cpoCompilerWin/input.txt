@@ -10,14 +10,15 @@ function processArray(arr as int()) as int
         sum=sum-i;
         i=i-1;
     end if
-    if i > 0 then
-            sum = sum + i;
-            i = i + 1;
-    end if
+   
     while i < 9 
     sum = sum + i;
     i = i + 1;
     wend
+     if i > 0 then
+            sum = sum + i;
+            i = i + 1;
+    end if
 end function
 function processWhile()
 end function
