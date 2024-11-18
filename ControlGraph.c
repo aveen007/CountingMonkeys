@@ -479,7 +479,7 @@ void writeDotGraph(controlFlowGraphBlock* cfg, FILE* file) {
     if (!cfg || !file) return;
     // Begin the dot file
     
-        char* treeText = (char*)malloc(1);
+        char* treeText = (char*)malloc(sizeof(char));
         treeText[0] = '\0'; // Initialize with an empty string
         //int currentSize = 1; // To hold the size of the dynamic string
     if (cfg->instructions)
@@ -521,10 +521,23 @@ void writeDotGraph(controlFlowGraphBlock* cfg, FILE* file) {
            controlFlowGraphBlock* outBlock = cfg->nodes[i]; // Assuming the node holds a pointer to a block
            writeDotGraph(outBlock, file); // Recursively process out node
            if (outBlock->blocktype == IfBlock) {
-               for (int j = 0; j < outBlock->outNodeCount;j++) {
-                   fprintf(file, "    n%p -> n%p\n", outBlock, outBlock->nodes[j]);
+               // Determine if there are more than one out nodes
+               int isElseNode = outBlock->outNodeCount > 1?1:0;
+
+               for (int j = 0; j < outBlock->outNodeCount; j++) {
+                   // Check if this is the "then" or "else" node
+                   if (isElseNode  == 1&& j==0) {
+                       // This is the "else" case
+                       fprintf(file, "    n%p -> n%p [label=\"False\" color=\"red\"]\n", outBlock, outBlock->nodes[j]);
+                   }
+                   else {
+                     
+                       // This is the "then" case
+                       fprintf(file, "    n%p -> n%p [label=\"True\" color=\"green\"]\n", outBlock, outBlock->nodes[j]);
+                   }
+
                    if (i != cfg->outNodeCount - 1) {
-                       fprintf(file, "    n%p -> n%p\n", outBlock->nodes[j], cfg->nodes[i+1]);
+                       fprintf(file, "    n%p -> n%p", outBlock->nodes[j], cfg->nodes[i+1]);
                    }
                }
            }
@@ -545,6 +558,13 @@ void CFGToDotFile(controlFlowGraphBlock* cfg, char* fileName) {
         return;
     }
     fprintf(file, "digraph G {\n");
+    const char* graphSettings = "ordering=out;\n"
+        "ranksep=.4;\n"
+        "bgcolor=\"lightgrey\";  node [shape=box, fixedsize=false, fontsize=12, fontname=\"Helvetica-bold\", fontcolor=\"blue\"\n"
+        "width=.25, height=.25, color=\"black\", fillcolor=\"white\", style=\"filled, solid, bold\"];\n"
+        "\n"
+        "edge [arrowsize=.5, color=\"black\", style=\"bold\"]";
+    fprintf(file, "% s", graphSettings);
     writeDotGraph(cfg, file);
     // Write each control flow graph to the dot file
     fprintf(file, "}\n");
