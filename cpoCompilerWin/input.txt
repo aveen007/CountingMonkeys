@@ -9,7 +9,11 @@ function processArray(arr as int()) as int
     else
         sum=sum-i;
         i=i-1;
-end if
+    end if
+    if i > 0 then
+            sum = sum + i;
+            i = i + 1;
+    end if
 end function
 function processWhile()
 end function
