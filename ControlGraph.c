@@ -1,7 +1,12 @@
 #include "ControlGraph.h"
 #include "parser.h"
+#include <stdlib.h>
 
-Subroutine CreateCFG(char* fileName, ParseTree * tree) {
+
+# pragma region subprogram detail construction
+
+
+Subroutine DefineSubprogram(char* fileName, ParseTree * tree) {
 
 
    if (tree) {
@@ -53,6 +58,9 @@ Subroutine CreateCFG(char* fileName, ParseTree * tree) {
                            //3. basic
                            //4. break
                            //5. do while
+                           // every cfg has the following info
+                           // it's type
+                           // a list of intstructions (operations)
                            //and so the first step is MAKE A GRAPH -> func 1
                            //2: traverse it  and produce a .dot file -> func 2
                            // TODO: make this work for multiple files instead of 1
@@ -64,6 +72,23 @@ Subroutine CreateCFG(char* fileName, ParseTree * tree) {
                            //2. assign into a literal, (literal is an lvalue in code)
                            //3. use a function that is not initialized (not in the cfg already)
                             // return the errors as well 
+                           ///Questions
+                           //   1
+                           // what information should the cfg store about each instruction
+                           // should we stor it as it is , plain text 
+                           // or should I handle the different types?
+                           // there could be a variable decleration or an expression
+                           // and expressions have many types
+                           // which of those info need to be stored 
+                           // 
+                           //   2
+                           //in the example that he showed in the class it was a mix of
+                           //an operations tree and a cfg, and there is also a mention of a call graph, so 
+                           // which should we do ?
+                           // 
+                           // I also need to rewatch his answer in the class
+                           //
+
 
                        }
                        /*  = args;*/
@@ -81,6 +106,10 @@ Subroutine CreateCFG(char* fileName, ParseTree * tree) {
     }
 
 }
+
+#pragma region  handling types for the subprograms
+
+
 Type* create_simple_type(SimpleType simple_type, const char* custom_id) {
     Type* type = (Type*)malloc(sizeof(Type));
     type->kind = TYPE_SIMPLE;
@@ -114,18 +143,18 @@ void free_type(Type* type) {
 Type* HandleType(ParseTree* typeNode) {
 
     Type* returnType = (Type*)malloc(sizeof (Type));
-    if (typeNode->childrenCount != 1) {
-        int size = typeNode->children[1]->childrenCount;
+    if (typeNode->children[0]->childrenCount != 0) {
+        int size = typeNode->children[0]->children[1]->childrenCount;
         return create_array_type(HandleType(typeNode->children[0]->children[0]), size);
     }
     else {
-        char* typeName = typeNode->token;
+        char* typeName = typeNode->children[0]->token;
       
-        if (typeName == "int") {
+        if (strcmp(typeName , "int")==0) {
             return create_simple_type(TYPE_INT,"");
 
         }
-        if (typeName == "bool") {
+        if (strcmp(typeName, "bool") == 0) {
             return create_simple_type(TYPE_BOOL, "");
 
         }
@@ -153,3 +182,317 @@ Type* HandleType(ParseTree* typeNode) {
         
     }
 }
+#pragma endregion
+#pragma endregion
+
+# pragma region operations tree
+
+
+
+// Function to create a new node for an operator
+OTNode* createOperatorNode(char* operator) {
+    OTNode* newNode = (OTNode*)malloc(sizeof(OTNode));
+    newNode->type = NODE_TYPE_OPERATOR;
+    newNode->value.operator = operator;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+// Function to create a new node for an operand
+OTNode* createOperandNode(char* operand) {
+    OTNode* newNode = (OTNode*)malloc(sizeof(OTNode));
+    newNode->type = NODE_TYPE_OPERAND;
+    newNode->value.operand = operand;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+// Function to free the operations tree
+void freeTree(OTNode* root) {
+    if (root) {
+        freeTree(root->left);
+        freeTree(root->right);
+        free(root);
+    }
+}
+
+// Function to print the tree in a readable format (in-order traversal)
+void printTree(OTNode* node) {
+    if (node == NULL)
+        return;
+
+    if (node->type == NODE_TYPE_OPERATOR) {
+        printf("(");
+        printTree(node->left);
+        printf(" %c ", node->value.operator);
+        printTree(node->right);
+        printf(")");
+    }
+    else {
+        printf("%d", node->value.operand);
+    }
+}
+varDeclaration * CreateVarDeclaration(char** Ids, Type* type) {
+    varDeclaration* var = (varDeclaration*)malloc(sizeof(varDeclaration));
+    var->Ids = Ids;
+    var->type = type;
+
+    return var;
+
+}
+OTNode* HandleOperationsTree(ParseTree* base) {
+    OTNode* OT = (OTNode*)malloc(sizeof(OTNode));
+    if (base->childrenCount > 0) {
+        OT=createOperatorNode(base->token);
+        OT->left = HandleOperationsTree(base->children[1]);
+        OT->right = HandleOperationsTree(base->children[0]);
+        }
+    else {
+        OT = createOperandNode(base->token);
+    }
+        return OT;
+    
+}
+void InsertInstruction(Instructions* instructions, cfgBlockContent NewContent) {
+    instructions->size++;
+    instructions->content = (cfgBlockContent**)realloc(instructions->content, sizeof(cfgBlockContent*) * instructions->size);
+    instructions->content[instructions->size - 1] = malloc(sizeof(cfgBlockContent)); // Allocate memory for the new content
+    *(instructions->content[instructions->size - 1]) = NewContent; // Copy the new content into the allocated space
+}
+Instructions* CreateInstructions( ) {
+
+    Instructions* instructions = malloc(sizeof(Instructions));
+    instructions->content = malloc(instructions->content, sizeof(cfgBlockContent*));
+    instructions->size = 0;
+    return instructions;
+}
+
+
+
+void insertCFGBlock(controlFlowGraphBlock* nodes, controlFlowGraphBlock* node) {
+
+    nodes->outNodeCount++;
+    nodes->nodes = (controlFlowGraphBlock**)realloc(nodes->nodes, (sizeof(controlFlowGraphBlock*) * nodes->outNodeCount));
+ /*   if (nodes->nodes == NULL) {
+        return;
+    }*/
+    nodes->nodes[nodes->outNodeCount - 1] = malloc(sizeof(controlFlowGraphBlock));
+    nodes->nodes[nodes->outNodeCount - 1] = node;
+
+}
+controlFlowGraphBlock** createCFGBlock(controlFlowGraphBlock* block) {
+     //= malloc(sizeof(controlFlowGraphBlock));
+    
+    block->nodes = (controlFlowGraphBlock**)malloc(sizeof(controlFlowGraphBlock*));
+    //instructions->content = malloc(instructions->content, sizeof(cfgBlockContent*));
+    block->outNodeCount = 0;
+    return block->nodes;
+}
+
+#pragma endregion
+
+#pragma region creating the CFG for each subprogram
+
+void CFGInterfacer(char* fileName, ParseTree* tree) {
+
+    if (tree) {
+        tree = tree->children[0];
+        controlFlowGraphBlock** cfgs = malloc(sizeof(controlFlowGraphBlock*)*tree->childrenCount);
+          
+
+        for (int i = 0; i < tree->childrenCount; i++) {
+            // here I am just creating the start block
+            controlFlowGraphBlock* cfg = (controlFlowGraphBlock*)malloc(sizeof(controlFlowGraphBlock));
+            cfg->blocktype = BaseBlock;
+            cfg->ast = tree->children[i];
+            cfg->instructions= CreateInstructions(cfg->instructions);
+
+            for (int j = 1; j < cfg->ast->childrenCount; j++) {
+
+               ConstructCFG( cfg, cfg->ast->children[j], BaseBlock);
+            }
+            cfgs[i] = malloc(sizeof(controlFlowGraphBlock*));
+            cfgs[i]= cfg;
+            char filename[20]; // Make sure this is large enough to hold the filename
+            sprintf(filename, "cfgi%d.dot", i); // Create the filename "cfgiX.dot" where X is the index
+            CFGToDotFile(cfgs[i], filename);
+            // Prepare output picture file name
+            char pngFilename[30]; // Adjust size according to your needs
+            sprintf(pngFilename, "../cpoCompilerWin/%s.png", filename); // Assuming fileName variable is filename
+
+            // Check if the output PNG file already exists
+            //struct stat buffer;
+            //if (stat(pngFilename, &buffer) != 0) { // File does not exist
+            char makeTreeGraph[100]; // Increase size for the command string
+            sprintf(makeTreeGraph, "dot -Tpng %s -o %s", filename, pngFilename);
+            system(makeTreeGraph);
+
+        }
+    }
+}
+
+void ConstructCFG(controlFlowGraphBlock *cfg, ParseTree* tree, BlockType  blockType) {
+   
+  
+
+                ParseTree* instructionTree = tree;
+                //cfg->blocktype = blockType;
+                //cfg->ast = tree;
+               
+                if (strcmp(instructionTree->token, "VarStatement") == 0) {
+                    // add a var instruction
+                    char** ids = (char*)malloc(sizeof(char*) * instructionTree->children[0]->childrenCount);
+                    for (int k = 0; k < instructionTree->children[0]->childrenCount; k++) {
+                        
+                        ids[k] = instructionTree->children[0]->children[k]->token;
+                    }
+                    Type* instructionType = HandleType(instructionTree->children[1]);
+                    varDeclaration* varDecl = CreateVarDeclaration(ids, instructionType);
+                    cfgBlockContent instructionContent;
+                    instructionContent.type = TYPE_VARDECLARATION;
+                    instructionContent.varDec = varDecl;  // Assign var declaration to the union
+                    InsertInstruction(cfg->instructions, instructionContent);
+                
+                }
+                else if (strcmp(instructionTree->token, "Expression") == 0) {
+                    // add an operations tree
+                    cfgBlockContent instructionContent;
+
+                   OTNode * otNode = HandleOperationsTree(instructionTree->children[0]);
+                  
+                   instructionContent.type = TYPE_OTNODE;
+                   instructionContent.ot = otNode;  // Assign OTNode to the union
+
+                   InsertInstruction(cfg->instructions, instructionContent);
+                }
+                else if (strcmp( instructionTree->token , "IfStatement")==0)
+                {
+                    //insert the last instructions w the last cfg to the graph
+                    
+                    // initialize a new cfg node
+
+                    controlFlowGraphBlock* IfStatementCfg = (controlFlowGraphBlock*)malloc(sizeof(controlFlowGraphBlock));
+                    IfStatementCfg->blocktype = IfBlock;
+
+                    //here we just add the condition to the if blocks 
+                   
+                    IfStatementCfg->ast = instructionTree;
+                    IfStatementCfg->instructions= CreateInstructions();
+                    cfgBlockContent instructionContent;
+                    
+                    OTNode* otNode = HandleOperationsTree(instructionTree->children[0]->children[0]);
+                    instructionContent.ot = otNode;
+                    instructionContent.type = TYPE_OTNODE;
+                    InsertInstruction(IfStatementCfg->instructions, instructionContent);
+
+
+                    //
+                    int k = 0;
+                    IfStatementCfg->nodes= createCFGBlock(IfStatementCfg);
+                    IfStatementCfg->blocktype = IfBlock;
+                    IfStatementCfg->ast = instructionTree;
+                    controlFlowGraphBlock* thenBlock = malloc(sizeof(controlFlowGraphBlock));
+                    thenBlock->instructions= CreateInstructions();
+                    thenBlock->blocktype = ThenBlock;
+                    thenBlock->ast = instructionTree->children[0];
+                    for (; k < instructionTree->childrenCount-1; k++) {
+                     ConstructCFG(thenBlock, instructionTree->children[k], ThenBlock);
+                    
+                    }
+                    if (strcmp(instructionTree->children[k]->token , "ElseStatement")!=0) {
+
+                        ConstructCFG(thenBlock, instructionTree->children[k], ThenBlock);
+
+                    }
+                    else {
+                        controlFlowGraphBlock* elseBlock = malloc(sizeof(controlFlowGraphBlock));
+
+                        ConstructCFG(elseBlock, instructionTree->children[k], ElseBlock);
+                        elseBlock->instructions=  CreateInstructions();
+                        elseBlock->blocktype = ElseBlock;
+                        elseBlock->ast = instructionTree->children[k];
+
+                        insertCFGBlock(IfStatementCfg, elseBlock);
+                    }
+                    insertCFGBlock(IfStatementCfg, thenBlock);
+                    
+                 
+         
+                    if (cfg->outNodeCount < 0) {
+                        cfg->nodes = createCFGBlock(cfg);
+
+                    }
+                    insertCFGBlock(cfg,IfStatementCfg );
+
+                }
+                else if (strcmp( instructionTree->token , "WhileStatement")==0) {
+                
+                    //TODO: 
+
+                }
+            }
+
+#pragma endregion
+
+
+#pragma region  writing the cfgs to the .dot
+
+
+
+void writeDotGraph(controlFlowGraphBlock* cfg, FILE* file) {
+    if (!cfg || !file) return;
+
+    // Print the current block
+    //WhileBlock,        ///< A block representing a while loop.
+    //    IfBlock,           ///< A block representing an if statement.
+    //    BreakBlock,
+    //    ElseBlock,
+    //    ThenBlock
+    fprintf(file, "    %p [label=\"%s\"];\n", cfg, (cfg->blocktype == BaseBlock ? 
+        "BaseBlock" : (cfg->blocktype == IfBlock ? "IfBlock" : (cfg->blocktype == WhileBlock ? "WhileBlock":
+            (cfg->blocktype == ElseBlock ? "ElseBlock": (cfg->blocktype == ThenBlock ? "ThenBlock" :"BreakBlock"))))));
+
+     //Traverse out nodes and create edges
+    if (cfg->nodes) {
+       for (int  i=0; i<(cfg->instructions->size);i++){
+           
+            cfgBlockContent* outBlock = cfg->instructions->content[i]; // Assuming the node holds a pointer to a block
+            fprintf(file, "    %p -> %p;\n", cfg, outBlock);
+            //writeDotGraph(outBlock, file); // Recursively process out node
+            //current = current->next; // Move to next linked list node
+        }
+       for (int i = 0; i < cfg->outNodeCount; i++)
+       {
+           controlFlowGraphBlock* outBlock = cfg->nodes[i]; // Assuming the node holds a pointer to a block
+           fprintf(file, "    %p -> %p;\n", cfg, outBlock);
+           writeDotGraph(outBlock, file); // Recursively process out node
+       }
+    }
+}
+
+void CFGToDotFile(controlFlowGraphBlock* cfgs, char* fileName) {
+    FILE* file = fopen(fileName, "w");
+    if (!file) {
+        perror("Error opening file");
+        return;
+    }
+
+    // Begin the dot file
+    fprintf(file, "digraph G {\n");
+
+    // Write each control flow graph to the dot file
+   for (int i=0; i<cfgs->outNodeCount;i++){
+        controlFlowGraphBlock* cfg =cfgs->nodes[i]; // Assuming the node holds a pointer to a block
+        writeDotGraph(cfg, file);
+        //current = current->next; // Move to next linked list node
+    }
+
+    // End the dot file
+    fprintf(file, "}\n");
+    fclose(file);
+}
+
+#pragma endregion
+

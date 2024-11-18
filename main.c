@@ -17,7 +17,8 @@ int main(int argc, char** argv) {
     ParseTree * myTree = result.tree->children[0]->children[0];
 
 
-    CreateCFG("input.txt", result.tree);
+    //ConstructCFG("input.txt", result.tree);
+    CFGInterfacer("input.txt", result.tree);
 	ErrorInfo* current = result.errors;
 	while (current != NULL) {
 		printf("%s", current->message, " at line: ", current->line, " and pos: ", current->position);

@@ -6,6 +6,9 @@ function processArray(arr as int()) as int
     if i < 9 then
         sum = sum + i;
         i = i + 1;
+    else
+        sum= sum-i;
+        i=i-1;
 end if
 end function
 function processWhile()

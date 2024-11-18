@@ -90,6 +90,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="ControlGraph.c" />
+    <ClCompile Include="cpoCompilerWin\LinkedList.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="Makefile" />
     <ClCompile Include="MyGrammarLexer.c" />
@@ -102,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ControlGraph.h" />
+    <ClInclude Include="cpoCompilerWin\LinkedList.h" />
     <ClInclude Include="MyGrammarLexer.h" />
     <ClInclude Include="MyGrammarParser.h" />
     <ClInclude Include="parser.h" />
