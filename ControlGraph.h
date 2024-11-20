@@ -77,7 +77,7 @@ typedef struct Type {
 // Define the argument definition structure
 typedef struct ArgumentDef {
     char* name;  ///< The name of the argument.
-    Type* type;  ///< The type of the argument (e.g., int, float, etc.).
+    struct Type* type;  ///< The type of the argument (e.g., int, float, etc.).
 } ArgumentDef;
 
 // Define a position structure to represent the source code location
@@ -104,7 +104,7 @@ varDeclaration* CreateVarDeclaration(char** Ids, Type* type);
 
 // Structure to represent an operation tree node
 typedef struct OTNode {
-    OTNodeType type;     // Type of the node (operator or operand)
+    enum OTNodeType type;     // Type of the node (operator or operand)
     union {
         char* operator; // char to represent operators (+, -, *, /)
         char* operand;   // int to represent numeric values
@@ -117,21 +117,22 @@ typedef struct OTNode {
 typedef struct cfgBlockContent {
     ContentType type;  // Track the type of content
     union {
-        OTNode* ot;
-        varDeclaration* varDec;
+        struct OTNode* ot;
+        struct varDeclaration* varDec;
     };
 }cfgBlockContent;
 
 // Structure to represent instructions
 typedef struct Instructions {
-    cfgBlockContent** content;
+    struct cfgBlockContent** content;
     int size;
 }Instructions;
 
 typedef struct controlFlowGraphBlock {
-    ParseTree* ast;                         //< the corresponding AST
-    BlockType blocktype;                    ///< The type of the control flow graph block.
+    struct ParseTree* ast;                         //< the corresponding AST
+    enum BlockType blocktype;                    ///< The type of the control flow graph block.
     struct controlFlowGraphBlock** nodes;   ///< Pointer to the outgoing nodes (following blocks).
+    //struct controlFlowGraphBlock** inNodes;   ///< Pointer to the outgoing nodes (following blocks).
     //int inNodeCount;                        ///< Number of incoming nodes (preceding blocks).
     int outNodeCount;                       ///< Number of outgoing nodes (following blocks).
     Instructions* instructions;             // CFG Block Content
@@ -144,16 +145,29 @@ typedef struct Subroutine {
     struct SignatureDetails* signatureDetails; ///< Pointer to the signature details of the subroutine.
 }Subroutine;
 
-// -------------------------
-// Function Prototypes
-// -------------------------
 
-// Type handling functions
-Type* create_simple_type(SimpleType simple_type, const char* custom_id);
-Type* create_array_type(Type* element_type, size_t length);
-void free_type(Type* type);
-Type* HandleType(ParseTree* typeNode);
+// a stack cuz why not 
 
+typedef struct Stack {
+    struct controlFlowGraphBlock** items; // Array of pointers to controlFlowGraphBlocks
+    int top;                        // Index of the top element
+    int capacity;                   // Capacity of the stack
+} Stack;
+
+// Function to create a stack
+Stack* createStack();
+// Function to check if the stack is empty
+int isEmpty(Stack* stack);
+// Function to double the capacity of the stack
+void resizeStack(Stack* stack);
+// Function to push an item onto the stack
+void push(Stack* stack, controlFlowGraphBlock* block);
+// Function to pop an item from the stack
+controlFlowGraphBlock* pop(Stack* stack);
+// Function to peek at the top item of the stack without removing it
+controlFlowGraphBlock* peek(Stack* stack);
+// Function to delete the stack and free its memory
+void deleteStack(Stack* stack);
 // Argument definition functions
 void setName(ArgumentDef* arg, char* name);
 
@@ -165,11 +179,12 @@ Instructions* CreateInstructions( );
 Subroutine DefineSubprogram(char* fileName, ParseTree* tree);
 void ConstructCFG(controlFlowGraphBlock* cfg, ParseTree* tree, BlockType blockType);
 void CFGInterfacer(char* fileName, ParseTree* tree);
-void writeDotGraph(controlFlowGraphBlock* cfg, FILE* file);
-void CFGToDotFile(controlFlowGraphBlock* cfgs,  char* fileName);
+controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file);
+void CFGToDotFile(controlFlowGraphBlock* cfgs, char* fileName);
 
 // Operation tree functions
 OTNode* createOperatorNode(char* operator);
 OTNode* createOperandNode(char* operand);
 void freeTree(OTNode* root);
 char* printTree(char* treeText,OTNode* node);
+Type* HandleType(ParseTree* typeNode);

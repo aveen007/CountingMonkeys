@@ -6,15 +6,11 @@ function processArray(arr as int()) as int
     if i < 9 then
         sum = sum + i;
         i = i + 1;
-    else
-        sum=sum-i;
-        i=i-1;
+   else
+   sum=sum-i;
     end if
    
-    while i < 9 
-    sum = sum + i;
-    i = i + 1;
-    wend
+   
      if i > 0 then
             sum = sum + i;
             i = i + 1;
