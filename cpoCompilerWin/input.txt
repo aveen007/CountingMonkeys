@@ -8,6 +8,9 @@ function processArray(arr as int()) as int
         i = i + 1;
    else
    sum=sum-i;
+   while i>0
+   i=i-1;
+   wend
     end if
    
    

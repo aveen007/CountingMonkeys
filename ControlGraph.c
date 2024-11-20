@@ -534,7 +534,7 @@ controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file) {
 	// Begin the dot file
 
 	char* treeText = (char*)malloc(sizeof(char));
-	treeText[0] = '\0'; // Initialize with an empty string
+	 treeText[0] = '\0'; // Initialize with an empty string
 	//int currentSize = 1; // To hold the size of the dynamic string
 	if (cfg->instructions)
 	{
@@ -598,16 +598,30 @@ controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file) {
 			}
 
 		}
+		writeDotGraph(openNodes, file);
+
 	}
 	else if (cfg->blocktype == WhileBlock) {
 
+		//fprintf(file, "    n%p -> n%p [label=\"false\" color=\"blue\"]\n", cfg,peek( openNodes));
 
-		fprintf(file, "    n%p -> n%p [label=\"True\" color=\"black\"]\n", cfg->nodes[0], cfg);
+		fprintf(file, "    n%p -> n%p [label=\"True\" color=\"blue\"]\n", cfg->nodes[0], cfg);
+		fprintf(file, "    n%p -> n%p [ color=\"blue\"]\n",  cfg, cfg->nodes[0]);
+		if (cfg->outNodeCount > 0) {
+		controlFlowGraphBlock* whilebody = cfg->nodes[0];
+		push(openNodes, whilebody);
+		writeDotGraph(openNodes, file);
+		return cfg;
+
+		}
+
+
+
 	}
 	//Traverse out nodes and create edges
 
 	if (cfg->outNodeCount > 0) {
-		if (cfg->blocktype != IfBlock && cfg->blocktype != WhileBodyBlock) {
+		if (cfg->blocktype != IfBlock && cfg->blocktype != WhileBodyBlock&&cfg->blocktype!=WhileBlock) {
 
 			fprintf(file, "    n%p -> n%p\n", cfg, cfg->nodes[0]);
 			for (int i = cfg->outNodeCount - 1; i >= 0; i--)
@@ -619,19 +633,26 @@ controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file) {
 
 			}
 		
-			while (!isEmpty(openNodes)) {
-				//fprintf(file, "    n%p -> n%p [ color=\"yellow\"]\n", cfg, peek(openNodes));
+			//while (!isEmpty(openNodes)) {
+			//	//fprintf(file, "    n%p -> n%p [ color=\"yellow\"]\n", cfg, peek(openNodes));
 
-				writeDotGraph(openNodes, file);
+			 	writeDotGraph(openNodes, file);
 
-			}
+                              			//}
 		
 		}
 		
 
 	}
 	else {
+		if (cfg->blocktype == WhileBodyBlock) {
+			printf("hi");
+		}
+		else {
+
 		return cfg;
+		}
+		
 	}
 	//while (!isEmpty(openNodes)) {
 	//  /*  if (cfg->outNodeCount <= 0) {
