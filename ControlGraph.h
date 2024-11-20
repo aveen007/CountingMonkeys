@@ -176,9 +176,9 @@ void insertCFGBlock(controlFlowGraphBlock* nodes, controlFlowGraphBlock* node);
 controlFlowGraphBlock** createCFGBlock(controlFlowGraphBlock* block);
 void InsertInstruction(Instructions* instructions, cfgBlockContent NewContent);
 Instructions* CreateInstructions( );
-Subroutine DefineSubprogram(char* fileName, ParseTree* tree);
+Subroutine ** DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs,ParseTree* tree);
 void ConstructCFG(controlFlowGraphBlock* cfg, ParseTree* tree, BlockType blockType);
-void CFGInterfacer(char* fileName, ParseTree* tree);
+controlFlowGraphBlock** CFGInterfacer(char* fileName, ParseTree* tree);
 controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file);
 void CFGToDotFile(controlFlowGraphBlock* cfgs, char* fileName);
 

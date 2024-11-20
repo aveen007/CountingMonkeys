@@ -6,12 +6,13 @@
 # pragma region subprogram detail construction
 
 
-Subroutine DefineSubprogram(char* fileName, ParseTree* tree) {
+Subroutine ** DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs,ParseTree* tree) {
 
 
 	if (tree) {
 		// get the funcDefs, attach each one to a subroutine and get for each subroutine the required details
 		  // construct the proper cfg for each subroutine
+	
 		tree = tree->children[0];
 		Subroutine** subprograms = (Subroutine**)malloc(sizeof(Subroutine*) * tree->childrenCount);
 		for (int i = 0; i < tree->childrenCount; i++) {
@@ -58,12 +59,14 @@ Subroutine DefineSubprogram(char* fileName, ParseTree* tree) {
 								// return the errors as well 
 							///Questions
 							// TODO:  debug the strange errors that keep coming up
+							//TODO: check what's happening with the while if it's all good
 
 						}
 					}
 				}
 				subprograms[i]->signatureDetails->position = pos;
 				subprograms[i]->name = name;
+				subprograms[i]->cfg = cfgs[i];
 
 
 			}
@@ -71,7 +74,9 @@ Subroutine DefineSubprogram(char* fileName, ParseTree* tree) {
 
 
 		}
+		return subprograms;
 	}
+	return;
 
 }
 
@@ -339,7 +344,7 @@ void deleteStack(Stack* stack) {
 
 #pragma region creating the CFG for each subprogram
 
-void CFGInterfacer(char* fileName, ParseTree* tree) {
+controlFlowGraphBlock** CFGInterfacer(char* fileName, ParseTree* tree) {
 
 	if (tree) {
 		tree = tree->children[0];
@@ -387,7 +392,9 @@ void CFGInterfacer(char* fileName, ParseTree* tree) {
 			///=======================================================================================
 
 		}
+	return cfgs;
 	}
+	return;
 }
 
 void ConstructCFG(controlFlowGraphBlock* cfg, ParseTree* tree, BlockType  blockType) {

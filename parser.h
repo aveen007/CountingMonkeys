@@ -28,5 +28,4 @@ typedef struct ParseResult {
 
 ParseResult parse(char* text, size_t size, char* name);
 void freeErrorInfo(ErrorInfo* head);
-
-
+ParseTree* duplicateStruct(const ParseTree* original);

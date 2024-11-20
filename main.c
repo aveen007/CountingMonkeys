@@ -16,9 +16,14 @@ int main(int argc, char** argv) {
 	ParseResult result = parse(testText, strlen(testText), "input.txt");
     ParseTree * myTree = result.tree->children[0]->children[0];
 
-
     //ConstructCFG("input.txt", result.tree);
-    CFGInterfacer("input.txt", result.tree);
+    controlFlowGraphBlock** correspondingCFGs = malloc(sizeof(controlFlowGraphBlock*) * myTree->childrenCount);
+    //ParseTree* treeCopy = duplicateStruct(myTree);
+
+    correspondingCFGs = CFGInterfacer("input.txt", result.tree);
+    Subroutine** subroutines = malloc(sizeof(Subroutine*) * myTree->childrenCount);
+    subroutines=DefineSubprogram("input.txt",correspondingCFGs, result.tree);
+    
 	ErrorInfo* current = result.errors;
 	while (current != NULL) {
 		printf("%s", current->message, " at line: ", current->line, " and pos: ", current->position);

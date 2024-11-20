@@ -338,3 +338,19 @@ const char* getText(pANTLR3_BASE_TREE tree) {
     return (const char*)tree->getText(tree)->chars;
 }
 #pragma endregion
+ParseTree* duplicateStruct(const ParseTree* original)
+
+{
+    // Allocate memory for the new struct
+    ParseTree* copy = (ParseTree*)malloc(sizeof(ParseTree));
+    if (copy == NULL) {
+        perror("Failed to allocate memory");
+        exit(EXIT_FAILURE);
+    }
+
+    // Copy the contents
+    memcpy(copy, original, sizeof(ParseTree));
+
+    return copy;
+}
+
