@@ -616,9 +616,15 @@ controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file) {
 				push(openNodes, ElseNode);
 				controlFlowGraphBlock* finalOfElse = malloc(sizeof(controlFlowGraphBlock));
 				 finalOfElse = writeDotGraph(openNodes, file);
-				        fprintf(file, "    n%p -> n%p [ color=\"blue\"]\n", finalOfElse, FathersNext);
+				 if (finalOfElse->blocktype == WhileBlock) {
+					 fprintf(file, "    n%p -> n%p [label=\"False\" color=\"red\"]\n", finalOfElse, FathersNext);
 
+				 }
+				 else {
 
+					 fprintf(file, "    n%p -> n%p [ color=\"blue\"]\n", finalOfElse, FathersNext);
+
+				 }
 
 			}
 			else {
@@ -629,7 +635,15 @@ controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file) {
 				push(openNodes, ThenNode);
 				controlFlowGraphBlock* finalOfThen = malloc(sizeof(controlFlowGraphBlock));
 				finalOfThen = writeDotGraph(openNodes, file);
+
+				if (finalOfThen->blocktype == WhileBlock) {
+					fprintf(file, "    n%p -> n%p [label=\"False\" color=\"red\"]\n", finalOfThen, FathersNext);
+
+				}
+				else{
+				
 				fprintf(file, "    n%p -> n%p [ color=\"blue\"]\n", finalOfThen, FathersNext);
+				}
 				// This is the "then" case
 			}
 
@@ -653,7 +667,7 @@ controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file) {
 
 		FinalOfWhilebody= writeDotGraph(openNodes, file);
 		//exitWhilebody=writeDotGraph(openNodes, file);
-		fprintf(file, "    n%p -> n%p [label=\"True\" color=\"blue\"]\n", exitWhilebody, cfg);
+		fprintf(file, "    n%p -> n%p [label=\"True\" color=\"green\"]\n", exitWhilebody, cfg);
 		//free(treeText);
 
 		return cfg;
