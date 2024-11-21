@@ -30,7 +30,8 @@ typedef enum BlockType {
     BreakBlock,   ///< A block representing a break statement.
     ElseBlock,
     ThenBlock,
-    WhileBodyBlock
+    WhileBodyBlock,
+    WhileExitBlock
 } BlockType;
 
 typedef enum {
@@ -188,3 +189,4 @@ OTNode* createOperandNode(char* operand);
 void freeTree(OTNode* root);
 char* printTree(char* treeText,OTNode* node);
 Type* HandleType(ParseTree* typeNode);
+size_t estimatedSize(OTNode* node);

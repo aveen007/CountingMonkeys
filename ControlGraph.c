@@ -190,9 +190,27 @@ void freeTree(OTNode* root) {
 		free(root);
 	}
 }
+size_t estimatedSize(OTNode* node) {
+	if (node == NULL) {
+		return 1; // For empty string
+	}
+	size_t size = 0;
+	if (node->type == NODE_TYPE_OPERATOR) {
+		size += strlen(node->value.operator) + 3; // operator + " , " + parentheses
+		size += estimatedSize(node->left);
+		size += estimatedSize(node->right);
+	}
+	else {
+		size += strlen(node->value.operand);
+	}
+	return size;
+}
 
 // Function to print the tree in a readable format (in-order traversal)
 char* printTree(char* treeText, OTNode* node) {
+	//size_t size = estimatedSize(node) + 1; // +1 for null-terminator
+	
+	 //treeText = realloc(treeText, size+strlen(treeText));
 	if (node == NULL) {
 		return treeText;
 	}
@@ -387,6 +405,8 @@ controlFlowGraphBlock** CFGInterfacer(char* fileName, ParseTree* tree) {
 			char makeTreeGraph[100]; // Increase size for the command string
 			sprintf(makeTreeGraph, "dot -Tpng %s -o %s", filename, pngFilename);
 			system(makeTreeGraph);
+			/*free(pngFilename);
+			free(makeTreeGraph);*/
 
 
 			///=======================================================================================
@@ -519,9 +539,16 @@ void ConstructCFG(controlFlowGraphBlock* cfg, ParseTree* tree, BlockType  blockT
 		for (int j = 1; j < instructionTree->childrenCount; j++) {
 			ConstructCFG(baseBlock, instructionTree->children[j], WhileBodyBlock);
 		}
+		controlFlowGraphBlock* exitBlock = malloc(sizeof(controlFlowGraphBlock));
+
+		exitBlock->instructions = CreateInstructions();
+		exitBlock->blocktype = WhileExitBlock;
+		exitBlock->ast = instructionTree;
+
 		WhileBlockCfg->nodes = createCFGBlock(WhileBlockCfg);
 
 		insertCFGBlock(WhileBlockCfg, baseBlock);
+		insertCFGBlock(WhileBlockCfg, exitBlock);
 		insertCFGBlock(cfg, WhileBlockCfg);
 	}
 
@@ -540,7 +567,7 @@ controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file) {
 	controlFlowGraphBlock* cfg = pop(openNodes);
 	// Begin the dot file
 
-	char* treeText = (char*)malloc(sizeof(char));
+	char* treeText = (char*)malloc(sizeof(char));//OT: [ ]\n
 	 treeText[0] = '\0'; // Initialize with an empty string
 	//int currentSize = 1; // To hold the size of the dynamic string
 	if (cfg->instructions)
@@ -568,8 +595,8 @@ controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file) {
 			(cfg->blocktype == IfBlock ? "IfBlock" :
 				(cfg->blocktype == WhileBlock ? "WhileBlock" :
 					(cfg->blocktype == ElseBlock ? "ElseBlock" :
-						(cfg->blocktype == ThenBlock ? "ThenBlock" : (cfg->blocktype == WhileBodyBlock ? "WhileBodyBlock" :
-							"BreakBlock")))))),
+						(cfg->blocktype == ThenBlock ? "ThenBlock" : (cfg->blocktype == WhileBodyBlock ? "WhileBodyBlock" : (cfg->blocktype == WhileExitBlock ? "WhileExitBlock" :
+							"BreakBlock"))))))),
 		treeText);
 
 	///
@@ -587,7 +614,8 @@ controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file) {
 				controlFlowGraphBlock* FathersNext = peek(openNodes);
 
 				push(openNodes, ElseNode);
-				controlFlowGraphBlock* finalOfElse = writeDotGraph(openNodes, file);
+				controlFlowGraphBlock* finalOfElse = malloc(sizeof(controlFlowGraphBlock));
+				 finalOfElse = writeDotGraph(openNodes, file);
 				        fprintf(file, "    n%p -> n%p [ color=\"blue\"]\n", finalOfElse, FathersNext);
 
 
@@ -599,7 +627,8 @@ controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file) {
 				controlFlowGraphBlock* FathersNext = peek(openNodes);
 
 				push(openNodes, ThenNode);
-				controlFlowGraphBlock* finalOfThen = writeDotGraph(openNodes, file);
+				controlFlowGraphBlock* finalOfThen = malloc(sizeof(controlFlowGraphBlock));
+				finalOfThen = writeDotGraph(openNodes, file);
 				fprintf(file, "    n%p -> n%p [ color=\"blue\"]\n", finalOfThen, FathersNext);
 				// This is the "then" case
 			}
@@ -612,12 +641,21 @@ controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file) {
 
 		//fprintf(file, "    n%p -> n%p [label=\"false\" color=\"blue\"]\n", cfg,peek( openNodes));
 
-		fprintf(file, "    n%p -> n%p [label=\"True\" color=\"blue\"]\n", cfg->nodes[0], cfg);
 		fprintf(file, "    n%p -> n%p [ color=\"blue\"]\n",  cfg, cfg->nodes[0]);
 		if (cfg->outNodeCount > 0) {
+			controlFlowGraphBlock* FathersNext = peek(openNodes);
+
 		controlFlowGraphBlock* whilebody = cfg->nodes[0];
+		controlFlowGraphBlock* exitWhilebody = cfg->nodes[1];
+		push(openNodes, exitWhilebody);
 		push(openNodes, whilebody);
-		writeDotGraph(openNodes, file);
+		controlFlowGraphBlock* FinalOfWhilebody = malloc(sizeof(controlFlowGraphBlock));
+
+		FinalOfWhilebody= writeDotGraph(openNodes, file);
+		//exitWhilebody=writeDotGraph(openNodes, file);
+		fprintf(file, "    n%p -> n%p [label=\"True\" color=\"blue\"]\n", exitWhilebody, cfg);
+		//free(treeText);
+
 		return cfg;
 
 		}
@@ -628,7 +666,7 @@ controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file) {
 	//Traverse out nodes and create edges
 
 	if (cfg->outNodeCount > 0) {
-		if (cfg->blocktype != IfBlock && cfg->blocktype != WhileBodyBlock&&cfg->blocktype!=WhileBlock) {
+		if (cfg->blocktype != IfBlock &&cfg->blocktype!=WhileBlock) {
 
 			fprintf(file, "    n%p -> n%p\n", cfg, cfg->nodes[0]);
 			for (int i = cfg->outNodeCount - 1; i >= 0; i--)
@@ -640,35 +678,16 @@ controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file) {
 
 			}
 		
-			//while (!isEmpty(openNodes)) {
-			//	//fprintf(file, "    n%p -> n%p [ color=\"yellow\"]\n", cfg, peek(openNodes));
-
 			 	writeDotGraph(openNodes, file);
 
-                              			//}
-		
 		}
-		
-
 	}
 	else {
-		if (cfg->blocktype == WhileBodyBlock) {
-			printf("hi");
-		}
-		else {
-
+		
+	//free(treeText);
 		return cfg;
-		}
 		
 	}
-	//while (!isEmpty(openNodes)) {
-	//  /*  if (cfg->outNodeCount <= 0) {
-	//        fprintf(file, "    n%p -> n%p [ color=\"blue\"]\n", cfg, peek(openNodes));
-	//    }*/
-
-	//    
-	//}
-
 
 	// End the dot file
 }
