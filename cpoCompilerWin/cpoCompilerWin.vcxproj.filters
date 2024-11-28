@@ -70,9 +70,6 @@
     <Image Include="cfgi0.dot.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="cfgi1.dot.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="output.png">
       <Filter>Resource Files</Filter>
     </Image>

@@ -105,7 +105,7 @@ varDeclaration* CreateVarDeclaration(char** Ids, Type* type);
 
 // Structure to represent an operation tree node
 typedef struct OTNode {
-    enum OTNodeType type;     // Type of the node (operator or operand)
+     OTNodeType type;     // Type of the node (operator or operand)
     union {
         char* operator; // char to represent operators (+, -, *, /)
         char* operand;   // int to represent numeric values
@@ -139,13 +139,22 @@ typedef struct controlFlowGraphBlock {
     Instructions* instructions;             // CFG Block Content
 } controlFlowGraphBlock, * pControlFlowGraphBlock;
 
-
 typedef struct Subroutine {
     char* name;                            ///< The name of the subroutine.
     struct controlFlowGraphBlock* cfg;    ///< Pointer to the control flow graph associated with the subroutine.
     struct SignatureDetails* signatureDetails; ///< Pointer to the signature details of the subroutine.
 }Subroutine;
 
+typedef struct ErrorInfoCFG {
+    struct ErrorInfoCFG* next;
+    char* message;
+    struct ParseTree* ast;
+} ErrorInfoCFG;
+
+typedef struct SubroutinesInfo {
+    Subroutine** subroutines;
+    ErrorInfo* errors;
+} SubroutinesInfo;
 
 // a stack cuz why not 
 
@@ -190,3 +199,5 @@ void freeTree(OTNode* root);
 char* printTree(char* treeText,OTNode* node);
 Type* HandleType(ParseTree* typeNode);
 size_t estimatedSize(OTNode* node);
+char* mystrcat(const char* str1, const char* str2);
+int stringLen(char* str);

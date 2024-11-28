@@ -1,6 +1,9 @@
 #include "ControlGraph.h"
 #include "parser.h"
 #include <stdlib.h>
+#define allocator_may_return_null 1 
+
+
 
 
 # pragma region subprogram detail construction
@@ -59,7 +62,20 @@ Subroutine ** DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs,Pars
 								// return the errors as well 
 							///Questions
 							// TODO:  debug the strange errors that keep coming up
-							//TODO: check what's happening with the while if it's all good
+							//TOASK: check again about how the 
+							// 3.e
+							//when should we capture the error 
+							//the structure of the errors
+							// check if I have the right structure for the cfg
+							// the function call
+							//Payload
+							// add an enumeration for the type of the operation in ot
+							// rethink the out nodes struct
+							//error tree nodes, maybe I can add the errors to evry one of the 
+							// corresponding cfgs and enter the list to construct and draw
+							//the nodes for the tree can have args** insted of left and right
+							// check the callOfIndex
+							//does the structure of the cfg affect the 3rd lab because I have a different struct 
 
 						}
 					}
@@ -115,7 +131,6 @@ void free_type(Type* type) {
 }
 Type* HandleType(ParseTree* typeNode) {
 
-	Type* returnType = (Type*)malloc(sizeof(Type));
 	if (typeNode->children[0]->childrenCount != 0) {
 		int size = typeNode->children[0]->children[1]->childrenCount;
 		return create_array_type(HandleType(typeNode->children[0]->children[0]), size);
@@ -208,35 +223,51 @@ size_t estimatedSize(OTNode* node) {
 
 // Function to print the tree in a readable format (in-order traversal)
 char* printTree(char* treeText, OTNode* node) {
-	//size_t size = estimatedSize(node) + 1; // +1 for null-terminator
+	//int size = estimatedSize(node) + 1; // +1 for null-terminator
 	
-	 //treeText = realloc(treeText, size+strlen(treeText));
+	 //treeText = realloc(treeText, sizeof (char*)*(strlen(treeText)+size));
 	if (node == NULL) {
 		return treeText;
 	}
 
 	if (node->type == NODE_TYPE_OPERATOR) {
+		char* newText2 = mystrcat(treeText, " ");
+		treeText = (char*)realloc(treeText, stringLen(newText2) * sizeof(char));
+		treeText = newText2;
+		char* newText3 = mystrcat(treeText, node->value.operator);
+		treeText = (char*)realloc(treeText, stringLen(newText3) * sizeof(char));
+		treeText = newText3;
+		if (node->left != NULL && node->right != NULL) {
+		char* newText4 = mystrcat(treeText, "(");
+		treeText = (char*)realloc(treeText, stringLen(newText4) * sizeof(char));
+		treeText = newText4;
+	
+		char* newText40 = mystrcat(treeText, "\0");
+		treeText = (char*)realloc(treeText, stringLen(newText40) * sizeof(char));
+		treeText = newText40;
 
+			// Print the left child
+			treeText = printTree(treeText, node->left);
 
-		strcat(treeText, " ");
-		strcat(treeText, node->value.operator);
-		strcat(treeText, "\0");
-		strcat(treeText, "(");
+			// Add operator
+			char* newText5 = mystrcat(treeText, " , ");
+			treeText = (char*)realloc(treeText, stringLen(newText5) * sizeof(char));
+			treeText = newText5;
 
-		// Print the left child
-		treeText = printTree(treeText, node->left);
+			//strcat(treeText, " , ");
 
-		// Add operator
-		strcat(treeText, " , ");
-
-		// Print the right child
-		treeText = printTree(treeText, node->right);
-
-		strcat(treeText, ")");
+			// Print the right child
+			treeText = printTree(treeText, node->right);
+			char* newText6 = mystrcat(treeText, ")");
+			treeText = (char*)realloc(treeText, stringLen(newText6) * sizeof(char));
+			treeText = newText6;
+		}
 	}
 	else {
 		// It's an operand
-		strcat(treeText, (char*)node->value.operand);
+		char* newText7 = mystrcat(treeText, (char*)node->value.operand);
+		treeText = (char*)realloc(treeText, stringLen(newText7) * sizeof(char));
+		treeText = newText7;
 	}
 
 	return treeText;
@@ -251,28 +282,24 @@ varDeclaration* CreateVarDeclaration(char** Ids, Type* type) {
 
 }
 OTNode* HandleOperationsTree(ParseTree* base) {
-	OTNode* OT = (OTNode*)malloc(sizeof(OTNode));
+	OTNode* OT = createOperatorNode(base->token);
 	if (base->childrenCount > 0) {
-		OT = createOperatorNode(base->token);
 		OT->left = HandleOperationsTree(base->children[1]);
 		OT->right = HandleOperationsTree(base->children[0]);
-	}
-	else {
-		OT = createOperandNode(base->token);
 	}
 	return OT;
 
 }
 void InsertInstruction(Instructions* instructions, cfgBlockContent NewContent) {
 	instructions->size++;
-	instructions->content = (cfgBlockContent**)realloc(instructions->content, sizeof(cfgBlockContent*) * instructions->size);
+	instructions->content = realloc(instructions->content, sizeof(cfgBlockContent*) * instructions->size);
 	instructions->content[instructions->size - 1] = malloc(sizeof(cfgBlockContent)); // Allocate memory for the new content
 	*(instructions->content[instructions->size - 1]) = NewContent; // Copy the new content into the allocated space
 }
 Instructions* CreateInstructions() {
 
 	Instructions* instructions = malloc(sizeof(Instructions));
-	instructions->content = malloc(instructions->content, sizeof(cfgBlockContent*));
+	instructions->content = malloc( sizeof(cfgBlockContent*));
 	instructions->size = 0;
 	return instructions;
 }
@@ -289,7 +316,7 @@ void insertCFGBlock(controlFlowGraphBlock* nodes, controlFlowGraphBlock* node) {
 	/*   if (nodes->nodes == NULL) {
 		   return;
 	   }*/
-	nodes->nodes[nodes->outNodeCount - 1] = malloc(sizeof(controlFlowGraphBlock));
+	//nodes->nodes[nodes->outNodeCount - 1] = malloc(sizeof(controlFlowGraphBlock));
 	nodes->nodes[nodes->outNodeCount - 1] = node;
 
 }
@@ -396,14 +423,26 @@ controlFlowGraphBlock** CFGInterfacer(char* fileName, ParseTree* tree) {
 			///================================================================================
 
 
-			char filename[20]; // Make sure this is large enough to hold the filename
-			sprintf(filename, "cfgi%d.dot", i); // Create the filename "cfgiX.dot" where X is the index
+			char* filename;
+			size_t filename_size= (size_t)snprintf(NULL,0,"cfgi%d.dot", i);
+			filename = malloc(filename_size+1);
+
+			snprintf(filename, filename_size+1, "cfgi%d.dot", i);
 			CFGToDotFile(cfgs[i], filename);
 			// Prepare output picture file name
-			char pngFilename[30]; // Adjust size according to your needs
-			sprintf(pngFilename, "../cpoCompilerWin/%s.png", filename); // Assuming fileName variable is filename
-			char makeTreeGraph[100]; // Increase size for the command string
-			sprintf(makeTreeGraph, "dot -Tpng %s -o %s", filename, pngFilename);
+			size_t pngFileSize = (size_t)snprintf(NULL, 0, "../cpoCompilerWin/%s.png", filename);
+
+			char *pngFilename=malloc(pngFileSize+1); // Adjust size according to your needs
+			snprintf(pngFilename, pngFileSize+1, "../cpoCompilerWin/%s.png", filename);
+
+			//pngFilename[0] = '\0';
+			//strcat(pngFilename, "../cpoCompilerWin/%s.png", filename); // Assuming fileName variable is filename
+			size_t makeTreeSize = (size_t)snprintf(NULL, 0, "dot -Tpng %s -o %s", filename, pngFilename);
+
+			char *makeTreeGraph=malloc(makeTreeSize+1); // Increase size for the command string
+			snprintf(makeTreeGraph, makeTreeSize+1, "dot -Tpng %s -o %s", filename, pngFilename);
+
+			//strcat(makeTreeGraph, "dot -Tpng %s -o %s", filename, pngFilename);
 			system(makeTreeGraph);
 			/*free(pngFilename);
 			free(makeTreeGraph);*/
@@ -568,7 +607,7 @@ controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file) {
 	// Begin the dot file
 
 	char* treeText = (char*)malloc(sizeof(char));//OT: [ ]\n
-	 treeText[0] = '\0'; // Initialize with an empty string
+	treeText[0] = '\0';
 	//int currentSize = 1; // To hold the size of the dynamic string
 	if (cfg->instructions)
 	{
@@ -578,16 +617,20 @@ controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file) {
 			cfgBlockContent* instruction = cfg->instructions->content[i]; // Assuming the node holds a pointer to a block
 			if (instruction->type == TYPE_OTNODE) {
 				//
-				strcat(treeText, "OT: [");
-
-				treeText = printTree(treeText, instruction->ot);
-				strcat(treeText, "]\n");
+				char * newText=mystrcat(treeText, "OT: [");
+				treeText = (char*)realloc(treeText,( stringLen(newText))*sizeof(char));
+				treeText = newText;
+				
+				char* newText20 = printTree(treeText, instruction->ot);
+				treeText = newText20;
+				char* newText2=mystrcat(treeText, "]\n");
+				treeText = (char*)realloc(treeText, stringLen(newText2) * sizeof(char));
+				treeText = newText2;
 			}
 			// TODO: here I want to create some special code to write the operations tree and the var statements inside
 			// the block
 		}
 	}
-
 	// Print the current block
 
 	fprintf(file, "    n%p [label=\"%s\\n %s\"]\n", cfg,
@@ -614,8 +657,8 @@ controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file) {
 				controlFlowGraphBlock* FathersNext = peek(openNodes);
 
 				push(openNodes, ElseNode);
-				controlFlowGraphBlock* finalOfElse = malloc(sizeof(controlFlowGraphBlock));
-				 finalOfElse = writeDotGraph(openNodes, file);
+				 //finalOfElse = malloc(sizeof(controlFlowGraphBlock));
+				 controlFlowGraphBlock*  finalOfElse = writeDotGraph(openNodes, file);
 				 if (finalOfElse->blocktype == WhileBlock) {
 					 fprintf(file, "    n%p -> n%p [label=\"False\" color=\"red\"]\n", finalOfElse, FathersNext);
 
@@ -633,8 +676,8 @@ controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file) {
 				controlFlowGraphBlock* FathersNext = peek(openNodes);
 
 				push(openNodes, ThenNode);
-				controlFlowGraphBlock* finalOfThen = malloc(sizeof(controlFlowGraphBlock));
-				finalOfThen = writeDotGraph(openNodes, file);
+				 //finalOfThen = malloc(sizeof(controlFlowGraphBlock));
+				 controlFlowGraphBlock*  finalOfThen = writeDotGraph(openNodes, file);
 
 				if (finalOfThen->blocktype == WhileBlock) {
 					fprintf(file, "    n%p -> n%p [label=\"False\" color=\"red\"]\n", finalOfThen, FathersNext);
@@ -663,9 +706,9 @@ controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file) {
 		controlFlowGraphBlock* exitWhilebody = cfg->nodes[1];
 		push(openNodes, exitWhilebody);
 		push(openNodes, whilebody);
-		controlFlowGraphBlock* FinalOfWhilebody = malloc(sizeof(controlFlowGraphBlock));
+		 //FinalOfWhilebody = malloc(sizeof(controlFlowGraphBlock));
 
-		FinalOfWhilebody= writeDotGraph(openNodes, file);
+		 controlFlowGraphBlock*  FinalOfWhilebody= writeDotGraph(openNodes, file);
 		//exitWhilebody=writeDotGraph(openNodes, file);
 		fprintf(file, "    n%p -> n%p [label=\"True\" color=\"green\"]\n", exitWhilebody, cfg);
 		//free(treeText);
@@ -731,6 +774,42 @@ void CFGToDotFile(controlFlowGraphBlock* cfg, char* fileName) {
 
 	fclose(file);
 }
+char * mystrcat(const char* str1, const char* str2)
+{
+	
 
+	char* dest = NULL;
+
+	if (str1 && str2)
+	{
+	int str1_length = stringLen(str1);
+	int str2_length= stringLen(str2);
+
+		dest = realloc(dest, (str1_length+str2_length+1) * sizeof(char));
+		if (dest)
+		{
+			memcpy(dest, str1, str1_length);
+			memcpy(dest + str1_length, str2, str2_length);
+		}
+		dest[str1_length + str2_length] = '\0';
+	}
+	if (dest != NULL) {
+		return dest;
+	}
+}
+int stringLen(char* str)
+{
+	int length = 0;
+
+	// Loop till the NULL character is found
+	while (*str != '\0')
+	{
+		length++;
+
+		// Move to the next character
+		str++;
+	}
+	return length;
+}
 #pragma endregion
 

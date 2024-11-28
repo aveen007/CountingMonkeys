@@ -1,7 +1,7 @@
 function processArray(arr as int()) as int
     dim sum as int 
     dim i as int
-    sum = 0;
+    sum = 2;
     i = 0;
     if i < 9 then
         sum = sum + i;

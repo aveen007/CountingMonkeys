@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "parser.h"
 #include "ControlGraph.h"
-#define _CRT_SECURE_NO_WARNINGS
+//#define _CRT_SECURE_NO_WARNINGS
 char* read_file_to_string(const char* filename);
 int main(int argc, char** argv) {
     FILE* file;
@@ -17,16 +17,14 @@ int main(int argc, char** argv) {
     ParseTree * myTree = result.tree->children[0]->children[0];
 
     //ConstructCFG("input.txt", result.tree);
-    controlFlowGraphBlock** correspondingCFGs = malloc(sizeof(controlFlowGraphBlock*) * myTree->childrenCount);
     //ParseTree* treeCopy = duplicateStruct(myTree);
 
-    correspondingCFGs = CFGInterfacer("input.txt", result.tree);
-    Subroutine** subroutines = malloc(sizeof(Subroutine*) * myTree->childrenCount);
-    subroutines=DefineSubprogram("input.txt",correspondingCFGs, result.tree);
+     controlFlowGraphBlock**  correspondingCFGs = CFGInterfacer("input.txt", result.tree);
+    Subroutine** subroutines = DefineSubprogram("input.txt",correspondingCFGs, result.tree);
     
 	ErrorInfo* current = result.errors;
 	while (current != NULL) {
-		printf("%s", current->message, " at line: ", current->line, " and pos: ", current->position);
+		printf("%s %s %s %s %s ", current->message, " at line: ", current->line, " and pos: ", current->position);
 			current = current->next;
 	}
 	freeErrorInfo(result.errors);
