@@ -187,6 +187,16 @@ typedef struct Stack {
     int capacity;                   // Capacity of the stack
 } Stack;
 
+typedef struct callGraph {
+    struct controlFlowGraphBlock* node;
+    struct controlFlowGraphBlock** calledProcedures;
+    int cnt;
+}callGraph;
+void insertCG(controlFlowGraphBlock* called);
+void printCallGraph(char* fileName);
+controlFlowGraphBlock* FindCFG(char* funcName);
+
+callGraph* CreateCGNode(controlFlowGraphBlock* cfg);
 // Function to create a stack
 Stack* createStack();
 // Function to check if the stack is empty

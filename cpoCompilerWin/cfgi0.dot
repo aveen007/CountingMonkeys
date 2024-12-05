@@ -4,51 +4,7 @@ ranksep=.4;
 bgcolor="lightgrey";  node [shape=box, fixedsize=false, fontsize=12, fontname="Helvetica-bold", fontcolor="blue"
 width=.25, height=.25, color="black", fillcolor="white", style="filled, solid, bold"];
 
-edge [arrowsize=.5, color="black", style="bold"]    n0000120BA4EA34D0 [label="BaseBlock\n OT: [ =( 2 ,  sum)]
-OT: [ =( 0 ,  i)]
-OT: [ processWhile( 1 ,  2)]
-"]
-    n0000120BA4EA35D0 [label="IfBlock\n OT: [ <( 9 ,  i)]
-"]
-    n0000120BA4EA34D0 -> n0000120BA4EA35D0
-    n0000120BA4EA35D0 -> n0000120BA4EA3610 [label="True" color="green"]
-    n0000120BA4EA3610 [label="ThenBlock\n OT: [ =( +( i ,  sum) ,  sum)]
-OT: [ =( +( 1 ,  i) ,  i)]
-"]
-    n0000120BA4EA35D0 -> n0000120BA4EA3650 [label="False" color="red"]
-    n0000120BA4EA3650 [label="ElseBlock\n OT: [ =( -( i ,  sum) ,  sum)]
-"]
-    n0000120BA4EA3690 [label="WhileBlock\n OT: [ >( 0 ,  i)]
-"]
-    n0000120BA4EA3650 -> n0000120BA4EA3690
-	   n0000120BA4EA3690 -> n0000120BA4EA36D0 [ label = "True" color="green"]
-    n0000120BA4EA36D0 [label="WhileBodyBlock\n "]
-    n0000120BA4EA3710 [label="BreakBlock\n "]
-    n0000120BA4EA36D0 -> n0000120BA4EA3710
-    n0000120BA4EA3710 -> n0000120BA4EA3690 [ color="blue"]
-	   n0000120BA4EA3690 -> n0000120BA4EA3850 [ label = "False" color="red"]
-    n0000120BA4EA3850 [label="WhileExitBlock\n "]
-    n0000120BA4EA3850 -> n0000120BA4EA3890 [color="blue"]
-    n0000120BA4EA3610 -> n0000120BA4EA3890 [ color="blue"]
-    n0000120BA4EA3890 [label="IfExitBlock\n "]
-    n0000120BA4EA38D0 [label="IfBlock\n OT: [ >( 0 ,  i)]
-"]
-    n0000120BA4EA3890 -> n0000120BA4EA38D0
-    n0000120BA4EA38D0 -> n0000120BA4EA3910 [label="True" color="green"]
-    n0000120BA4EA3910 [label="ThenBlock\n OT: [ =( +( i ,  sum) ,  sum)]
-OT: [ =( +( 1 ,  i) ,  i)]
-"]
-    n0000120BA4EA3910 -> n0000120BA4EA3950 [ color="blue"]
-    n0000120BA4EA3950 [label="IfExitBlock\n "]
-    n0000120BA4EA3990 [label="IfBlock\n OT: [ >( 0 ,  i)]
-"]
-    n0000120BA4EA3950 -> n0000120BA4EA3990
-    n0000120BA4EA3990 -> n0000120BA4EA39D0 [label="True" color="green"]
-    n0000120BA4EA39D0 [label="ThenBlock\n OT: [ =( +( i ,  sum) ,  sum)]
-OT: [ =( +( 1 ,  i) ,  i)]
-"]
-    n0000120BA4EA39D0 -> n0000120BA4EA3A10 [ color="blue"]
-    n0000120BA4EA3A10 [label="IfExitBlock\n "]
-    n0000120BA4EA3A50 [label="BaseBlock\n "]
-    n0000120BA4EA3A10 -> n0000120BA4EA3A50
+edge [arrowsize=.5, color="black", style="bold"]    n00001252932A34D0 [label="BaseBlock\n "]
+    n00001252932A3510 [label="BaseBlock\n "]
+    n00001252932A34D0 -> n00001252932A3510
 }

@@ -1,3 +1,5 @@
+function processWhile(i as int,j as int)
+end function
 function processArray(arr as int()) as int
     dim sum as int 
     dim i as int
@@ -28,6 +30,4 @@ function processArray(arr as int()) as int
             sum = sum + i;
             i = i + 1;
     end if
-end function
-function processWhile(i as int,j as int)
 end function

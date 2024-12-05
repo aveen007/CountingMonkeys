@@ -8,6 +8,11 @@
 
 # pragma region subprogram detail construction
 # pragma region create subroutine info and errors
+controlFlowGraphBlock** cfgs;
+controlFlowGraphBlock* current;
+callGraph* currentCG;
+callGraph** CG;
+int procedures;
 ErrorInfoCFG* errors;
 CfgsInfo* createCfgsInfo(ParseTree* ast) {
 	CfgsInfo* info = malloc(sizeof(CfgsInfo));
@@ -17,7 +22,15 @@ CfgsInfo* createCfgsInfo(ParseTree* ast) {
 }
 controlFlowGraphBlock** createCfgs(ParseTree* ast) {
 	controlFlowGraphBlock** cfgs = (controlFlowGraphBlock**)malloc(sizeof(controlFlowGraphBlock*) * ast->childrenCount);
+	CG = (callGraph**)malloc(sizeof(callGraph*) * ast->childrenCount);
+	procedures = 0;
+
 	return cfgs;
+}
+void insertCG(controlFlowGraphBlock * called) {
+	currentCG->cnt++;
+	currentCG->calledProcedures = realloc(currentCG->calledProcedures,sizeof(controlFlowGraphBlock*)*currentCG->cnt);
+	currentCG->calledProcedures[currentCG->cnt - 1] = called;
 }
 Subroutine** createSubroutines(ParseTree* ast) {
 	Subroutine** subroutines = (Subroutine**)malloc(sizeof(Subroutine*) * ast->childrenCount);
@@ -69,7 +82,6 @@ void addErrorCFG(ErrorInfoCFG** errors, ErrorInfoCFG* newError) {
 #pragma endregion
 
 
-
 Subroutine** DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, ParseTree* tree) {
 
 
@@ -100,9 +112,9 @@ Subroutine** DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, Pars
 							//char* temp = argsTree->children[j]->children[0]->token;
 							subprograms[i]->signatureDetails->arguments[j] = (ArgumentDef*)malloc(sizeof(ArgumentDef));
 							//if (temp) {
-								subprograms[i]->signatureDetails->arguments[j]->name = argsTree->children[j]->children[0]->token;
-								//setName(args[j]->name, name);
-							//}
+							subprograms[i]->signatureDetails->arguments[j]->name = argsTree->children[j]->children[0]->token;
+							//setName(args[j]->name, name);
+						//}
 
 							if (argsTree->childrenCount > 1) {
 
@@ -117,7 +129,6 @@ Subroutine** DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, Pars
 										//3. use a function that is not initialized (not in the cfg already)
 								// return the errors as well 
 							//TODO:4 call graph
-							//TODO:5 the tree can have more than two operands aka callOfIndex
 
 							///Questions
 							//when should we capture the error 
@@ -273,24 +284,24 @@ char* printTree(char* treeText, OTNode* node) {
 		char* newText3 = mystrcat(treeText, node->value.operator);
 		treeText = (char*)realloc(treeText, stringLen(newText3) * sizeof(char));
 		treeText = newText3;
-		if (node->cntOperands!=0){
-		char* newText4 = mystrcat(treeText, "(");
-		treeText = (char*)realloc(treeText, stringLen(newText4) * sizeof(char));
-		treeText = newText4;
+		if (node->cntOperands != 0) {
+			char* newText4 = mystrcat(treeText, "(");
+			treeText = (char*)realloc(treeText, stringLen(newText4) * sizeof(char));
+			treeText = newText4;
 
-		char* newText40 = mystrcat(treeText, "\0");
-		treeText = (char*)realloc(treeText, stringLen(newText40) * sizeof(char));
-		treeText = newText40;
-		for (int i = 0; i < node->cntOperands; i++) {
-			treeText = printTree(treeText, node->operands[i]);
-			if (i != node->cntOperands - 1) {
-				char* newText5 = mystrcat(treeText, " , ");
-				treeText = (char*)realloc(treeText, stringLen(newText5) * sizeof(char));
-				treeText = newText5;
+			char* newText40 = mystrcat(treeText, "\0");
+			treeText = (char*)realloc(treeText, stringLen(newText40) * sizeof(char));
+			treeText = newText40;
+			for (int i = 0; i < node->cntOperands; i++) {
+				treeText = printTree(treeText, node->operands[i]);
+				if (i != node->cntOperands - 1) {
+					char* newText5 = mystrcat(treeText, " , ");
+					treeText = (char*)realloc(treeText, stringLen(newText5) * sizeof(char));
+					treeText = newText5;
+				}
+
+
 			}
-
-
-		}
 			char* newText6 = mystrcat(treeText, ")");
 			treeText = (char*)realloc(treeText, stringLen(newText6) * sizeof(char));
 			treeText = newText6;
@@ -317,17 +328,25 @@ varDeclaration* CreateVarDeclaration(char** Ids, Type* type) {
 OTNode* HandleOperationsTree(ParseTree* base) {
 	OTNode* OT;
 	if (strcmp(base->token, "CallOrIndexer") == 0) {
-		 OT = createOperatorNode(base->children[1]->token);
 
+		OT = createOperatorNode(base->children[1]->token);
+
+		controlFlowGraphBlock* calledFunc = FindCFG(base->children[1]->token);
+		if (calledFunc != NULL) {
+			insertCG(calledFunc);
+		}
+		else {
+			ErrorInfoCFG* undefined = createErrorInfoNodeCFG("call to undefined function", base->line, base->position);
+		}
 		base = base->children[0];
 	}
 	else {
-		 OT = createOperatorNode(base->token);
+		OT = createOperatorNode(base->token);
 	}
 	OT->cntOperands = base->childrenCount;
-	OT->operands = malloc(sizeof(OTNode*)*base->childrenCount);
-	
-	for (int i=0;i<OT->cntOperands;i++){
+	OT->operands = malloc(sizeof(OTNode*) * base->childrenCount);
+
+	for (int i = 0; i < OT->cntOperands; i++) {
 
 		OT->operands[i] = HandleOperationsTree(base->children[i]);
 	}
@@ -445,6 +464,28 @@ void deleteStack(Stack* stack) {
 
 #pragma endregion
 
+callGraph* CreateCGNode(controlFlowGraphBlock* cfg) {
+	callGraph* CGI = malloc(sizeof(callGraph));
+	CGI->node = cfg;
+	CGI->calledProcedures = malloc(sizeof(controlFlowGraphBlock*));
+	CGI->cnt = 0;
+	return CGI;
+}
+controlFlowGraphBlock* FindCFG(char* funcName) {
+	controlFlowGraphBlock* found = NULL;
+	for (int i = 0; i < procedures; i++) {
+
+		if (strcmp(cfgs[i]->ast->children[0]->children[0]->token, funcName)==0);
+		{
+			//printf(cfgs[i]->ast->children[0]->children[0]->token);
+			found = cfgs[i];
+			return found;
+		}
+	}
+	return;
+
+
+}
 
 #pragma region creating the CFG for each subprogram
 
@@ -453,21 +494,27 @@ CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree) {
 	if (tree) {
 		tree = tree->children[0];
 		CfgsInfo* cfgsInfo = createCfgsInfo(tree);
-		controlFlowGraphBlock** cfgs = cfgsInfo->cfgs;
+		cfgs = cfgsInfo->cfgs;
 
 		for (int i = 0; i < tree->childrenCount; i++) {
-			// here I am just creating the start block
+			procedures++;
 			controlFlowGraphBlock* cfg = createCFGBlock(tree->children[i], BaseBlock);
-			ConstructCFG(cfg, tree->children[i],cfgsInfo->errors);
+			cfgs[i] = cfg;
+			current = cfg;
+			CG[i] = CreateCGNode(cfg);
+			currentCG = CG[i];
+			// here I am just creating the start block
+			ConstructCFG(cfg, tree->children[i], cfgsInfo->errors);
 			controlFlowGraphBlock* cfgEnd = createCFGBlock(tree->children[i], BaseBlock);
 			insertCFGBlock(cfg, cfgEnd);
-			cfgs[i] = cfg;
+
+
 			//========================================
 			char* filename;
 			size_t filename_size = (size_t)snprintf(NULL, 0, "cfgi%d.dot", i);
 			filename = malloc(filename_size + 1);
 			snprintf(filename, filename_size + 1, "cfgi%d.dot", i);
-			CFGToDotFile(cfgs[i], filename,cfgsInfo->errors);
+			CFGToDotFile(cfgs[i], filename, cfgsInfo->errors);
 			// Prepare output picture file name
 			size_t pngFileSize = (size_t)snprintf(NULL, 0, "../cpoCompilerWin/%s.png", filename);
 			char* pngFilename = malloc(pngFileSize + 1); // Adjust size according to your needs
@@ -476,15 +523,32 @@ CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree) {
 			char* makeTreeGraph = malloc(makeTreeSize + 1); // Increase size for the command string
 			snprintf(makeTreeGraph, makeTreeSize + 1, "dot -Tpng %s -o %s", filename, pngFilename);
 			system(makeTreeGraph);
+
 			///=======================================================================================
 
 		}
+			char* filename1;
+			size_t filename_size1 = (size_t)snprintf(NULL, 0, "CG%s.dot", fileName);
+			filename1 = malloc(filename_size1 + 2);
+			snprintf(filename1, filename_size1 + 2, "CG.%s.dot",fileName);
+			printCallGraph(filename1);
+
+			size_t pngFileSize1 = (size_t)snprintf(NULL, 0, "../cpoCompilerWin/%s.png", filename1);
+			char* pngFilename1 = malloc(pngFileSize1 + 1); // Adjust size according to your needs
+			snprintf(pngFilename1, pngFileSize1 + 1, "../cpoCompilerWin/%s.png", filename1);
+			size_t makeTreeSize1 = (size_t)snprintf(NULL, 0, "dot -Tpng %s -o %s", filename1, pngFilename1);
+			char* makeTreeGraph1 = malloc(makeTreeSize1 + 1); // Increase size for the command string
+			snprintf(makeTreeGraph1, makeTreeSize1 + 1, "dot -Tpng %s -o %s", filename1, pngFilename1);
+
+
+			system(makeTreeGraph1);
 		cfgsInfo->errors = errors;
 		return cfgsInfo;
 	}
 	return;
 }
-cfgBlockContent* createInstructionsVarStatement(ParseTree* ast ) {
+
+cfgBlockContent* createInstructionsVarStatement(ParseTree* ast) {
 	// add a var instruction
 	cfgBlockContent* content = malloc(sizeof(cfgBlockContent));
 	char** ids = (char*)malloc(sizeof(char*) * ast->children[0]->childrenCount);
@@ -498,7 +562,7 @@ cfgBlockContent* createInstructionsVarStatement(ParseTree* ast ) {
 	content->varDec = varDecl;  // Assign var declaration to the union
 	return content;
 }
-cfgBlockContent* createInstructionsExpression(ParseTree* ast ) {
+cfgBlockContent* createInstructionsExpression(ParseTree* ast) {
 	// add an operations tree
 	cfgBlockContent* content = malloc(sizeof(cfgBlockContent));
 
@@ -510,7 +574,7 @@ cfgBlockContent* createInstructionsExpression(ParseTree* ast ) {
 
 }
 int ImWhile = 0;
-controlFlowGraphBlock* ConstructCFGIfStatement(ParseTree* tree ) {
+controlFlowGraphBlock* ConstructCFGIfStatement(ParseTree* tree) {
 	controlFlowGraphBlock* IfStatementCfg = createCFGBlock(tree, IfBlock);
 	InsertInstruction(IfStatementCfg->instructions, tree->children[0]);
 
@@ -518,14 +582,14 @@ controlFlowGraphBlock* ConstructCFGIfStatement(ParseTree* tree ) {
 
 	for (int j = 0; j < tree->children[1]->childrenCount; j++) {
 
-		ConstructCFG(thenBlock, tree->children[1]->children[j] );
+		ConstructCFG(thenBlock, tree->children[1]->children[j]);
 	}
 	insertCFGBlock(IfStatementCfg, thenBlock);
 
 	if (tree->childrenCount > 2) {
 		controlFlowGraphBlock* elseBlock = createCFGBlock(tree->children[2], ElseBlock);
 		for (int j = 0; j < tree->children[2]->childrenCount; j++) {
-			ConstructCFG(elseBlock, tree->children[2]->children[j] );
+			ConstructCFG(elseBlock, tree->children[2]->children[j]);
 		}
 		insertCFGBlock(IfStatementCfg, elseBlock);
 		controlFlowGraphBlock* ifExitBlock = createCFGBlock(tree->children[2], IfExitBlock);
@@ -538,7 +602,7 @@ controlFlowGraphBlock* ConstructCFGIfStatement(ParseTree* tree ) {
 	return IfStatementCfg;
 
 }
-controlFlowGraphBlock* ConstructCFGWhileStatement(ParseTree* tree ) {
+controlFlowGraphBlock* ConstructCFGWhileStatement(ParseTree* tree) {
 	// initialize a new cfg node
 
 	controlFlowGraphBlock* WhileBlockCfg = createCFGBlock(tree, WhileBlock);
@@ -546,7 +610,7 @@ controlFlowGraphBlock* ConstructCFGWhileStatement(ParseTree* tree ) {
 	controlFlowGraphBlock* whileBodyBlock = createCFGBlock(tree, WhileBodyBlock);
 
 	for (int j = 1; j < tree->childrenCount; j++) {
-		ConstructCFG(whileBodyBlock, tree->children[j], WhileBodyBlock );
+		ConstructCFG(whileBodyBlock, tree->children[j], WhileBodyBlock);
 	}
 	controlFlowGraphBlock* exitBlock = createCFGBlock(tree, WhileExitBlock);
 	insertCFGBlock(WhileBlockCfg, whileBodyBlock);
@@ -554,17 +618,17 @@ controlFlowGraphBlock* ConstructCFGWhileStatement(ParseTree* tree ) {
 	ImWhile = 0;
 	return WhileBlockCfg;
 }
-void ConstructCFG(controlFlowGraphBlock* cfg, ParseTree* tree ) {
+void ConstructCFG(controlFlowGraphBlock* cfg, ParseTree* tree) {
 
 	controlFlowGraphBlock* next;
 	if (strcmp(tree->token, "IfStatement") == 0)
 	{
-		next = ConstructCFGIfStatement(tree );
+		next = ConstructCFGIfStatement(tree);
 		insertCFGBlock(cfg, next);
 	}
 	else if (strcmp(tree->token, "WhileStatement") == 0) {
 		ImWhile = 1;
-		next = ConstructCFGWhileStatement(tree );
+		next = ConstructCFGWhileStatement(tree);
 		insertCFGBlock(cfg, next);
 	}
 	else if (strcmp(tree->token, "BreakStatement") == 0) {
@@ -581,7 +645,7 @@ void ConstructCFG(controlFlowGraphBlock* cfg, ParseTree* tree ) {
 		{
 			if (strcmp(tree->children[i]->token, "FuncSignature") == 0)
 				continue;
-			ConstructCFG(cfg, tree->children[i] );
+			ConstructCFG(cfg, tree->children[i]);
 		}
 	}
 }
@@ -592,7 +656,7 @@ void ConstructCFG(controlFlowGraphBlock* cfg, ParseTree* tree ) {
 
 #pragma region  writing the cfgs to the .dot
 
-char* writeDotGraphOperationsTree(controlFlowGraphBlock* cfg, FILE* file ) {
+char* writeDotGraphOperationsTree(controlFlowGraphBlock* cfg, FILE* file) {
 
 	char* treeText = (char*)malloc(sizeof(char));//OT: [ ]\n
 	treeText[0] = '\0';
@@ -617,7 +681,7 @@ char* writeDotGraphOperationsTree(controlFlowGraphBlock* cfg, FILE* file ) {
 	}
 	return treeText;
 }
-controlFlowGraphBlock* writeDotGraphIfStatement(Stack* openNodes, controlFlowGraphBlock* node, FILE* file ) {
+controlFlowGraphBlock* writeDotGraphIfStatement(Stack* openNodes, controlFlowGraphBlock* node, FILE* file) {
 
 	node = pop(openNodes);
 	// Determine if there are more than one out nodes
@@ -631,13 +695,13 @@ controlFlowGraphBlock* writeDotGraphIfStatement(Stack* openNodes, controlFlowGra
 	controlFlowGraphBlock* ThenNode = node->nodes[0];
 	fprintf(file, "    n%p -> n%p [label=\"True\" color=\"green\"]\n", node, ThenNode);
 	push(openNodes, ThenNode);
-	controlFlowGraphBlock* finalOfThen = writeDotGraph(openNodes, file );
+	controlFlowGraphBlock* finalOfThen = writeDotGraph(openNodes, file);
 	if (isElseNode == 1) {
 		// This is the "else" case
 		controlFlowGraphBlock* ElseNode = node->nodes[1];
 		fprintf(file, "    n%p -> n%p [label=\"False\" color=\"red\"]\n", node, ElseNode);
 		push(openNodes, ElseNode);
-		controlFlowGraphBlock* finalOfElse = writeDotGraph(openNodes, file );
+		controlFlowGraphBlock* finalOfElse = writeDotGraph(openNodes, file);
 		IfExitNode = node->nodes[2];
 		fprintf(file, "    n%p -> n%p [color=\"blue\"]\n", finalOfElse, IfExitNode);
 	}
@@ -649,11 +713,11 @@ controlFlowGraphBlock* writeDotGraphIfStatement(Stack* openNodes, controlFlowGra
 
 
 	fprintf(file, "    n%p ", IfExitNode);
-	printBlockToFile(BlockType_STRING[IfExitBlock], file, IfExitNode );
+	printBlockToFile(BlockType_STRING[IfExitBlock], file, IfExitNode);
 	push(openNodes, IfExitNode);
 	return IfExitNode;
 }
-controlFlowGraphBlock* writeDotGraphWhileStatement(Stack* openNodes, controlFlowGraphBlock* node, FILE* file ) {
+controlFlowGraphBlock* writeDotGraphWhileStatement(Stack* openNodes, controlFlowGraphBlock* node, FILE* file) {
 
 	node = pop(openNodes);
 	controlFlowGraphBlock* Father = pop(openNodes);
@@ -664,21 +728,21 @@ controlFlowGraphBlock* writeDotGraphWhileStatement(Stack* openNodes, controlFlow
 
 	controlFlowGraphBlock* exitWhilebody = node->nodes[1];
 	push(openNodes, whilebody);
-	controlFlowGraphBlock* FinalOfWhilebody = writeDotGraph(openNodes, file );
+	controlFlowGraphBlock* FinalOfWhilebody = writeDotGraph(openNodes, file);
 	fprintf(file, "    n%p -> n%p [ color=\"blue\"]\n", FinalOfWhilebody, node);
 	fprintf(file, "	   n%p -> n%p [ label = \"False\" color=\"red\"]\n", node, exitWhilebody);
 
 
 	fprintf(file, "    n%p ", exitWhilebody);
-	printBlockToFile(BlockType_STRING[WhileExitBlock], file, exitWhilebody );
+	printBlockToFile(BlockType_STRING[WhileExitBlock], file, exitWhilebody);
 	push(openNodes, exitWhilebody);
 	return exitWhilebody;
 
 }
-controlFlowGraphBlock* writeDotGraphBaseStatement(Stack* openNodes, controlFlowGraphBlock* node, FILE* file ) {
+controlFlowGraphBlock* writeDotGraphBaseStatement(Stack* openNodes, controlFlowGraphBlock* node, FILE* file) {
 	if (node->outNodeCount <= 0) {
 		fprintf(file, "    n%p ", node);
-		printBlockToFile(BlockType_STRING[node->blocktype], file, node );
+		printBlockToFile(BlockType_STRING[node->blocktype], file, node);
 		return node;
 	}
 	controlFlowGraphBlock* outBlock = NULL;
@@ -686,8 +750,8 @@ controlFlowGraphBlock* writeDotGraphBaseStatement(Stack* openNodes, controlFlowG
 	{
 		outBlock = node->nodes[i]; // Assuming the node holds a pointer to a block
 		push(openNodes, outBlock);
-		outBlock = writeDotGraph(openNodes, file );
-		if (outBlock ->blocktype==BreakBlock) {
+		outBlock = writeDotGraph(openNodes, file);
+		if (outBlock->blocktype == BreakBlock) {
 			return outBlock;
 		}
 
@@ -696,10 +760,10 @@ controlFlowGraphBlock* writeDotGraphBaseStatement(Stack* openNodes, controlFlowG
 
 
 }
-void printBlockToFile(char* blockType, FILE* file, controlFlowGraphBlock* node ) {
+void printBlockToFile(char* blockType, FILE* file, controlFlowGraphBlock* node) {
 	fprintf(file, "[label=\"%s\\n ", blockType);
 	if (node->instructions->size > 0) {
-		char* treeText = writeDotGraphOperationsTree(node, file );
+		char* treeText = writeDotGraphOperationsTree(node, file);
 		fprintf(file, "%s\"]\n", treeText);
 	}
 	else {
@@ -707,21 +771,21 @@ void printBlockToFile(char* blockType, FILE* file, controlFlowGraphBlock* node )
 
 	}
 }
-controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file ) {
+controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file) {
 
 	// Print the current block
 	if (isEmpty(openNodes) || !file) { return; }
 	controlFlowGraphBlock* cfg = peek(openNodes);
 	fprintf(file, "    n%p ", cfg);
-	printBlockToFile(BlockType_STRING[cfg->blocktype], file, cfg );
+	printBlockToFile(BlockType_STRING[cfg->blocktype], file, cfg);
 
 	switch (cfg->blocktype)
 	{
 	case IfBlock:
-		writeDotGraphIfStatement(openNodes, cfg, file );
+		writeDotGraphIfStatement(openNodes, cfg, file);
 		break;
 	case WhileBlock:
-		writeDotGraphWhileStatement(openNodes, cfg, file );
+		writeDotGraphWhileStatement(openNodes, cfg, file);
 		break;
 	case BreakBlock:
 		pop(openNodes);
@@ -738,9 +802,9 @@ controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file ) {
 				controlFlowGraphBlock* Father = pop(openNodes);
 				fprintf(file, "    n%p -> n%p\n", Father, cfg);
 			}
-				return cfg;
+			return cfg;
 		}
-		writeDotGraphBaseStatement(openNodes, cfg, file );
+		writeDotGraphBaseStatement(openNodes, cfg, file);
 
 		break;
 	default:
@@ -748,13 +812,13 @@ controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file ) {
 			pop(openNodes);
 			return cfg;
 		}
-		writeDotGraphBaseStatement(openNodes, cfg, file );
+		writeDotGraphBaseStatement(openNodes, cfg, file);
 		break;
 	}
 }
 
 
-void CFGToDotFile(controlFlowGraphBlock* cfg, char* fileName ) {
+void CFGToDotFile(controlFlowGraphBlock* cfg, char* fileName) {
 	FILE* file = fopen(fileName, "w");
 	if (!file) {
 		perror("Error opening file");
@@ -770,13 +834,44 @@ void CFGToDotFile(controlFlowGraphBlock* cfg, char* fileName ) {
 	fprintf(file, "% s", graphSettings);
 	Stack* openNodes = createStack();
 	push(openNodes, cfg);
-	writeDotGraph(openNodes, file );
+	writeDotGraph(openNodes, file);
 	// Write each control flow graph to the dot file
 	fprintf(file, "}\n");
 
 
 
 	fclose(file);
+}
+void printCallGraph(char * fileName) {
+	FILE* file = fopen(fileName, "w");
+	if (!file) {
+		perror("Error opening file");
+		return;
+	}
+	fprintf(file, "digraph G {\n");
+	const char* graphSettings = "ordering=out;\n"
+		"ranksep=.4;\n"
+		"bgcolor=\"lightgrey\";  node [shape=box, fixedsize=false, fontsize=12, fontname=\"Helvetica-bold\", fontcolor=\"blue\"\n"
+		"width=.25, height=.25, color=\"black\", fillcolor=\"white\", style=\"filled, solid, bold\"];\n"
+		"\n"
+		"edge [arrowsize=.5, color=\"black\", style=\"bold\"]\n";
+	fprintf(file, "% s", graphSettings);
+	// Write each control flow graph to the dot file
+
+	for (int i = 0; i < procedures; i++) {
+		
+		fprintf(file, "    n%p ", CG[i]->node);
+
+		fprintf(file, "[label=\"%s\\n \"]\n",CG[i]->node->ast->children[0]->children[0]->token);
+		
+		
+		for (int j = 0; j < CG[i]->cnt; j++) {
+			fprintf(file, "    n%p -> n%p\n", CG[i]->node, CG[i]->calledProcedures[j]);
+		}
+
+	}
+	fprintf(file, "}\n");
+
 }
 // some helper functions with strings
 char* mystrcat(const char* str1, const char* str2)

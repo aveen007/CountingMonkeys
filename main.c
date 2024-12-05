@@ -33,6 +33,18 @@ int main(int argc, char** argv) {
     for (int i = 0; i < numberOfFiles; i++) {
   
     CfgsInfo*  correspondingCFGs = CFGInterfacer(files[i]->name, files[i]->ast);
+    ErrorInfoCFG* current = correspondingCFGs->errors;
+    while (current != NULL) {
+        printf("%s %s %d %s %d ", current->message, " at line: ", current->line, " and pos: ", current->position);
+        break;
+      /*  if (current->next != NULL) {
+        current = current->next;
+
+      }
+        else {
+            break;
+        }*/
+    }
     Subroutine** subroutines = DefineSubprogram(files[i]->name,correspondingCFGs->cfgs, files[i]->ast);
     free(files[i]->ast);
     free(files[i]->name);
