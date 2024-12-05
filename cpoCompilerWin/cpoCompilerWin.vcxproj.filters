@@ -44,9 +44,9 @@
     <None Include="..\MyGrammar.tokens" />
     <None Include="packages.config" />
     <None Include="tree.dot" />
-    <None Include="cfgi0.dot" />
-    <None Include="cfgi1.dot" />
     <None Include="CG.input.txt.dot" />
+    <None Include="input.txt.processArray.dot" />
+    <None Include="input.txt.processWhile.dot" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\MyGrammarLexer.h">
@@ -71,16 +71,16 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="cfgi0.dot.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="output.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="cfgi1.dot.png">
+    <Image Include="CG.input.txt.dot.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="CG.input.txt.dot.png">
+    <Image Include="input.txt.processArray.dot.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="input.txt.processWhile.dot.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

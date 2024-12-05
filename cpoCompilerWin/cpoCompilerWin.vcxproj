@@ -143,9 +143,9 @@
   <ItemGroup>
     <None Include="..\generate.bat" />
     <None Include="..\MyGrammar.tokens" />
-    <None Include="cfgi0.dot" />
-    <None Include="cfgi1.dot" />
     <None Include="CG.input.txt.dot" />
+    <None Include="input.txt.processArray.dot" />
+    <None Include="input.txt.processWhile.dot" />
     <None Include="packages.config" />
     <None Include="tree.dot" />
   </ItemGroup>
@@ -162,9 +162,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="cfgi0.dot.png" />
-    <Image Include="cfgi1.dot.png" />
     <Image Include="CG.input.txt.dot.png" />
+    <Image Include="input.txt.processArray.dot.png" />
+    <Image Include="input.txt.processWhile.dot.png" />
     <Image Include="output.png" />
   </ItemGroup>
   <ItemGroup>
