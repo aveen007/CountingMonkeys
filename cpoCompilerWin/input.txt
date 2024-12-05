@@ -7,18 +7,22 @@ function processArray(arr as int()) as int
         sum = sum + i;
         i = i + 1;
     else
-    sum=sum-i;
+       sum=sum-i;
        while i>0
            if i>=sum then
-           i=i-1;
-           else
-           i=i+1;
+                  i=i-1;
+               else
+                   i=i+1;
            end if 
        wend
     end if
    
    
-     if i > 0 then
+    if i > 0 then
+            sum = sum + i;
+            i = i + 1;
+    end if
+    if i > 0 then
             sum = sum + i;
             i = i + 1;
     end if

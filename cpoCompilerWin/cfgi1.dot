@@ -4,7 +4,7 @@ ranksep=.4;
 bgcolor="lightgrey";  node [shape=box, fixedsize=false, fontsize=12, fontname="Helvetica-bold", fontcolor="blue"
 width=.25, height=.25, color="black", fillcolor="white", style="filled, solid, bold"];
 
-edge [arrowsize=.5, color="black", style="bold"]    n0000129252523A50 [label="BaseBlock\n "]
-    n0000129252523A50 -> n0000129252523A90
-    n0000129252523A90 [label="BaseBlock\n "]
+edge [arrowsize=.5, color="black", style="bold"]    n000012A765F24B10 [label="BaseBlock\n "]
+    n000012A765F24B50 [label="BaseBlock\n "]
+    n000012A765F24B10 -> n000012A765F24B50
 }

@@ -30,6 +30,7 @@ BuiltinArray;
 CustomArray;
 ListExpr;
 ElseStatement;
+ThenStatement;
 UntilExpr;
 ListIdentifier;
 Unary;
@@ -53,7 +54,7 @@ statement:
     | breakStatement
     | expressionStatement;
 varStatement: 'dim' listIdentifier? 'as' element-> ^(VarStatement listIdentifier? element); // for static typing
-ifStatement: 'if' expr 'then' statement* elseStatement? 'end' 'if'-> ^(IfStatement ^(Expression expr) statement* elseStatement?);
+ifStatement: 'if' expr 'then' statement* elseStatement? 'end' 'if'-> ^(IfStatement ^(Expression expr) ^(ThenStatement statement*) elseStatement?);
 elseStatement
 	:	 ('else' statement*)->^( ElseStatement statement*);
 whileStatement: 'while' expr statement* 'wend'-> ^(WhileStatement ^(Expression expr) statement*);

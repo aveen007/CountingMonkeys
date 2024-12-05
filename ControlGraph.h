@@ -23,17 +23,29 @@ typedef enum {
 } SimpleType;
 
 // Enum representing the different types of control flow graph blocks.
+
 typedef enum BlockType {
-    BaseBlock,    ///< A basic block, no special control flow.
-    WhileBlock,   ///< A block representing a while loop.
-    IfBlock,      ///< A block representing an if statement.
-    BreakBlock,   ///< A block representing a break statement.
+    BaseBlock,   
+    WhileBlock,  
+    IfBlock,     
+    BreakBlock,  
     ElseBlock,
     ThenBlock,
+    IfExitBlock,
     WhileBodyBlock,
     WhileExitBlock
 } BlockType;
-
+static const char* BlockType_STRING[] = {
+    "BaseBlock",
+    "WhileBlock",
+    "IfBlock",
+    "BreakBlock",
+    "ElseBlock",
+    "ThenBlock",
+    "IfExitBlock",
+    "WhileBodyBlock",
+    "WhileExitBlock"
+};
 typedef enum {
     NODE_TYPE_OPERATOR,
     NODE_TYPE_OPERAND
@@ -183,12 +195,28 @@ void setName(ArgumentDef* arg, char* name);
 
 // Control flow graph functions
 void insertCFGBlock(controlFlowGraphBlock* nodes, controlFlowGraphBlock* node);
-controlFlowGraphBlock** createCFGBlock(controlFlowGraphBlock* block);
-void InsertInstruction(Instructions* instructions, cfgBlockContent NewContent);
+controlFlowGraphBlock* createCFGBlock( ParseTree * ast);
+void InsertInstruction(Instructions* instructions, ParseTree * ast);
 Instructions* CreateInstructions( );
+cfgBlockContent* createInstructionsVarStatement(ParseTree* ast);
+cfgBlockContent *createInstructionsExpression(ParseTree* ast);
 Subroutine ** DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs,ParseTree* tree);
-void ConstructCFG(controlFlowGraphBlock* cfg, ParseTree* tree, BlockType blockType);
+
+
+
+
+controlFlowGraphBlock* ConstructCFGWhileStatement(ParseTree* tree);
+controlFlowGraphBlock* ConstructCFGIfStatement(ParseTree* tree);
+void ConstructCFG(controlFlowGraphBlock* cfg, ParseTree* tree);
+
+
 controlFlowGraphBlock** CFGInterfacer(char* fileName, ParseTree* tree);
+char* writeDotGraphOperationsTree(controlFlowGraphBlock* cfg, FILE* file);
+controlFlowGraphBlock* writeDotGraphIfStatement(Stack* openNodes, controlFlowGraphBlock* node, FILE* file);
+controlFlowGraphBlock* writeDotGraphWhileStatement(Stack* openNodes, controlFlowGraphBlock* node, FILE* file);
+controlFlowGraphBlock* writeDotGraphBaseStatement(Stack* openNodes, controlFlowGraphBlock* node, FILE* file);
+void printBlockToFile(char* blockType, FILE* file, controlFlowGraphBlock* node);
+
 controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file);
 void CFGToDotFile(controlFlowGraphBlock* cfgs, char* fileName);
 
