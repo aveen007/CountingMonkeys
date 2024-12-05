@@ -511,9 +511,9 @@ CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree) {
 
 			//========================================
 			char* filename;
-			size_t filename_size = (size_t)snprintf(NULL, 0, "cfgi%d.dot", i);
+			size_t filename_size = (size_t)snprintf(NULL, 0, "%s.%s.dot", fileName,current->ast->children[0]->children[0]->token);
 			filename = malloc(filename_size + 1);
-			snprintf(filename, filename_size + 1, "cfgi%d.dot", i);
+			snprintf(filename, filename_size + 1, "%s.%s.dot", fileName, current->ast->children[0]->children[0]->token);
 			CFGToDotFile(cfgs[i], filename, cfgsInfo->errors);
 			// Prepare output picture file name
 			size_t pngFileSize = (size_t)snprintf(NULL, 0, "../cpoCompilerWin/%s.png", filename);
