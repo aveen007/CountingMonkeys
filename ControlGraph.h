@@ -125,8 +125,9 @@ typedef struct OTNode {
         char* operator; // char to represent operators (+, -, *, /)
         char* operand;   // int to represent numeric values
     } value;          // Union to hold either an operator or an operand
-    struct OTNode* left;  // Pointer to the left child
-    struct OTNode* right; // Pointer to the right child
+    struct OTNode** operands;  // Pointer to the left child
+    int cntOperands;
+    //struct OTNode* right; // Pointer to the right child
 } OTNode;
 
 // Structure to hold control flow graph block content

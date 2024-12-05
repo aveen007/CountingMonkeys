@@ -116,7 +116,6 @@ Subroutine** DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, Pars
 										//2. assign into a literal, (literal is an lvalue in code)
 										//3. use a function that is not initialized (not in the cfg already)
 								// return the errors as well 
-							//TODO:3 check the callOfIndex
 							//TODO:4 call graph
 							//TODO:5 the tree can have more than two operands aka callOfIndex
 
@@ -232,8 +231,9 @@ OTNode* createOperatorNode(char* operator) {
 	OTNode* newNode = (OTNode*)malloc(sizeof(OTNode));
 	newNode->type = NODE_TYPE_OPERATOR;
 	newNode->value.operator = operator;
-	newNode->left = NULL;
-	newNode->right = NULL;
+	newNode->operands = NULL;
+	newNode->cntOperands = 0;
+
 	return newNode;
 }
 
@@ -242,34 +242,20 @@ OTNode* createOperandNode(char* operand) {
 	OTNode* newNode = (OTNode*)malloc(sizeof(OTNode));
 	newNode->type = NODE_TYPE_OPERAND;
 	newNode->value.operand = operand;
-	newNode->left = NULL;
-	newNode->right = NULL;
+	newNode->operands = NULL;
+	newNode->cntOperands = 0;
+
 	return newNode;
 }
 
 // Function to free the operations tree
 void freeTree(OTNode* root) {
 	if (root) {
-		freeTree(root->left);
-		freeTree(root->right);
+		freeTree(root->operands);
 		free(root);
 	}
 }
-size_t estimatedSize(OTNode* node) {
-	if (node == NULL) {
-		return 1; // For empty string
-	}
-	size_t size = 0;
-	if (node->type == NODE_TYPE_OPERATOR) {
-		size += strlen(node->value.operator) + 3; // operator + " , " + parentheses
-		size += estimatedSize(node->left);
-		size += estimatedSize(node->right);
-	}
-	else {
-		size += strlen(node->value.operand);
-	}
-	return size;
-}
+
 
 // Function to print the tree in a readable format (in-order traversal)
 char* printTree(char* treeText, OTNode* node) {
@@ -287,27 +273,24 @@ char* printTree(char* treeText, OTNode* node) {
 		char* newText3 = mystrcat(treeText, node->value.operator);
 		treeText = (char*)realloc(treeText, stringLen(newText3) * sizeof(char));
 		treeText = newText3;
-		if (node->left != NULL && node->right != NULL) {
-			char* newText4 = mystrcat(treeText, "(");
-			treeText = (char*)realloc(treeText, stringLen(newText4) * sizeof(char));
-			treeText = newText4;
+		if (node->cntOperands!=0){
+		char* newText4 = mystrcat(treeText, "(");
+		treeText = (char*)realloc(treeText, stringLen(newText4) * sizeof(char));
+		treeText = newText4;
 
-			char* newText40 = mystrcat(treeText, "\0");
-			treeText = (char*)realloc(treeText, stringLen(newText40) * sizeof(char));
-			treeText = newText40;
+		char* newText40 = mystrcat(treeText, "\0");
+		treeText = (char*)realloc(treeText, stringLen(newText40) * sizeof(char));
+		treeText = newText40;
+		for (int i = 0; i < node->cntOperands; i++) {
+			treeText = printTree(treeText, node->operands[i]);
+			if (i != node->cntOperands - 1) {
+				char* newText5 = mystrcat(treeText, " , ");
+				treeText = (char*)realloc(treeText, stringLen(newText5) * sizeof(char));
+				treeText = newText5;
+			}
 
-			// Print the left child
-			treeText = printTree(treeText, node->left);
 
-			// Add operator
-			char* newText5 = mystrcat(treeText, " , ");
-			treeText = (char*)realloc(treeText, stringLen(newText5) * sizeof(char));
-			treeText = newText5;
-
-			//strcat(treeText, " , ");
-
-			// Print the right child
-			treeText = printTree(treeText, node->right);
+		}
 			char* newText6 = mystrcat(treeText, ")");
 			treeText = (char*)realloc(treeText, stringLen(newText6) * sizeof(char));
 			treeText = newText6;
@@ -332,10 +315,21 @@ varDeclaration* CreateVarDeclaration(char** Ids, Type* type) {
 
 }
 OTNode* HandleOperationsTree(ParseTree* base) {
-	OTNode* OT = createOperatorNode(base->token);
-	if (base->childrenCount > 0) {
-		OT->left = HandleOperationsTree(base->children[1]);
-		OT->right = HandleOperationsTree(base->children[0]);
+	OTNode* OT;
+	if (strcmp(base->token, "CallOrIndexer") == 0) {
+		 OT = createOperatorNode(base->children[1]->token);
+
+		base = base->children[0];
+	}
+	else {
+		 OT = createOperatorNode(base->token);
+	}
+	OT->cntOperands = base->childrenCount;
+	OT->operands = malloc(sizeof(OTNode*)*base->childrenCount);
+	
+	for (int i=0;i<OT->cntOperands;i++){
+
+		OT->operands[i] = HandleOperationsTree(base->children[i]);
 	}
 	return OT;
 
