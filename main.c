@@ -12,23 +12,35 @@ int main(int argc, char** argv) {
 
 
 	//char* testText = "function a2 ( a1, a2 as bool (bool)) end function";
-    char* testText = read_file_to_string("input.txt");
-	ParseResult result = parse(testText, strlen(testText), "input.txt");
-    ParseTree * myTree = result.tree->children[0]->children[0];
+    int numberOfFiles = 1;
+    cfgFile** files=malloc(sizeof(cfgFile*)* numberOfFiles);
+    for (int i = 0; i < numberOfFiles;i++) {
+        files[i] = malloc(sizeof(cfgFile));
+        size_t filename_size = (size_t)snprintf(NULL, 0,"input.txt");
+        files[i]->name = malloc(filename_size + 1);
+        snprintf(files[0]->name, filename_size + 1, "input.txt");
+        char* testText = read_file_to_string(files[0]->name);
+        ParseResult result = parse(testText, strlen(testText), files[i]->name);
+        ParseTree* myTree = result.tree->children[0]->children[0];
+    	ErrorInfo* current = result.errors;
+        files[0]->ast = result.tree;
+	    while (current != NULL) {
+	    	printf("%s %s %s %s %s ", current->message, " at line: ", current->line, " and pos: ", current->position);
+	    		current = current->next;
+	    }
+        free(testText);
+    }
+    for (int i = 0; i < numberOfFiles; i++) {
+  
+    CfgsInfo*  correspondingCFGs = CFGInterfacer(files[i]->name, files[i]->ast);
+    Subroutine** subroutines = DefineSubprogram(files[i]->name,correspondingCFGs->cfgs, files[i]->ast);
+    free(files[i]->ast);
+    free(files[i]->name);
+    free(files[i]);
+    }
+    free(files);
 
-    //ConstructCFG("input.txt", result.tree);
-    //ParseTree* treeCopy = duplicateStruct(myTree);
 
-     controlFlowGraphBlock**  correspondingCFGs = CFGInterfacer("input.txt", result.tree);
-    Subroutine** subroutines = DefineSubprogram("input.txt",correspondingCFGs, result.tree);
-    
-	ErrorInfo* current = result.errors;
-	while (current != NULL) {
-		printf("%s %s %s %s %s ", current->message, " at line: ", current->line, " and pos: ", current->position);
-			current = current->next;
-	}
-	freeErrorInfo(result.errors);
-    free(testText);
 	printf("aveen!\n");
 }
 char* read_file_to_string(const char* filename) {

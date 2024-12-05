@@ -3,13 +3,14 @@ function processArray(arr as int()) as int
     dim i as int
     sum = 2;
     i = 0;
+    processWhile(1,2);
     if i < 9 then
         sum = sum + i;
         i = i + 1;
     else
        sum=sum-i;
        while i>0
-                   break
+       break
            if i>=sum then
                   i=i-1;
                else
@@ -28,5 +29,5 @@ function processArray(arr as int()) as int
             i = i + 1;
     end if
 end function
-function processWhile()
+function processWhile(i as int,j as int)
 end function

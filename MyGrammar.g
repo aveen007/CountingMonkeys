@@ -38,13 +38,14 @@ Braces;
 BinaryExpr;
 AssignmentExpr;
 Elements;
+CallOrIndexer;
 }
 sourcer	:	 source  EOF -> ^(Sourcer source);
 source: funcDef*  ->^(Source funcDef*);
 
 funcDef: 'function' funcSignature statement* 'end' 'function' -> ^(FuncDef funcSignature statement*);
 
-funcSignature: ID '(' listArgdef? ')' ( 'as' typeRef )? ->^(FuncSignature ^(ID listArgdef?) (typeRef)? );
+funcSignature: ID '(' listArgdef ')' ( 'as' typeRef )? ->^(FuncSignature ^(ID listArgdef) (typeRef)? );
 
 statement:
     varStatement 
@@ -64,7 +65,7 @@ expressionStatement: expr ';'->^(Expression expr);
 
 argDef: ID ( 'as' typeRef )? ->^(ArgDef ID (typeRef)?) ;
 
-listArgdef: argDef ( ',' argDef )* ->^(ListArgdef ',' argDef+) ;
+listArgdef: (argDef ( ',' argDef )*)? ->^(ListArgdef  argDef*) ;
 
 element : typeRef | array; 
 typeRef : builtin (array )? -> ^(TypeRef array? builtin)
@@ -84,7 +85,8 @@ expr 	:
 expr0	:	(unary   | braces  | place  | atom);
 expr1	:	 (assignmentExpr);
 expr2	:	 (binaryExpression);
-expr3	:	 (listExpr);
+expr3	:	 (listExpr)->^(CallOrIndexer listExpr);
+
 expr4	:	(expr1|expr2|expr3)? ;
 assignmentExpr
 	:	 (AssignmentOp  ) expr -> ^(AssignmentOp expr);
@@ -96,7 +98,7 @@ binaryExpression
   :  ('+'|'-'|'*'|'/'|'%'|'<<'|'>>'|'&'|'^'|'|')? '='
   ;    
 listExpr:
-  '(' ( expr (',' expr)* )?')' expr->^(ListExpr '(' expr+ ')' Expression expr );
+  '(' ( expr (',' expr)* )?')' expr->^(ListExpr  ( expr (expr)*)? );
 
 listIdentifier:
     (ID (',' ID)*)-> ^(ListIdentifier ID+)
