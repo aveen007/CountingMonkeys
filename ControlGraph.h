@@ -25,10 +25,10 @@ typedef enum {
 // Enum representing the different types of control flow graph blocks.
 
 typedef enum BlockType {
-    BaseBlock,   
-    WhileBlock,  
-    IfBlock,     
-    BreakBlock,  
+    BaseBlock,
+    WhileBlock,
+    IfBlock,
+    BreakBlock,
     ElseBlock,
     ThenBlock,
     IfExitBlock,
@@ -59,10 +59,7 @@ typedef enum {
 // -------------------------
 // Structures
 // -------------------------
-typedef struct cfgFile {
-    char* name;
-    ParseTree* ast;
-}cfgFile;
+
 // Define a struct to represent simple types
 typedef struct {
     SimpleType type;
@@ -120,7 +117,7 @@ varDeclaration* CreateVarDeclaration(char** Ids, Type* type);
 
 // Structure to represent an operation tree node
 typedef struct OTNode {
-     OTNodeType type;     // Type of the node (operator or operand)
+    OTNodeType type;     // Type of the node (operator or operand)
     union {
         char* operator; // char to represent operators (+, -, *, /)
         char* operand;   // int to represent numeric values
@@ -153,6 +150,10 @@ typedef struct controlFlowGraphBlock {
     //int inNodeCount;                        ///< Number of incoming nodes (preceding blocks).
     int outNodeCount;                       ///< Number of outgoing nodes (following blocks).
     Instructions* instructions;             // CFG Block Content
+    //char** calledIndex;
+    struct callGraph* called;
+    //int calledFoundCnt;
+    //int calledCnt;
 } controlFlowGraphBlock, * pControlFlowGraphBlock;
 
 typedef struct Subroutine {
@@ -173,6 +174,7 @@ typedef struct CfgsInfo {
     controlFlowGraphBlock** cfgs;
     ErrorInfoCFG* errors;
 } CfgsInfo;
+
 CfgsInfo* createCfgsInfo(ParseTree* ast);
 controlFlowGraphBlock** createCfgs(ParseTree* ast);
 Subroutine** createSubroutines(ParseTree* ast);
@@ -188,13 +190,23 @@ typedef struct Stack {
 } Stack;
 
 typedef struct callGraph {
-    struct controlFlowGraphBlock* node;
+    //struct controlFlowGraphBlock* node;
     struct controlFlowGraphBlock** calledProcedures;
+    int cntNames ;
+    char** calledTokens;
+
     int cnt;
 }callGraph;
-void insertCG(controlFlowGraphBlock* called);
-void printCallGraph(char* fileName);
-controlFlowGraphBlock* FindCFG(char* funcName);
+typedef struct cfgFile {
+    char* name;
+    ParseTree* ast;
+    struct CfgsInfo* cfgs;
+}cfgFile;
+cfgFile** HandleCallGraphs(cfgFile** allFiles, int fileCnt);
+
+void insertCG(controlFlowGraphBlock* caller, controlFlowGraphBlock* called);
+void printCallGraph(cfgFile* file, cfgFile** allFiles, int fileCnt);
+    controlFlowGraphBlock* FindCFG(controlFlowGraphBlock** cfgss, int cfgCnt, char* funcName);
 
 callGraph* CreateCGNode(controlFlowGraphBlock* cfg);
 // Function to create a stack
@@ -216,36 +228,36 @@ void setName(ArgumentDef* arg, char* name);
 
 // Control flow graph functions
 void insertCFGBlock(controlFlowGraphBlock* nodes, controlFlowGraphBlock* node);
-controlFlowGraphBlock* createCFGBlock( ParseTree * ast);
-void InsertInstruction(Instructions* instructions, ParseTree * ast);
-Instructions* CreateInstructions( );
+controlFlowGraphBlock* createCFGBlock(ParseTree* ast);
+void InsertInstruction(Instructions* instructions, ParseTree* ast);
+Instructions* CreateInstructions();
 cfgBlockContent* createInstructionsVarStatement(ParseTree* ast);
-cfgBlockContent *createInstructionsExpression(ParseTree* ast);
-Subroutine ** DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs,ParseTree* tree);
+cfgBlockContent* createInstructionsExpression(ParseTree* ast);
+Subroutine** DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, ParseTree* tree);
 
 
 
 
-controlFlowGraphBlock* ConstructCFGWhileStatement(ParseTree* tree );
-controlFlowGraphBlock* ConstructCFGIfStatement(ParseTree* tree );
-void ConstructCFG(controlFlowGraphBlock* cfg, ParseTree* tree );
+controlFlowGraphBlock* ConstructCFGWhileStatement(ParseTree* tree);
+controlFlowGraphBlock* ConstructCFGIfStatement(ParseTree* tree);
+void ConstructCFG(controlFlowGraphBlock* cfg, ParseTree* tree);
 
 
 CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree);
-char* writeDotGraphOperationsTree(controlFlowGraphBlock* cfg, FILE* file );
-controlFlowGraphBlock* writeDotGraphIfStatement(Stack* openNodes, controlFlowGraphBlock* node, FILE* file );
-controlFlowGraphBlock* writeDotGraphWhileStatement(Stack* openNodes, controlFlowGraphBlock* node, FILE* file );
-controlFlowGraphBlock* writeDotGraphBaseStatement(Stack* openNodes, controlFlowGraphBlock* node, FILE* file );
-void printBlockToFile(char* blockType, FILE* file, controlFlowGraphBlock* node );
+char* writeDotGraphOperationsTree(controlFlowGraphBlock* cfg, FILE* file);
+controlFlowGraphBlock* writeDotGraphIfStatement(Stack* openNodes, controlFlowGraphBlock* node, FILE* file);
+controlFlowGraphBlock* writeDotGraphWhileStatement(Stack* openNodes, controlFlowGraphBlock* node, FILE* file);
+controlFlowGraphBlock* writeDotGraphBaseStatement(Stack* openNodes, controlFlowGraphBlock* node, FILE* file);
+void printBlockToFile(char* blockType, FILE* file, controlFlowGraphBlock* node);
 
-controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file );
-void CFGToDotFile(controlFlowGraphBlock* cfgs, char* fileName );
+controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file);
+void CFGToDotFile(controlFlowGraphBlock* cfgs, char* fileName);
 
 // Operation tree functions
 OTNode* createOperatorNode(char* operator);
 OTNode* createOperandNode(char* operand);
 void freeTree(OTNode* root);
-char* printTree(char* treeText,OTNode* node);
+char* printTree(char* treeText, OTNode* node);
 Type* HandleType(ParseTree* typeNode);
 size_t estimatedSize(OTNode* node);
 char* mystrcat(const char* str1, const char* str2);

@@ -18,19 +18,25 @@ CfgsInfo* createCfgsInfo(ParseTree* ast) {
 	CfgsInfo* info = malloc(sizeof(CfgsInfo));
 	info->cfgs = createCfgs(ast);
 	info->errors = NULL;
+	
 	return info;
 }
 controlFlowGraphBlock** createCfgs(ParseTree* ast) {
 	controlFlowGraphBlock** cfgs = (controlFlowGraphBlock**)malloc(sizeof(controlFlowGraphBlock*) * ast->childrenCount);
-	CG = (callGraph**)malloc(sizeof(callGraph*) * ast->childrenCount);
+	
 	procedures = 0;
 
 	return cfgs;
 }
-void insertCG(controlFlowGraphBlock * called) {
-	currentCG->cnt++;
-	currentCG->calledProcedures = realloc(currentCG->calledProcedures,sizeof(controlFlowGraphBlock*)*currentCG->cnt);
-	currentCG->calledProcedures[currentCG->cnt - 1] = called;
+void insertCG(controlFlowGraphBlock * caller,controlFlowGraphBlock * called) {
+	caller->called->cnt++;
+	caller->called->calledProcedures = realloc(caller->called->calledProcedures,sizeof(controlFlowGraphBlock*)* caller->called->cnt);
+	caller->called->calledProcedures[caller->called->cnt - 1] = called;
+}
+void insertCGToken(char* called) {
+	current->called->cntNames++;
+	current->called->calledTokens = realloc(currentCG->calledTokens, sizeof(char*) * currentCG->cntNames);
+	current->called->calledTokens[currentCG->cntNames - 1] = called;
 }
 Subroutine** createSubroutines(ParseTree* ast) {
 	Subroutine** subroutines = (Subroutine**)malloc(sizeof(Subroutine*) * ast->childrenCount);
@@ -331,13 +337,14 @@ OTNode* HandleOperationsTree(ParseTree* base) {
 
 		OT = createOperatorNode(base->children[1]->token);
 
-		controlFlowGraphBlock* calledFunc = FindCFG(base->children[1]->token);
-		if (calledFunc != NULL) {
-			insertCG(calledFunc);
-		}
-		else {
+		//controlFlowGraphBlock* calledFunc = FindCFG(base->children[1]->token);
+		//if (calledFunc != NULL) {
+			insertCGToken(base->children[1]->token);
+		//}
+		/*else {
 			ErrorInfoCFG* undefined = createErrorInfoNodeCFG("call to undefined function", base->line, base->position);
-		}
+			addErrorCFG(&errors, undefined);
+		}*/
 		base = base->children[0];
 	}
 	else {
@@ -403,7 +410,7 @@ controlFlowGraphBlock* createCFGBlock(ParseTree* ast, BlockType blockType) {
 	block->ast = ast;
 	block->instructions = CreateInstructions();
 	block->blocktype = blockType;
-
+	block->called = CreateCGNode(block);
 	return block;
 }
 
@@ -466,43 +473,46 @@ void deleteStack(Stack* stack) {
 
 callGraph* CreateCGNode(controlFlowGraphBlock* cfg) {
 	callGraph* CGI = malloc(sizeof(callGraph));
-	CGI->node = cfg;
+	//CGI->node = cfg;
 	CGI->calledProcedures = malloc(sizeof(controlFlowGraphBlock*));
+	CGI->calledTokens = malloc(sizeof(char*));
 	CGI->cnt = 0;
+	CGI->cntNames = 0;
 	return CGI;
 }
-controlFlowGraphBlock* FindCFG(char* funcName) {
+controlFlowGraphBlock* FindCFG(controlFlowGraphBlock **cfgss, int cfgCnt, char* funcName) {
 	controlFlowGraphBlock* found = NULL;
-	for (int i = 0; i < procedures; i++) {
+	for (int i = 0; i < cfgCnt; i++) {
 
-		if (strcmp(cfgs[i]->ast->children[0]->children[0]->token, funcName)==0);
+		if (strcmp(cfgss[i]->ast->children[0]->children[0]->token, funcName)==0)
 		{
 			//printf(cfgs[i]->ast->children[0]->children[0]->token);
-			found = cfgs[i];
+			found = cfgss[i];
 			return found;
 		}
 	}
-	return;
+	return found;
 
 
 }
 
 #pragma region creating the CFG for each subprogram
 
-CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree) {
-
+CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree, int procedure) {
+	//CG = CGs;
 	if (tree) {
 		tree = tree->children[0];
 		CfgsInfo* cfgsInfo = createCfgsInfo(tree);
 		cfgs = cfgsInfo->cfgs;
 
 		for (int i = 0; i < tree->childrenCount; i++) {
-			procedures++;
+			procedure++;
+			procedures = procedure;
 			controlFlowGraphBlock* cfg = createCFGBlock(tree->children[i], BaseBlock);
 			cfgs[i] = cfg;
 			current = cfg;
-			CG[i] = CreateCGNode(cfg);
-			currentCG = CG[i];
+			//CG[i] = CreateCGNode(cfg);
+			currentCG = cfg->called;
 			// here I am just creating the start block
 			ConstructCFG(cfg, tree->children[i], cfgsInfo->errors);
 			controlFlowGraphBlock* cfgEnd = createCFGBlock(tree->children[i], BaseBlock);
@@ -523,25 +533,11 @@ CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree) {
 			char* makeTreeGraph = malloc(makeTreeSize + 1); // Increase size for the command string
 			snprintf(makeTreeGraph, makeTreeSize + 1, "dot -Tpng %s -o %s", filename, pngFilename);
 			system(makeTreeGraph);
-
+			//cfg->called = currentCG;
 			///=======================================================================================
 
 		}
-			char* filename1;
-			size_t filename_size1 = (size_t)snprintf(NULL, 0, "CG%s.dot", fileName);
-			filename1 = malloc(filename_size1 + 2);
-			snprintf(filename1, filename_size1 + 2, "CG.%s.dot",fileName);
-			printCallGraph(filename1);
-
-			size_t pngFileSize1 = (size_t)snprintf(NULL, 0, "../cpoCompilerWin/%s.png", filename1);
-			char* pngFilename1 = malloc(pngFileSize1 + 1); // Adjust size according to your needs
-			snprintf(pngFilename1, pngFileSize1 + 1, "../cpoCompilerWin/%s.png", filename1);
-			size_t makeTreeSize1 = (size_t)snprintf(NULL, 0, "dot -Tpng %s -o %s", filename1, pngFilename1);
-			char* makeTreeGraph1 = malloc(makeTreeSize1 + 1); // Increase size for the command string
-			snprintf(makeTreeGraph1, makeTreeSize1 + 1, "dot -Tpng %s -o %s", filename1, pngFilename1);
-
-
-			system(makeTreeGraph1);
+			
 		cfgsInfo->errors = errors;
 		return cfgsInfo;
 	}
@@ -842,35 +838,58 @@ void CFGToDotFile(controlFlowGraphBlock* cfg, char* fileName) {
 
 	fclose(file);
 }
-void printCallGraph(char * fileName) {
-	FILE* file = fopen(fileName, "w");
-	if (!file) {
+void printCallGraph(cfgFile* file, cfgFile** allFiles, int fileCnt) {
+	char* fileName = file->name;
+	char* filename1;
+	size_t filename_size1 = (size_t)snprintf(NULL, 0, "CG%s.dot", fileName);
+	filename1 = malloc(filename_size1 + 2);
+	snprintf(filename1, filename_size1 + 2, "CG.%s.dot", fileName);
+	//printCallGraph(filename1);
+
+	size_t pngFileSize1 = (size_t)snprintf(NULL, 0, "../cpoCompilerWin/%s.png", filename1);
+	char* pngFilename1 = malloc(pngFileSize1 + 1); // Adjust size according to your needs
+	snprintf(pngFilename1, pngFileSize1 + 1, "../cpoCompilerWin/%s.png", filename1);
+	size_t makeTreeSize1 = (size_t)snprintf(NULL, 0, "dot -Tpng %s -o %s", filename1, pngFilename1);
+	char* makeTreeGraph1 = malloc(makeTreeSize1 + 1); // Increase size for the command string
+	snprintf(makeTreeGraph1, makeTreeSize1 + 1, "dot -Tpng %s -o %s", filename1, pngFilename1);
+
+	FILE* myfile = fopen(filename1, "w");
+	if (!myfile) {
 		perror("Error opening file");
 		return;
 	}
-	fprintf(file, "digraph G {\n");
+	fprintf(myfile, "digraph G {\n");
 	const char* graphSettings = "ordering=out;\n"
 		"ranksep=.4;\n"
 		"bgcolor=\"lightgrey\";  node [shape=box, fixedsize=false, fontsize=12, fontname=\"Helvetica-bold\", fontcolor=\"blue\"\n"
 		"width=.25, height=.25, color=\"black\", fillcolor=\"white\", style=\"filled, solid, bold\"];\n"
 		"\n"
 		"edge [arrowsize=.5, color=\"black\", style=\"bold\"]\n";
-	fprintf(file, "% s", graphSettings);
+	fprintf(myfile, "% s", graphSettings);
 	// Write each control flow graph to the dot file
 
-	for (int i = 0; i < procedures; i++) {
+	for (int i = 0; i < file->ast->children[0]->childrenCount; i++) {
 		
-		fprintf(file, "    n%p ", CG[i]->node);
+		fprintf(myfile, "    n%p ",file->cfgs->cfgs[i]);
 
-		fprintf(file, "[label=\"%s\\n \"]\n",CG[i]->node->ast->children[0]->children[0]->token);
+		fprintf(myfile, "[label=\"%s\\n \"]\n", file->cfgs->cfgs[i]->ast->children[0]->children[0]->token);
 		
 		
-		for (int j = 0; j < CG[i]->cnt; j++) {
-			fprintf(file, "    n%p -> n%p\n", CG[i]->node, CG[i]->calledProcedures[j]);
+		for (int j = 0; j < file->cfgs->cfgs[i]->called->cnt; j++) {
+
+			fprintf(myfile, "    n%p -> n%p\n", file->cfgs->cfgs[i], file->cfgs->cfgs[i]->called->calledProcedures[j]);
+			fprintf(myfile, "    n%p ", file->cfgs->cfgs[i]->called->calledProcedures[j]);
+
+			fprintf(myfile, "[label=\"%s\\n \"]\n", file->cfgs->cfgs[i]->called->calledProcedures[j]->ast->children[0]->children[0]->token);
+
+			//make a smaller function that 
 		}
 
 	}
-	fprintf(file, "}\n");
+	fprintf(myfile, "}\n");
+		
+
+		system(makeTreeGraph1);
 
 }
 // some helper functions with strings
@@ -911,5 +930,54 @@ int stringLen(char* str)
 	}
 	return length;
 }
+cfgFile** HandleCallGraphs(cfgFile** allFiles, int fileCnt) {
+
+	//here I will try to find for a given cfg from a file if it's called procedures do exist anywhere in any other file 
+	for (int i = 0; i < fileCnt; i++) {
+		for (int j = 0; j < allFiles[i]->ast->children[0]->childrenCount; j++) {
+			for (int k = 0; k < allFiles[i]->cfgs->cfgs[j]->called->cntNames; k++) {
+				int found = 0; // have we found the called proc
+				controlFlowGraphBlock* calledFunc=NULL;
+				for (int l = 0; l < fileCnt; l++) {
+
+
+					calledFunc = FindCFG(allFiles[l]->cfgs->cfgs, allFiles[l]->ast->children[0]->childrenCount, allFiles[i]->cfgs->cfgs[j]->called->calledTokens[k]);
+					if (calledFunc != NULL) {
+						found = 1;
+						break;
+						//insertCGToken(base->children[1]->token);
+					}
+					/*else {
+						ErrorInfoCFG* undefined = createErrorInfoNodeCFG("call to undefined function", base->line, base->position);
+						addErrorCFG(&errors, undefined);
+					}*/
+
+				}
+				if (found == 1) {
+					insertCG(allFiles[i]->cfgs->cfgs[j],calledFunc);
+				}
+				else{
+					//TODO: add line and posiion to called graph
+					char* errorString;
+					size_t errSize = (size_t)snprintf(NULL, 0, "call to undefined function : %s", allFiles[i]->cfgs->cfgs[j]->called->calledTokens[k]);
+					errorString = malloc(errSize + 2);
+					snprintf(errorString, errSize + 2, "call to undefined function : %s", allFiles[i]->cfgs->cfgs[j]->called->calledTokens[k]);
+					ErrorInfoCFG* undefined = createErrorInfoNodeCFG(errorString, allFiles[i]->cfgs->cfgs[j]->ast->line, allFiles[i]->cfgs->cfgs[j]->ast->position);
+					addErrorCFG(&allFiles[i]->cfgs->errors, undefined);
+				}
+			}
+		}
+
+	}
+	return allFiles;
+}
+
+//CfgsInfo** createCfgsInfoAll(int numberFiles) {
+//	CfgsInfo** res = malloc(sizeof(CfgsInfo*) * numberFiles);
+//	return res;
+//}
+//void insertCfgsInfoAll(int numberFiles, CfgsInfo* cfgsInfo) {
+//
+//}
 #pragma endregion
 

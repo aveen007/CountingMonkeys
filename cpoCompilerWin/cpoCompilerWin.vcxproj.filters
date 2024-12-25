@@ -33,9 +33,6 @@
     <ClCompile Include="LinkedList.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CFG.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\generate.bat">
@@ -47,6 +44,7 @@
     <None Include="CG.input.txt.dot" />
     <None Include="input.txt.processArray.dot" />
     <None Include="input.txt.processWhile.dot" />
+    <None Include="CG.input2.txt.dot" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\MyGrammarLexer.h">
@@ -69,18 +67,24 @@
     <Text Include="input.txt">
       <Filter>Source Files</Filter>
     </Text>
+    <Text Include="input2.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="output.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="CG.input.txt.dot.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="input.txt.processArray.dot.png">
+    <Image Include="CG.input2.txt.dot.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="input.txt.processWhile.dot.png">
+    <Image Include="output.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="input.txt.processAnotherArray.dot.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="input.txt.d.dot.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

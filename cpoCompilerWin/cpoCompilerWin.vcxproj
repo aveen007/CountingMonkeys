@@ -137,13 +137,13 @@
     <ClCompile Include="..\MyGrammarLexer.c" />
     <ClCompile Include="..\MyGrammarParser.c" />
     <ClCompile Include="..\parser.c" />
-    <ClCompile Include="CFG.c" />
     <ClCompile Include="LinkedList.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\generate.bat" />
     <None Include="..\MyGrammar.tokens" />
     <None Include="CG.input.txt.dot" />
+    <None Include="CG.input2.txt.dot" />
     <None Include="input.txt.processArray.dot" />
     <None Include="input.txt.processWhile.dot" />
     <None Include="packages.config" />
@@ -162,13 +162,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="CG.input.txt.dot.png" />
-    <Image Include="input.txt.processArray.dot.png" />
-    <Image Include="input.txt.processWhile.dot.png" />
-    <Image Include="output.png" />
+    <Text Include="input.txt" />
+    <Text Include="input2.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="input.txt" />
+    <Image Include="CG.input.txt.dot.png" />
+    <Image Include="CG.input2.txt.dot.png" />
+    <Image Include="input.txt.d.dot.png" />
+    <Image Include="input.txt.processAnotherArray.dot.png" />
+    <Image Include="output.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
