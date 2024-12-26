@@ -93,9 +93,9 @@ int main(int argc, char* argv[]) {
                 break;
             }
         }
-         printCallGraph(files[i], files, numberOfFiles);
     
     }
+         printCallGraph(files, numberOfFiles);
 
     //free(files);
 

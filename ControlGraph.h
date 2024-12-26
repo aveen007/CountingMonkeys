@@ -205,7 +205,7 @@ typedef struct cfgFile {
 cfgFile** HandleCallGraphs(cfgFile** allFiles, int fileCnt);
 
 void insertCG(controlFlowGraphBlock* caller, controlFlowGraphBlock* called);
-void printCallGraph(cfgFile* file, cfgFile** allFiles, int fileCnt);
+void printCallGraph(cfgFile** allFiles, int fileCnt);
     controlFlowGraphBlock* FindCFG(controlFlowGraphBlock** cfgss, int cfgCnt, char* funcName);
 
 callGraph* CreateCGNode(controlFlowGraphBlock* cfg);

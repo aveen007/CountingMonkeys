@@ -838,56 +838,57 @@ void CFGToDotFile(controlFlowGraphBlock* cfg, char* fileName) {
 
 	fclose(file);
 }
-void printCallGraph(cfgFile* file, cfgFile** allFiles, int fileCnt) {
-	char* fileName = file->name;
-	char* filename1;
-	size_t filename_size1 = (size_t)snprintf(NULL, 0, "CG%s.dot", fileName);
-	filename1 = malloc(filename_size1 + 2);
-	snprintf(filename1, filename_size1 + 2, "CG.%s.dot", fileName);
-	//printCallGraph(filename1);
+void printCallGraph(cfgFile** allFiles, int fileCnt) {
+		char* fileName = "all";
+		char* filename1;
+		size_t filename_size1 = (size_t)snprintf(NULL, 0, "CG%s.dot", fileName);
+		filename1 = malloc(filename_size1 + 2);
+		snprintf(filename1, filename_size1 + 2, "CG.%s.dot", fileName);
+		//printCallGraph(filename1);
 
-	size_t pngFileSize1 = (size_t)snprintf(NULL, 0, "../cpoCompilerWin/%s.png", filename1);
-	char* pngFilename1 = malloc(pngFileSize1 + 1); // Adjust size according to your needs
-	snprintf(pngFilename1, pngFileSize1 + 1, "../cpoCompilerWin/%s.png", filename1);
-	size_t makeTreeSize1 = (size_t)snprintf(NULL, 0, "dot -Tpng %s -o %s", filename1, pngFilename1);
-	char* makeTreeGraph1 = malloc(makeTreeSize1 + 1); // Increase size for the command string
-	snprintf(makeTreeGraph1, makeTreeSize1 + 1, "dot -Tpng %s -o %s", filename1, pngFilename1);
-
-	FILE* myfile = fopen(filename1, "w");
-	if (!myfile) {
-		perror("Error opening file");
-		return;
-	}
-	fprintf(myfile, "digraph G {\n");
-	const char* graphSettings = "ordering=out;\n"
-		"ranksep=.4;\n"
-		"bgcolor=\"lightgrey\";  node [shape=box, fixedsize=false, fontsize=12, fontname=\"Helvetica-bold\", fontcolor=\"blue\"\n"
-		"width=.25, height=.25, color=\"black\", fillcolor=\"white\", style=\"filled, solid, bold\"];\n"
-		"\n"
-		"edge [arrowsize=.5, color=\"black\", style=\"bold\"]\n";
-	fprintf(myfile, "% s", graphSettings);
-	// Write each control flow graph to the dot file
-
-	for (int i = 0; i < file->ast->children[0]->childrenCount; i++) {
-		
-		fprintf(myfile, "    n%p ",file->cfgs->cfgs[i]);
-
-		fprintf(myfile, "[label=\"%s\\n \"]\n", file->cfgs->cfgs[i]->ast->children[0]->children[0]->token);
-		
-		
-		for (int j = 0; j < file->cfgs->cfgs[i]->called->cnt; j++) {
-
-			fprintf(myfile, "    n%p -> n%p\n", file->cfgs->cfgs[i], file->cfgs->cfgs[i]->called->calledProcedures[j]);
-			fprintf(myfile, "    n%p ", file->cfgs->cfgs[i]->called->calledProcedures[j]);
-
-			fprintf(myfile, "[label=\"%s\\n \"]\n", file->cfgs->cfgs[i]->called->calledProcedures[j]->ast->children[0]->children[0]->token);
-
-			//make a smaller function that 
+		size_t pngFileSize1 = (size_t)snprintf(NULL, 0, "../cpoCompilerWin/%s.png", filename1);
+		char* pngFilename1 = malloc(pngFileSize1 + 1); // Adjust size according to your needs
+		snprintf(pngFilename1, pngFileSize1 + 1, "../cpoCompilerWin/%s.png", filename1);
+		size_t makeTreeSize1 = (size_t)snprintf(NULL, 0, "dot -Tpng %s -o %s", filename1, pngFilename1);
+		char* makeTreeGraph1 = malloc(makeTreeSize1 + 1); // Increase size for the command string
+		snprintf(makeTreeGraph1, makeTreeSize1 + 1, "dot -Tpng %s -o %s", filename1, pngFilename1);
+		FILE* myfile = fopen(filename1, "w");
+		if (!myfile) {
+			perror("Error opening file");
+			return;
 		}
+		fprintf(myfile, "digraph G {\n");
+		const char* graphSettings = "ordering=out;\n"
+			"ranksep=.4;\n"
+			"bgcolor=\"lightgrey\";  node [shape=box, fixedsize=false, fontsize=12, fontname=\"Helvetica-bold\", fontcolor=\"blue\"\n"
+			"width=.25, height=.25, color=\"black\", fillcolor=\"white\", style=\"filled, solid, bold\"];\n"
+			"\n"
+			"edge [arrowsize=.5, color=\"black\", style=\"bold\"]\n";
+		fprintf(myfile, "% s", graphSettings);
+	for (int k = 0; k < fileCnt; k++) {
 
+		// Write each control flow graph to the dot file
+
+		for (int i = 0; i < allFiles[k]->ast->children[0]->childrenCount; i++) {
+
+			fprintf(myfile, "    n%p ", allFiles[k]->cfgs->cfgs[i]);
+
+			fprintf(myfile, "[label=\"%s\\n \"]\n", allFiles[k]->cfgs->cfgs[i]->ast->children[0]->children[0]->token);
+
+
+			for (int j = 0; j < allFiles[k]->cfgs->cfgs[i]->called->cnt; j++) {
+
+				fprintf(myfile, "    n%p -> n%p\n", allFiles[k]->cfgs->cfgs[i], allFiles[k]->cfgs->cfgs[i]->called->calledProcedures[j]);
+				/*fprintf(myfile, "    n%p ", file->cfgs->cfgs[i]->called->calledProcedures[j]);
+
+				fprintf(myfile, "[label=\"%s\\n \"]\n", file->cfgs->cfgs[i]->called->calledProcedures[j]->ast->children[0]->children[0]->token);*/
+
+				//make a smaller function that 
+			}
+
+		}
 	}
-	fprintf(myfile, "}\n");
-		
+		fprintf(myfile, "}\n");
 
 		system(makeTreeGraph1);
 

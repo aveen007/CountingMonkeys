@@ -142,6 +142,7 @@
   <ItemGroup>
     <None Include="..\generate.bat" />
     <None Include="..\MyGrammar.tokens" />
+    <None Include="CG.all.dot" />
     <None Include="CG.input.txt.dot" />
     <None Include="CG.input2.txt.dot" />
     <None Include="input.txt.processArray.dot" />
@@ -166,6 +167,7 @@
     <Text Include="input2.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="CG.all.dot.png" />
     <Image Include="CG.input.txt.dot.png" />
     <Image Include="CG.input2.txt.dot.png" />
     <Image Include="input.txt.d.dot.png" />
