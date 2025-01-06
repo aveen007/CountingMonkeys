@@ -82,9 +82,9 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < numberOfFiles; i++) {
         ErrorInfoCFG* current = files[i]->cfgs->errors;
         while (current != NULL) {
-            printf("%s  ", current->message);
+            printf("%s  \n", current->message);
             //printf("%s %s %d %s %d ", current->message, " at line: ", current->line, " and pos: ", current->position);
-            break;
+            //break;
             if (current->next != NULL) {
                 current = current->next;
 

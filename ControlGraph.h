@@ -205,6 +205,7 @@ typedef struct cfgFile {
 cfgFile** HandleCallGraphs(cfgFile** allFiles, int fileCnt);
 
 void insertCG(controlFlowGraphBlock* caller, controlFlowGraphBlock* called);
+void insertCGToken(char* called);
 void printCallGraph(cfgFile** allFiles, int fileCnt);
     controlFlowGraphBlock* FindCFG(controlFlowGraphBlock** cfgss, int cfgCnt, char* funcName);
 
@@ -262,3 +263,4 @@ Type* HandleType(ParseTree* typeNode);
 size_t estimatedSize(OTNode* node);
 char* mystrcat(const char* str1, const char* str2);
 int stringLen(char* str);
+void CreateFilePrint(char* fileName, CfgsInfo* info,controlFlowGraphBlock * cfg);
