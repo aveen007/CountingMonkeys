@@ -168,8 +168,6 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="CG.all.dot.png" />
-    <Image Include="CG.input.txt.dot.png" />
-    <Image Include="CG.input2.txt.dot.png" />
     <Image Include="input.txt.d.dot.png" />
     <Image Include="input.txt.processAnotherArray.dot.png" />
     <Image Include="output.png" />

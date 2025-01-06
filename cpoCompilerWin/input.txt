@@ -1,7 +1,8 @@
     
 function b()
     a();
-    r();
+    processIf();
+    h();
     d();
 end function
 function d()
@@ -33,11 +34,11 @@ function processAnotherArray(arr as int(,)) as int
     else
        sum=sum-i;
        while i>0
-       break
            if i>=sum then
                   i=i-1;
                else
                    i=i+1;
+                   break
            end if 
        wend
     end if

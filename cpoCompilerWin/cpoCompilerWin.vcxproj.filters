@@ -73,22 +73,16 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="CG.input.txt.dot.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="CG.input2.txt.dot.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="output.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="input.txt.processAnotherArray.dot.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="input.txt.d.dot.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="CG.all.dot.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="input.txt.processAnotherArray.dot.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
