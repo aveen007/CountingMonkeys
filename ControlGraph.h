@@ -154,6 +154,7 @@ typedef struct controlFlowGraphBlock {
     struct callGraph* called;
     //int calledFoundCnt;
     //int calledCnt;
+    int drawn;
 } controlFlowGraphBlock, * pControlFlowGraphBlock;
 
 typedef struct Subroutine {
@@ -184,7 +185,7 @@ ErrorInfoCFG* createErrorInfoNodeCFG(const char* message, int line, int position
 // a stack cuz why not 
 
 typedef struct Stack {
-    struct controlFlowGraphBlock** items; // Array of pointers to controlFlowGraphBlocks
+    struct ParseTree** items; // Array of pointers to controlFlowGraphBlocks
     int top;                        // Index of the top element
     int capacity;                   // Capacity of the stack
 } Stack;
@@ -192,7 +193,7 @@ typedef struct Stack {
 typedef struct callGraph {
     //struct controlFlowGraphBlock* node;
     struct controlFlowGraphBlock** calledProcedures;
-    int cntNames ;
+    int cntNames;
     char** calledTokens;
 
     int cnt;
@@ -207,7 +208,7 @@ cfgFile** HandleCallGraphs(cfgFile** allFiles, int fileCnt);
 void insertCG(controlFlowGraphBlock* caller, controlFlowGraphBlock* called);
 void insertCGToken(char* called);
 void printCallGraph(cfgFile** allFiles, int fileCnt);
-    controlFlowGraphBlock* FindCFG(controlFlowGraphBlock** cfgss, int cfgCnt, char* funcName);
+controlFlowGraphBlock* FindCFG(controlFlowGraphBlock** cfgss, int cfgCnt, char* funcName);
 
 callGraph* CreateCGNode(controlFlowGraphBlock* cfg);
 // Function to create a stack
@@ -217,11 +218,11 @@ int isEmpty(Stack* stack);
 // Function to double the capacity of the stack
 void resizeStack(Stack* stack);
 // Function to push an item onto the stack
-void push(Stack* stack, controlFlowGraphBlock* block);
+void push(Stack* stack, ParseTree* block);
 // Function to pop an item from the stack
-controlFlowGraphBlock* pop(Stack* stack);
+ParseTree* pop(Stack* stack);
 // Function to peek at the top item of the stack without removing it
-controlFlowGraphBlock* peek(Stack* stack);
+ParseTree* peek(Stack* stack);
 // Function to delete the stack and free its memory
 void deleteStack(Stack* stack);
 // Argument definition functions
@@ -239,19 +240,20 @@ Subroutine** DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, Pars
 
 
 
-controlFlowGraphBlock* ConstructCFGWhileStatement(ParseTree* tree);
-controlFlowGraphBlock* ConstructCFGIfStatement(ParseTree* tree);
-void ConstructCFG(controlFlowGraphBlock* cfg, ParseTree* tree);
+controlFlowGraphBlock* ConstructCFGWhileStatement(Stack* openNodes, controlFlowGraphBlock* start);
+controlFlowGraphBlock* ConstructCFGIfStatement(Stack* openNodes, controlFlowGraphBlock* start);
+controlFlowGraphBlock* ConstructCFGBaseStatement(Stack* openNodes, controlFlowGraphBlock* start);
+controlFlowGraphBlock* ConstructCFG(Stack* openNodes, controlFlowGraphBlock* start);
 
 
 CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree);
 char* writeDotGraphOperationsTree(controlFlowGraphBlock* cfg, FILE* file);
-controlFlowGraphBlock* writeDotGraphIfStatement(Stack* openNodes, controlFlowGraphBlock* node, FILE* file);
-controlFlowGraphBlock* writeDotGraphWhileStatement(Stack* openNodes, controlFlowGraphBlock* node, FILE* file);
-controlFlowGraphBlock* writeDotGraphBaseStatement(Stack* openNodes, controlFlowGraphBlock* node, FILE* file);
+void writeDotGraphIfStatement(controlFlowGraphBlock* node, FILE* file, controlFlowGraphBlock* start);
+void writeDotGraphWhileStatement(controlFlowGraphBlock* node, FILE* file, controlFlowGraphBlock* start);
+void writeDotGraphBaseStatement(controlFlowGraphBlock* node, FILE* file, controlFlowGraphBlock* start);
 void printBlockToFile(char* blockType, FILE* file, controlFlowGraphBlock* node);
 
-controlFlowGraphBlock* writeDotGraph(Stack* openNodes, FILE* file);
+void writeDotGraph(controlFlowGraphBlock* cfg, FILE* file, controlFlowGraphBlock* start);
 void CFGToDotFile(controlFlowGraphBlock* cfgs, char* fileName);
 
 // Operation tree functions
@@ -263,4 +265,4 @@ Type* HandleType(ParseTree* typeNode);
 size_t estimatedSize(OTNode* node);
 char* mystrcat(const char* str1, const char* str2);
 int stringLen(char* str);
-void CreateFilePrint(char* fileName, CfgsInfo* info,controlFlowGraphBlock * cfg);
+void CreateFilePrint(char* fileName, CfgsInfo* info, controlFlowGraphBlock* cfg);

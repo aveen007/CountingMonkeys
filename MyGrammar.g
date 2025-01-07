@@ -43,7 +43,7 @@ CallOrIndexer;
 sourcer	:	 source  EOF -> ^(Sourcer source);
 source: funcDef*  ->^(Source funcDef*);
 
-funcDef: 'function' funcSignature statement* 'end' 'function' -> ^(FuncDef funcSignature statement*);
+funcDef: 'function' funcSignature statement* 'end' 'function' -> ^(FuncDef funcSignature statement* 'end');
 
 funcSignature: ID '(' listArgdef ')' ( 'as' typeRef )? ->^(FuncSignature ^(ID listArgdef) (typeRef)? );
 
