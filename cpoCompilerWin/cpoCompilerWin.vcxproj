@@ -132,6 +132,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\asm.c" />
     <ClCompile Include="..\ControlGraph.c" />
     <ClCompile Include="..\main.c" />
     <ClCompile Include="..\MyGrammarLexer.c" />
@@ -151,6 +152,7 @@
     <None Include="tree.dot" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\asm.h" />
     <ClInclude Include="..\ControlGraph.h" />
     <ClInclude Include="..\MyGrammarLexer.h" />
     <ClInclude Include="..\MyGrammarParser.h" />
@@ -171,6 +173,7 @@
     <Image Include="input.txt.b.dot.png" />
     <Image Include="input.txt.d.dot.png" />
     <Image Include="input.txt.processAnotherArray.dot.png" />
+    <Image Include="input2.txt.processArray.dot.png" />
     <Image Include="output.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

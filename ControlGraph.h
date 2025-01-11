@@ -146,14 +146,9 @@ typedef struct controlFlowGraphBlock {
     struct ParseTree* ast;                         //< the corresponding AST
     enum BlockType blocktype;                    ///< The type of the control flow graph block.
     struct controlFlowGraphBlock** nodes;   ///< Pointer to the outgoing nodes (following blocks).
-    //struct controlFlowGraphBlock** inNodes;   ///< Pointer to the outgoing nodes (following blocks).
-    //int inNodeCount;                        ///< Number of incoming nodes (preceding blocks).
     int outNodeCount;                       ///< Number of outgoing nodes (following blocks).
     Instructions* instructions;             // CFG Block Content
-    //char** calledIndex;
     struct callGraph* called;
-    //int calledFoundCnt;
-    //int calledCnt;
     int drawn;
 } controlFlowGraphBlock, * pControlFlowGraphBlock;
 

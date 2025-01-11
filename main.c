@@ -41,18 +41,13 @@ int main(int argc, char* argv[]) {
 
     // Open the file for reading
 
-    //char** fileNames = list_txt_files("D:\\cpoCompiler\\cpoCompilerWin");
-	//char* testText = "function a2 ( a1, a2 as bool (bool)) end function";
     int numberOfProcedures=0;
     int numberOfFiles = argc-1;
     cfgFile** files=malloc(sizeof(cfgFile*)* numberOfFiles);
     char* name=argv[1];
     for (int i = 0; i < numberOfFiles;i++) {
         files[i] = malloc(sizeof(cfgFile));
-        //size_t filename_size = (size_t)snprintf(NULL, 0,argv[i]);
-        //files[i]->name = malloc(sizeof(char) * filename_size);
         files[i]->name =argv[i+1];
-        //snprintf(files[0]->name, filename_size + 1, argv[i]);
         char* testText = read_file_to_string(files[i]->name);
         ParseResult result = parse(testText, strlen(testText), files[i]->name);
         ParseTree* myTree = result.tree->children[0]->children[0];
@@ -64,17 +59,11 @@ int main(int argc, char* argv[]) {
 	    }
         free(testText);
     }
-    //callGraph** CGs=malloc(sizeof(callGraph*));
-    //CfgsInfo** correspondingCFGs =createCfgsInfo();
     for (int i = 0; i < numberOfFiles; i++) {
         numberOfProcedures += files[i]->ast->children[0]->childrenCount;
-        //CGs = realloc(CGs,sizeof(callGraph*) * numberOfProcedures);
-        files[i]->cfgs = CFGInterfacer(files[i]->name, files[i]->ast, 0);
+        files[i]->cfgs = CFGInterfacer(files[i]->name, files[i]->ast);
 
     Subroutine** subroutines = DefineSubprogram(files[i]->name,files[i]->cfgs->cfgs, files[i]->ast);
-   /* free(files[i]->ast);
-    free(files[i]->name);*/
-    //free(files);
     
      
     }
@@ -83,8 +72,6 @@ int main(int argc, char* argv[]) {
         ErrorInfoCFG* current = files[i]->cfgs->errors;
         while (current != NULL) {
             printf("%s  \n", current->message);
-            //printf("%s %s %d %s %d ", current->message, " at line: ", current->line, " and pos: ", current->position);
-            //break;
             if (current->next != NULL) {
                 current = current->next;
 

@@ -307,7 +307,18 @@ OTNode* HandleOperationsTree(ParseTree* base) {
 		base = base->children[0];
 	}
 	else {
+		if (strcmp(base->token, "Unary")!=0) {
+
 		OT = createOperatorNode(base->token);
+		}
+		else {
+			OT = createOperatorNode(base->children[0]->token);
+			OT->cntOperands = 1;
+			OT->operands = malloc(sizeof(OTNode*) );
+
+			OT->operands[0] = HandleOperationsTree(base->children[1]);
+			return OT;
+		}
 	}
 	OT->cntOperands = base->childrenCount;
 	OT->operands = malloc(sizeof(OTNode*) * base->childrenCount);
@@ -952,7 +963,6 @@ void CFGToDotFile(controlFlowGraphBlock* cfg, char* fileName) {
 	fclose(file);
 }
 
-// TODO: reconstruct cfgs so that I decouple what is happening when printing
 #pragma endregion
 
 #pragma region helper functions

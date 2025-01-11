@@ -10,7 +10,7 @@ function d()
     dim i as int
     sum = 2;
     i = 0;
-    b();
+    
     c();
     processAnotherArray(arr);
      while i>0
