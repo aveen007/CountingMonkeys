@@ -21,7 +21,7 @@ memory:
     granularity = 2;  // 2-byte chunks
   }
 
-  range m_stack [0x1000..0x1fff] {   // Stack space
+  range m_stack [0x0000..0xffff] {   // Stack space
     cell = 16;
     endianess = little-endian;
     granularity = 2;
@@ -31,57 +31,62 @@ instructions:
 	encode imm16 field = immediate [16];
  // Push immediate value onto the stack
   instruction push = { 0000, imm16 as value,0000 } {
-    m_stack[sp] = value;
-    sp = sp - 1;   // Decrement stack pointer
+    m_stack:2[sp] = value;
+    sp = sp - 2;   // Decrement stack pointer
     ip = ip + 3;   // Increment instruction pointer
   };
   // Pop value from the stack into outp
   instruction pop = { 0001, 0000 } {
-    sp = sp + 1;        // Increment stack pointer
-    outp = m_stack[sp]; // Retrieve value from stack
+    sp = sp + 2;        // Increment stack pointer
+    ip = ip + 1;        // Increment instruction pointer
+  };
+
+  instruction popOut = { 0010, 0000 } {
+    sp = sp + 2;        // Increment stack pointer
+    outp = m_stack:2[sp]; // Retrieve value from stack to standard output
     ip = ip + 1;        // Increment instruction pointer
   };
 
 
 
 // Add the top two integers on the stack
-  instruction iadd = { 0010, 0000 } {
-    sp = sp + 1;                // Increment stack pointer
-    inp = m_stack[sp];          // Pop first value into inp (top value of the stack)
+  instruction iadd = { 0011, 0000 } {
+    sp = sp + 2;                // Increment stack pointer
+    let x = m_stack:2[sp];          // Pop first value into inp (top value of the stack)
     
-    sp = sp + 1;                // Increment stack pointer
-    outp = m_stack[sp];         // Pop second value into outp (next top value)
+    sp = sp + 2;                // Increment stack pointer
+    let y = m_stack:2[sp];         // Pop second value into outp (next top value)
     
-    outp = inp + outp;          // Perform addition
+    let r = x + y;          // Perform addition
     
-    m_stack[sp] = outp;         // Push result back onto the stack
-    sp = sp - 1;                // Decrement stack pointer
+    m_stack:2[sp] = r;         // Push result back onto the stack
+    sp = sp - 2;                // Decrement stack pointer
     ip = ip + 1;                // Increment instruction pointer
 };
 // Add the top two longs on the stack
-  instruction ladd = { 0011, 0000 } {
-    sp = sp + 1;                // Increment stack pointer
-    inp = m_stack[sp];          // Pop first value into inp (top value of the stack)
+ instruction ladd = { 0100, 0000 } {
+    sp = sp + 2;                // Increment stack pointer
+    let x = m_stack:2[sp];          // Pop first value into inp (top value of the stack)
     
-    sp = sp + 1;                // Increment stack pointer
-    outp = m_stack[sp];         // Pop second value into outp (next top value)
+    sp = sp + 2;                // Increment stack pointer
+    let y = m_stack:2[sp];         // Pop second value into outp (next top value)
     
-    outp = inp + outp;          // Perform addition
+    let r = x + y;          // Perform addition
     
-    m_stack[sp] = outp;         // Push result back onto the stack
-    sp = sp - 1;                // Decrement stack pointer
+    m_stack:2[sp] = r;         // Push result back onto the stack
+    sp = sp - 2;                // Decrement stack pointer
     ip = ip + 1;                // Increment instruction pointer
 };
 
 // to create load I have to have different loads (iload, lload..) I also need a general funciton to dispatch to them, but I also need a to recieve the type
 // and a way to extract it, and a way to handle the labels, in short I need to know how I figuered out how to store it in metadata section
 // were I keep all my variables and their types, or simple just how I am storing so that I can load
-  instruction jmp = { 1110, 0000, imm16 as target } {
+  instruction jmp = { 0101, 0000, imm16 as target } {
     ip = target;
   };
 
-  instruction jz = { 1111, imm16 as target, inp as cond } {
-    if cond == 0 then
+  instruction jz = { 0111, imm16 as target,0000 } {
+    if inp == 0 then
       ip = target;
     else
       ip = ip + 3;
@@ -98,11 +103,12 @@ instructions:
 
 mnemonics:
 
-  mnemonic push (value) "push {1}";
-  mnemonic pop() "pop";
-  mnemonic iadd() "iadd";
-  mnemonic ladd() "iadd";
-  mnemonic jmp(target) "jmp {1}";
-  mnemonic jz(target, cond) "jz {1} {2}";
-  mnemonic hlt() "hlt";
+  mnemonic push (value) "{1}";
+  mnemonic pop() ;
+  mnemonic popOut();
+  mnemonic iadd();
+  mnemonic ladd() ;
+  mnemonic jmp(target) "{1}";
+  mnemonic jz(target) "{1}";
+  mnemonic hlt();
 }
