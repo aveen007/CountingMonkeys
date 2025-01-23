@@ -134,6 +134,7 @@
   <ItemGroup>
     <ClCompile Include="..\asm.c" />
     <ClCompile Include="..\ControlGraph.c" />
+    <ClCompile Include="..\localVariable.c" />
     <ClCompile Include="..\main.c" />
     <ClCompile Include="..\MyGrammarLexer.c" />
     <ClCompile Include="..\MyGrammarParser.c" />
@@ -154,6 +155,7 @@
   <ItemGroup>
     <ClInclude Include="..\asm.h" />
     <ClInclude Include="..\ControlGraph.h" />
+    <ClInclude Include="..\localVariable.h" />
     <ClInclude Include="..\MyGrammarLexer.h" />
     <ClInclude Include="..\MyGrammarParser.h" />
     <ClInclude Include="..\parser.h" />
@@ -165,8 +167,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="..\listingCode.txt" />
+    <Text Include="..\listingData.txt" />
     <Text Include="input.txt" />
     <Text Include="input2.txt" />
+    <Text Include="ugh.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="CG.all.dot.png" />

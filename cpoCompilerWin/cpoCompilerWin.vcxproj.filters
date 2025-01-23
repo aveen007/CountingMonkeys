@@ -36,6 +36,9 @@
     <ClCompile Include="..\asm.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\localVariable.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\generate.bat">
@@ -69,6 +72,9 @@
     <ClInclude Include="..\asm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\localVariable.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="input.txt">
@@ -77,6 +83,9 @@
     <Text Include="input2.txt">
       <Filter>Source Files</Filter>
     </Text>
+    <Text Include="..\listingData.txt" />
+    <Text Include="ugh.txt" />
+    <Text Include="..\listingCode.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="output.png">

@@ -8,13 +8,13 @@ end function
 function d()
     dim arr as int (,)
     dim i as int
-    sum = 2;
+    sum1 = 2;
     i = 0;
     
     c();
     processAnotherArray(arr);
      while i>0
-           if i>=sum then
+           if i>=sum1 then
                   i=i-1;
                else
                    i=i+1;
@@ -24,32 +24,32 @@ function d()
 end function
 function processAnotherArray(arr as int(,)) as int
     dim sum as int 
-    dim i as int
+    dim j as int
     sum = 2;
-    i = 0;
+    j = 0;
     processWhile(1,2);
-    if i < 9 then
-        sum = sum + i;
-        i = i + 1;
+    if j < 9 then
+        sum = sum + j;
+        j = j + 1;
     else
-       sum=sum-i;
-       while i>0
+       sum=sum-j;
+       while j>0
            if i>=sum then
-                  i=i-1;
+                  j=j-1;
                else
-                   i=i+1;
+                   j=j+1;
                    break
            end if 
        wend
     end if
    
    
-    if i > 0 then
-            sum = sum + i;
-            i = i + 1;
+    if j > 0 then
+            sum = sum + j;
+            j = j + 1;
     end if
-    if i > 0 then
-            sum = sum + i;
-            i = i + 1;
+    if j > 0 then
+            sum = sum + j;
+            j = j + 1;
     end if
 end function

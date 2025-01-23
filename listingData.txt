@@ -1,0 +1,32 @@
+arr_input: dd 0x0 
+    .type: dw 0x0 ; Offset for `type`
+    .value: dw 0x16 ; Offset for `value`
+arr_input_0: dd 0x0 
+    .type: dw 0x0 ; Offset for `type`
+    .value: dw 0x16 ; Offset for `value`
+i_input: dd 0x0 
+    .type: dw 0x0 ; Offset for `type`
+    .value: dw 0x16 ; Offset for `value`
+sum_input: dd 0x0 
+    .type: dw 0x0 ; Offset for `type`
+    .value: dw 0x16 ; Offset for `value`
+j_input: dd 0x0 
+    .type: dw 0x0 ; Offset for `type`
+    .value: dw 0x16 ; Offset for `value`
+arr_input2: dd 0x0 
+    .type: dw 0x0 ; Offset for `type`
+    .value: dw 0x16 ; Offset for `value`
+arr_input2_0: dd 0x0 
+    .type: dw 0x0 ; Offset for `type`
+    .value: dw 0x16 ; Offset for `value`
+k_input2: dd 0x0 
+    .type: dw 0x0 ; Offset for `type`
+    .value: dw 0x16 ; Offset for `value`
+sum_input2: dd 0x0 
+    .type: dw 0x0 ; Offset for `type`
+    .value: dw 0x16 ; Offset for `value`
+i_input2: dd 0x0 
+    .type: dw 0x0 ; Offset for `type`
+    .value: dw 0x16 ; Offset for `value`
+halt:
+	hlt

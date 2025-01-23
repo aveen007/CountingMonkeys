@@ -290,10 +290,11 @@ char* printTree(char* treeText, OTNode* node) {
 	return treeText;
 }
 
-varDeclaration* CreateVarDeclaration(char** Ids, Type* type) {
+varDeclaration* CreateVarDeclaration(char** Ids,int cnt, Type* type) {
 	varDeclaration* var = (varDeclaration*)malloc(sizeof(varDeclaration));
 	var->Ids = Ids;
 	var->type = type;
+	var->cntId = cnt;
 	return var;
 }
 OTNode* HandleOperationsTree(ParseTree* base) {
@@ -619,7 +620,7 @@ cfgBlockContent* createInstructionsVarStatement(ParseTree* ast) {
 		ids[k] = ast->children[0]->children[k]->token;
 	}
 	Type* instructionType = HandleType(ast->children[1]);
-	varDeclaration* varDecl = CreateVarDeclaration(ids, instructionType);
+	varDeclaration* varDecl = CreateVarDeclaration(ids, ast->children[0]->childrenCount,instructionType);
 	content->type = TYPE_VARDECLARATION;
 	content->varDec = varDecl;  // Assign var declaration to the union
 	return content;
@@ -1004,6 +1005,58 @@ int stringLen(char* str)
 	}
 	return length;
 }
+#include <stdio.h>
+
+void intToStr(int num, char* str) {
+	int i = 0;
+	int isNegative = 0;
+
+	// Handle negative numbers
+	if (num < 0) {
+		isNegative = 1;
+		num = -num;
+	}
+
+	// Convert integer to string
+	do {
+		str[i++] = (num % 10) + '0';
+		num /= 10;
+	} while (num > 0);
+
+	if (isNegative) {
+		str[i++] = '-';
+	}
+
+	str[i] = '\0';  // Null-terminate the string
+
+	// Reverse the string
+	for (int j = 0; j < i / 2; j++) {
+		char temp = str[j];
+		str[j] = str[i - j - 1];
+		str[i - j - 1] = temp;
+	}
+}
+char* remove_last_three_chars(const char* fileName) {
+	size_t len = strlen(fileName);
+
+	// Check if the file name has at least 3 characters
+	if (len <= 4) {
+		return NULL; // or return an empty string, depending on your needs
+	}
+
+	// Allocate memory for the new string
+	char* newFileName = (char*)malloc(len - 4 + 1); // +1 for the null terminator
+	if (newFileName == NULL) {
+		return NULL; // Memory allocation failed
+	}
+
+	// Copy the string excluding the last three characters
+	strncpy(newFileName, fileName, len - 4);
+	newFileName[len - 4] = '\0'; // null-terminate the new string
+
+	return newFileName;
+}
+
 #pragma endregion
 
 

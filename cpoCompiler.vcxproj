@@ -92,6 +92,7 @@
     <ClCompile Include="asm.c" />
     <ClCompile Include="ControlGraph.c" />
     <ClCompile Include="cpoCompilerWin\LinkedList.c" />
+    <ClCompile Include="localVariable.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="Makefile" />
     <ClCompile Include="MyGrammarLexer.c" />
@@ -107,12 +108,15 @@
     <ClInclude Include="asm.h" />
     <ClInclude Include="ControlGraph.h" />
     <ClInclude Include="cpoCompilerWin\LinkedList.h" />
+    <ClInclude Include="localVariable.h" />
     <ClInclude Include="MyGrammarLexer.h" />
     <ClInclude Include="MyGrammarParser.h" />
     <ClInclude Include="parser.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="input.txt" />
+    <Text Include="listingCode.txt" />
+    <Text Include="MyListing.txt" />
     <Text Include="output.txt" />
   </ItemGroup>
   <ItemDefinitionGroup />

@@ -21,7 +21,18 @@ typedef enum {
     TYPE_STRING,
     TYPE_CUSTOM // For custom types (e.g., ID)
 } SimpleType;
+static const char* SimpleType_STRING[] = {
 
+    "TYPE_BOOL",
+     "TYPE_BYTE",
+     "TYPE_INT",
+     "TYPE_UINT",
+     "TYPE_LONG",
+     "TYPE_ULONG",
+     "TYPE_CHAR",
+     "TYPE_STRING",
+     "TYPE_CUSTOM",
+};
 // Enum representing the different types of control flow graph blocks.
 
 typedef enum BlockType {
@@ -109,11 +120,12 @@ typedef struct SignatureDetails {
 // Structure to represent a variable declaration
 typedef struct varDeclaration {
     char** Ids;
-    Type* type;
+    struct Type* type;
+    int cntId;
 } varDeclaration;
 
 // Function to create a variable declaration
-varDeclaration* CreateVarDeclaration(char** Ids, Type* type);
+varDeclaration* CreateVarDeclaration(char** Ids,int cnt, Type* type);
 
 // Structure to represent an operation tree node
 typedef struct OTNode {
@@ -195,9 +207,11 @@ typedef struct callGraph {
 }callGraph;
 typedef struct cfgFile {
     char* name;
-    ParseTree* ast;
+    struct ParseTree* ast;
     struct CfgsInfo* cfgs;
+
 }cfgFile;
+
 cfgFile** HandleCallGraphs(cfgFile** allFiles, int fileCnt);
 
 void insertCG(controlFlowGraphBlock* caller, controlFlowGraphBlock* called);
@@ -261,3 +275,5 @@ size_t estimatedSize(OTNode* node);
 char* mystrcat(const char* str1, const char* str2);
 int stringLen(char* str);
 void CreateFilePrint(char* fileName, CfgsInfo* info, controlFlowGraphBlock* cfg);
+void intToStr(int num, char* str);
+char* remove_last_three_chars(const char* fileName);

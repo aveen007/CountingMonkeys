@@ -1,0 +1,395 @@
+Microsoft Windows [Version 10.0.19045.5247]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe
+Usage :
+                Portable.RemoteTasks.Manager.exe [options]
+
+where
+
+options are
+        -sh
+        --service-host
+                RemoteTasks service host name (default hidden)
+        -sp
+        --service-port
+                RemoteTasks service port (default 10000)
+        -ul
+        --user-login
+                User login (or explicit, or from Portable.RemoteTasks.Manager.Login environment variable)
+        -up
+        --user-password
+                User password (of explicit, or from Portable.RemoteTasks.Manager.Password environment variable)
+        -h
+        --help
+                Shows this help.
+        -v
+        --verbose
+                Be verbose on error
+        -a
+        --get-available-tasks
+                Get available tasks list
+        -t
+        --get-task-params
+                Get task parameters info
+        -g
+        --get-task-instance
+                Get task state by Id (see start output)
+        -r
+        --get-task-result
+                Get task result content by task Id from -g and result name
+        -o
+        --output-file
+                Write task result to file
+        -k
+        --kill-task-instance
+                Kill working task by Id (see start output)
+        -l
+        --list-task-instances
+                Get list of last task instances (possible formats: index, from..to, *)
+        -s
+        --start-task
+                Start task by name with following with parameters (see params winfo with -t)
+        -id
+        --id-only
+                Print only started task Id (with -q prints empty line per iteration of expectation)
+        -w
+        --wait-for-task
+                Wait for started task to be completed
+        -q
+        --quiet
+                Prevent started task output when it's finished
+        -ib
+        --interactive-bytes
+                Interactive byte mode
+        -ik
+        --interactive-keys
+                Interactive key mode
+        -il
+        --interactive-lines
+                Interactive line mode
+        --interpreter
+                Does nothing, needed for compatibilty reasons
+
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -a
+Available tasks:
+    ValidateArchDefSyntax
+    ValidateArchDefSyntaxes
+    ResolveArchModel
+    VisualizeArchModel
+    Assemble
+    AssembleWithIncludes
+    AssembleDebug
+    AssembleDebugWithIncludes
+    AssembleRaw
+    Disassemble
+    DisassembleRaw
+    DebugBinary
+    DebugBinaryWithInput
+    ExecuteBinary
+    ExecuteBinaryWithInput
+    ExecuteBinaryWithInteractiveInput
+    MachineDebugBinary
+    MachineDebugBinaryWithInput
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -t VisualizeArchModel
+Parameters info for task VisualizeArchModel
+    definitionFile :
+    archName :
+Results of task VisualizeArchModel
+    archInfoGraph.dgml :
+    syntaxTree.txt :
+    stdout.txt : Standard output result
+    stderr.txt : Standard error result
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -id VisualizeArchModel definitionFile architecture.pdsl archName spo
+Unknown command
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -id -s VisualizeArchModel definitionFile architecture.pdsl archName spo
+f315ee5e-0f7a-4543-a989-a8d5ff140ff8
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -l
+Error: Index was outside the bounds of the array.
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -l 0..10
+0: task VisualizeArchModel id f315ee5e-0f7a-4543-a989-a8d5ff140ff8
+    ?reation time: 1/10/2025 12:23:42 PM
+    State: Finished
+    Finish time: 1/10/2025 12:23:42 PM
+    Exit code: -2
+
+1: task VisualizeArchModel id 4356bb9b-258e-4e54-8fde-9b49a4ac1d73
+    ?reation time: 1/10/2025 2:05:31 AM
+    State: Finished
+    Finish time: 1/10/2025 2:05:31 AM
+    Exit code: -2
+
+2: task VisualizeArchModel id 7f317422-7a09-4906-a820-ff51763f4d7c
+    ?reation time: 1/10/2025 1:50:41 AM
+    State: Finished
+    Finish time: 1/10/2025 1:50:41 AM
+    Exit code: -2
+
+3: task VisualizeArchModel id c41a92d5-62d3-44e2-8f2b-ac559b483962
+    ?reation time: 1/10/2025 1:49:12 AM
+    State: Finished
+    Finish time: 1/10/2025 1:49:12 AM
+    Exit code: -2
+
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g f315ee5e-0f7a-4543-a989-a8d5ff140ff8 -r stdout.txt
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_f315ee5e-0f7a-4543-a989-a8d5ff140ff8\workdir\In\architecture.pdsl(28,9): Unexpected token "stack"; expected: name
+Error: Architecture 'spo' definition not collected.
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g f315ee5e-0f7a-4543-a989-a8d5ff140ff8 -r stderr.txt
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -w -id -s VisualizeArchModel definitionFile architecture.pdsl archName spo
+d9a3d8d9-3c35-4839-a2ee-85cc30cd491e
+
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g d9a3d8d9-3c35-4839-a2ee-85cc30cd491e -r stderr.txt
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g d9a3d8d9-3c35-4839-a2ee-85cc30cd491e -r stdout.txt
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_d9a3d8d9-3c35-4839-a2ee-85cc30cd491e\workdir\In\architecture.pdsl(28,9): Unexpected token "stack"; expected: name
+Error: Architecture 'spo' definition not collected.
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -w -id -s VisualizeArchModel archName spo definitionFile d:\cpoCompiler\architecture.pdsl
+4a50a3c6-2c06-413e-8dc4-5927d43a98ca
+
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g 4a50a3c6-2c06-413e-8dc4-5927d43a98ca -r stdout.txt
+Error: Incomplete instruction 'jmp' bytes!
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g 4a50a3c6-2c06-413e-8dc4-5927d43a98ca -r stdout.txt
+Error: Incomplete instruction 'jmp' bytes!
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -w -id -s VisualizeArchModel definitionFile architecture.pdsl archName spo
+7c27fb9f-0efa-4d7d-9890-bb0c2b772f33
+
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -w -id -s VisualizeArchModel archName spo definitionFile d:\cpoCompiler\architecture.pdsl
+587af59e-f363-42a4-a2da-c624363d769b
+
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g 587af59e-f363-42a4-a2da-c624363d769b -r stdout.txt
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r0' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r1' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r2' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r3' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r0' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r1' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r2' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r3' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r0' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r1' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r2' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r3' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r0' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r1' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r2' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r3' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r0' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r1' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r2' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r3' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r0' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r1' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r2' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r3' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r0' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r1' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r2' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r3' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r0' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r1' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r2' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r3' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r0' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r1' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r2' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r3' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r0' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r1' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r2' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r3' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r0' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r1' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r2' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r3' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r0' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r1' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r2' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(37,22): Reg view 'r3' not found!
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(97,17): Failed to resolve instruction for mnemonic 'push'(from) without constraints
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(98,16): Failed to resolve instruction for mnemonic 'pop'(to) without constraints
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(100,16): Failed to resolve instruction for mnemonic 'add'(to, from) without constraints
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(101,16): Failed to resolve instruction for mnemonic 'sub'(to, from) without constraints
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(102,16): Failed to resolve instruction for mnemonic 'mul'(to, from) without constraints
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(103,16): Failed to resolve instruction for mnemonic 'div'(to, from) without constraints
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(105,16): Failed to resolve instruction for mnemonic 'ldc'(to, value) without constraints
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_587af59e-f363-42a4-a2da-c624363d769b\workdir\In\architecture.pdsl(108,15): Failed to resolve instruction for mnemonic 'jz'(target, cond) without constraints
+Error: Architecture 'spo' definition not collected.
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -w -id -s VisualizeArchModel archName spo definitionFile d:\cpoCompiler\architecture.pdsl
+1e52b16e-857f-4dfc-bfce-c55aaae9ae53
+
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g 1e52b16e-857f-4dfc-bfce-c55aaae9ae53 -r stdout.txt
+Error: Incomplete instruction 'push' bytes!
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -w -id -s VisualizeArchModel archName spo definitionFile d:\cpoCompiler\architecture.pdsl
+a66e35ad-7ef2-4b5f-ab64-7d4875194d95
+
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g a66e35ad-7ef2-4b5f-ab64-7d4875194d95 -r stdout.txt
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_a66e35ad-7ef2-4b5f-ab64-7d4875194d95\workdir\In\architecture.pdsl(62,17): Unexpected token ";"; expected: (, for
+Error: Architecture 'spo' definition not collected.
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -w -id -s VisualizeArchModel archName spo definitionFile d:\cpoCompiler\architecture.pdsl
+5a89ddaa-b5bf-43ec-8022-28b7b33d8a92
+
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g 5a89ddaa-b5bf-43ec-8022-28b7b33d8a92 -r stdout.txt
+Error: Incomplete instruction 'push' bytes!
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -w -id -s VisualizeArchModel archName spo definitionFile d:\cpoCompiler\architecture.pdsl
+87d68f01-0a4b-4250-9cfb-6610ee5254a3
+
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g a87d68f01-0a4b-4250-9cfb-6610ee5254a3 -r stdout.txt
+Error: Guid should contain 32 digits with 4 dashes (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx).
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g 87d68f01-0a4b-4250-9cfb-6610ee5254a3 -r stdout.txt
+Error: Incomplete instruction 'push' bytes!
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -w -id -s VisualizeArchModel archName spo definitionFile d:\cpoCompiler\architecture.pdsl
+5b137286-dd49-429e-868a-d9494a52ab2b
+
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g 5b137286-dd49-429e-868a-d9494a52ab2b -r stdout.txt
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_5b137286-dd49-429e-868a-d9494a52ab2b\workdir\In\architecture.pdsl(34,30): Instruction field encoding 'inp' not found
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_5b137286-dd49-429e-868a-d9494a52ab2b\workdir\In\architecture.pdsl(40,29): Instruction field encoding 'outp' not found
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_5b137286-dd49-429e-868a-d9494a52ab2b\workdir\In\architecture.pdsl(46,29): Instruction field encoding 'outp' not found
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_5b137286-dd49-429e-868a-d9494a52ab2b\workdir\In\architecture.pdsl(62,17): Failed to resolve instruction for mnemonic 'push'(inp) without constraints
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_5b137286-dd49-429e-868a-d9494a52ab2b\workdir\In\architecture.pdsl(63,16): Failed to resolve instruction for mnemonic 'pop'(outp) without constraints
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_5b137286-dd49-429e-868a-d9494a52ab2b\workdir\In\architecture.pdsl(65,16): Failed to resolve instruction for mnemonic 'add'(outp) without constraints
+Error: Architecture 'spo' definition not collected.
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -w -id -s VisualizeArchModel archName spo definitionFile d:\cpoCompiler\architecture.pdsl
+061cd9e4-5a08-4a93-93bf-24ab6decf295
+
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g 061cd9e4-5a08-4a93-93bf-24ab6decf295 -r stdout.txt
+C:\RemoteTasks.Workspace\Sessions\VisualizeArchModel_061cd9e4-5a08-4a93-93bf-24ab6decf295\workdir\In\architecture.pdsl(49,9): Unexpected token "value1"; expected: dot, binMulOp, binAssOp, binSumOp, binRemOp, ;, :, [, (, binBitsOp, binCmpOp, binBoolOp
+Error: Architecture 'spo' definition not collected.
+
+C:\Users\D34\Downloads\RemoteTasks>
+C:\Users\D34\Downloads\RemoteTasks>
+C:\Users\D34\Downloads\RemoteTasks>
+C:\Users\D34\Downloads\RemoteTasks>
+C:\Users\D34\Downloads\RemoteTasks>
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -w -id -s VisualizeArchModel archName spo definitionFile d:\cpoCompiler\architecture.pdsl
+70018a8c-5752-46d3-b9bb-b373b0c93c32
+
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g 70018a8c-5752-46d3-b9bb-b373b0c93c32 -r stdout.txt
+Error: Incomplete instruction 'push' bytes!
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -w -id -s VisualizeArchModel archName spo definitionFile d:\cpoCompiler\architecture.pdsl
+d1eb6b6d-39ba-44e1-86d3-8c6330b01216
+
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g d1eb6b6d-39ba-44e1-86d3-8c6330b01216 -r stdout.txt
+Error: Incomplete instruction 'push' bytes!
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g d1eb6b6d-39ba-44e1-86d3-8c6330b01216 -r stderr.txt
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g d1eb6b6d-39ba-44e1-86d3-8c6330b01216 -r stdout.txt
+Error: Incomplete instruction 'push' bytes!
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -w -id -s VisualizeArchModel archName spo definitionFile d:\cpoCompiler\architecture.pdsl
+40bc206b-7a1d-4a37-8755-2b9be83a1b6a
+
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g 40bc206b-7a1d-4a37-8755-2b9be83a1b6a -r stdout.txt
+Error: Incomplete instruction 'push' bytes!
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -w -id -s VisualizeArchModel archName spo definitionFile d:\cpoCompiler\architecture.pdsl
+ab0e58f6-1580-44ea-b996-21a0214d259f
+
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g ab0e58f6-1580-44ea-b996-21a0214d259f -r stdout.txt
+Error: Incomplete instruction 'push' bytes!
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -w -id -s VisualizeArchModel archName spo definitionFile d:\cpoCompiler\architecture.pdsl
+febc2527-12d7-41fa-a1a5-8f44ec73a7ac
+
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g febc2527-12d7-41fa-a1a5-8f44ec73a7ac -r stdout.txt
+Architecture 'spo' seems to be valid for now.
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g febc2527-12d7-41fa-a1a5-8f44ec73a7ac -t
+Error: Index was outside the bounds of the array.
+
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g febc2527-12d7-41fa-a1a5-8f44ec73a7ac -r archInfoGraph.dgml
+<?xml version="1.0"?>
+<DirectedGraph xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+    <Node Id="7725db85-0c38-4610-ad7b-6c599a7700bb" Label="memory" />
+    <Node Id="4c67308b-69cc-4c79-8e7a-63a9d9de693e" Label="registers" />
+    <Node Id="dbbeb0e8-1158-45fd-9b12-3413cf692323" Label=" :  { &#xD;&#xA;     AddressSize : 15&#xD;&#xA;      CellSize : 8&#xD;&#xA;  End : 65535&#xD;&#xA;   Endianness : LittleEndian = 1&#xD;&#xA; Granularity : 2&#xD;&#xA;       IsFrozen : True&#xD;&#xA;       Name :  &quot;ram&quot;&#xD;&#xA;       Start : 0&#xD;&#xA;}" />
+    <Node Id="bc25eac0-6b17-488e-a2d1-59092c1e1dce" Label=" :  { &#xD;&#xA;     AddressSize : 12&#xD;&#xA;      CellSize : 8&#xD;&#xA;  End : 8191&#xD;&#xA;    Endianness : LittleEndian = 1&#xD;&#xA; Granularity : 2&#xD;&#xA;       IsFrozen : True&#xD;&#xA;       Name :  &quot;m_stack&quot;&#xD;&#xA;   Start : 4096&#xD;&#xA;}" />
+    <Node Id="a9832c45-35ae-417b-ba90-a303dcc37521" Label="storage  :  &quot;storage sp [16]&quot; { &#xD;&#xA; IsFrozen : True&#xD;&#xA;       Name :  &quot;sp&quot;&#xD;&#xA;        Size : 16&#xD;&#xA;}" />
+    <Node Id="b383898a-f68e-4e39-a142-40e840dad710" Label="storage  :  &quot;storage ip [16]&quot; { &#xD;&#xA; IsFrozen : True&#xD;&#xA;       Name :  &quot;ip&quot;&#xD;&#xA;        Size : 16&#xD;&#xA;}" />
+    <Node Id="9ae59442-560b-4b39-b2d8-7248cf25e4fc" Label="storage  :  &quot;storage inp [8]&quot; { &#xD;&#xA; IsFrozen : True&#xD;&#xA;       Name :  &quot;inp&quot;&#xD;&#xA;       Size : 8&#xD;&#xA;}" />
+    <Node Id="0c897760-988c-4312-bc7c-79de420c866b" Label="storage  :  &quot;storage outp [8]&quot; { &#xD;&#xA;        IsFrozen : True&#xD;&#xA;       Name :  &quot;outp&quot;&#xD;&#xA;      Size : 8&#xD;&#xA;}" />
+    <Node Id="c344169c-c9b6-4699-af22-56080a2f47b4" Label="instruction pop :  { &#xD;&#xA;      Bytes : 00010000&#xD;&#xA;      DefinitionName :  &quot;pop&quot;&#xD;&#xA;     DescribingMnemonic :  &quot;MnemonicSignatureInfo[ pop ]&quot;&#xD;&#xA;        IsFrozen : True&#xD;&#xA;       Name :  &quot;pop&quot;&#xD;&#xA;} :  &quot;MnemonicSignatureInfo[ pop ]&quot; { &#xD;&#xA;     Arguments :  Count = 0 { &#xD;&#xA;     &#xD;&#xA;      }&#xD;&#xA;     Format :  &quot;MnemonicFormat[ {0}     pop ]&quot; { &#xD;&#xA;                Format :  &quot;pop&quot;, Length = 3&#xD;&#xA;         FullFormat :  &quot;{0} pop&quot;, Length = 7&#xD;&#xA; }&#xD;&#xA;     IsFrozen : False&#xD;&#xA;      Mnemonic :  { &#xD;&#xA;                IsFrozen : True&#xD;&#xA;               Name :  &quot;pop&quot;, Length = 3&#xD;&#xA;   }&#xD;&#xA;}" />
+    <Node Id="8d339fde-c99d-410a-afac-976bcac886cc" Label="#0:&#xD;&#xA;write$sp(Sum$(read$sp(), const$(1)))&#xD;&#xA;write$outp(read$m_stack:2[read$sp()]())&#xD;&#xA;write$ip(Sum$(read$ip(), const$(1)))" />
+    <Node Id="67cdf8de-fc1c-45b4-bd32-c9ee10fe5b72" Label="instruction halt :  { &#xD;&#xA;     Bytes : 11111111&#xD;&#xA;      DefinitionName :  &quot;halt&quot;&#xD;&#xA;    DescribingMnemonic :  &quot;MnemonicSignatureInfo[ halt ]&quot;&#xD;&#xA;       IsFrozen : True&#xD;&#xA;       Name :  &quot;halt&quot;&#xD;&#xA;} :  &quot;MnemonicSignatureInfo[ halt ]&quot; { &#xD;&#xA;   Arguments :  Count = 0 { &#xD;&#xA;     &#xD;&#xA;      }&#xD;&#xA;     Format :  &quot;MnemonicFormat[ {0}     halt ]&quot; { &#xD;&#xA;               Format :  &quot;halt&quot;, Length = 4&#xD;&#xA;                FullFormat :  &quot;{0} halt&quot;, Length = 8&#xD;&#xA;        }&#xD;&#xA;     IsFrozen : False&#xD;&#xA;      Mnemonic :  { &#xD;&#xA;                IsFrozen : True&#xD;&#xA;               Name :  &quot;halt&quot;, Length = 4&#xD;&#xA;
+        }&#xD;&#xA;}" />
+    <Node Id="0de28a7c-0af1-468b-8c3d-0cddc11d1c08" Label="#0:&#xD;&#xA;&#xD;&#xA;return;" />
+  </Nodes>
+  <Links>
+    <Link Source="7725db85-0c38-4610-ad7b-6c599a7700bb" Target="bc25eac0-6b17-488e-a2d1-59092c1e1dce" />
+    <Link Source="7725db85-0c38-4610-ad7b-6c599a7700bb" Target="dbbeb0e8-1158-45fd-9b12-3413cf692323" />
+    <Link Source="4c67308b-69cc-4c79-8e7a-63a9d9de693e" Target="0c897760-988c-4312-bc7c-79de420c866b" />
+    <Link Source="4c67308b-69cc-4c79-8e7a-63a9d9de693e" Target="9ae59442-560b-4b39-b2d8-7248cf25e4fc" />
+    <Link Source="4c67308b-69cc-4c79-8e7a-63a9d9de693e" Target="a9832c45-35ae-417b-ba90-a303dcc37521" />
+    <Link Source="4c67308b-69cc-4c79-8e7a-63a9d9de693e" Target="b383898a-f68e-4e39-a142-40e840dad710" />
+    <Link Source="c344169c-c9b6-4699-af22-56080a2f47b4" Target="8d339fde-c99d-410a-afac-976bcac886cc" />
+    <Link Source="67cdf8de-fc1c-45b4-bd32-c9ee10fe5b72" Target="0de28a7c-0af1-468b-8c3d-0cddc11d1c08" />
+  </Links>
+</DirectedGraph>
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g febc2527-12d7-41fa-a1a5-8f44ec73a7ac -r archInfoGraph.dgml ./x.out
+<?xml version="1.0"?>
+<DirectedGraph xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+    <Node Id="7725db85-0c38-4610-ad7b-6c599a7700bb" Label="memory" />
+    <Node Id="4c67308b-69cc-4c79-8e7a-63a9d9de693e" Label="registers" />
+    <Node Id="dbbeb0e8-1158-45fd-9b12-3413cf692323" Label=" :  { &#xD;&#xA;     AddressSize : 15&#xD;&#xA;      CellSize : 8&#xD;&#xA;  End : 65535&#xD;&#xA;   Endianness : LittleEndian = 1&#xD;&#xA; Granularity : 2&#xD;&#xA;       IsFrozen : True&#xD;&#xA;       Name :  &quot;ram&quot;&#xD;&#xA;       Start : 0&#xD;&#xA;}" />
+    <Node Id="bc25eac0-6b17-488e-a2d1-59092c1e1dce" Label=" :  { &#xD;&#xA;     AddressSize : 12&#xD;&#xA;      CellSize : 8&#xD;&#xA;  End : 8191&#xD;&#xA;    Endianness : LittleEndian = 1&#xD;&#xA; Granularity : 2&#xD;&#xA;       IsFrozen : True&#xD;&#xA;       Name :  &quot;m_stack&quot;&#xD;&#xA;   Start : 4096&#xD;&#xA;}" />
+    <Node Id="a9832c45-35ae-417b-ba90-a303dcc37521" Label="storage  :  &quot;storage sp [16]&quot; { &#xD;&#xA; IsFrozen : True&#xD;&#xA;       Name :  &quot;sp&quot;&#xD;&#xA;        Size : 16&#xD;&#xA;}" />
+    <Node Id="b383898a-f68e-4e39-a142-40e840dad710" Label="storage  :  &quot;storage ip [16]&quot; { &#xD;&#xA; IsFrozen : True&#xD;&#xA;       Name :  &quot;ip&quot;&#xD;&#xA;        Size : 16&#xD;&#xA;}" />
+    <Node Id="9ae59442-560b-4b39-b2d8-7248cf25e4fc" Label="storage  :  &quot;storage inp [8]&quot; { &#xD;&#xA; IsFrozen : True&#xD;&#xA;       Name :  &quot;inp&quot;&#xD;&#xA;       Size : 8&#xD;&#xA;}" />
+    <Node Id="0c897760-988c-4312-bc7c-79de420c866b" Label="storage  :  &quot;storage outp [8]&quot; { &#xD;&#xA;        IsFrozen : True&#xD;&#xA;       Name :  &quot;outp&quot;&#xD;&#xA;      Size : 8&#xD;&#xA;}" />
+    <Node Id="c344169c-c9b6-4699-af22-56080a2f47b4" Label="instruction pop :  { &#xD;&#xA;      Bytes : 00010000&#xD;&#xA;      DefinitionName :  &quot;pop&quot;&#xD;&#xA;     DescribingMnemonic :  &quot;MnemonicSignatureInfo[ pop ]&quot;&#xD;&#xA;        IsFrozen : True&#xD;&#xA;       Name :  &quot;pop&quot;&#xD;&#xA;} :  &quot;MnemonicSignatureInfo[ pop ]&quot; { &#xD;&#xA;     Arguments :  Count = 0 { &#xD;&#xA;     &#xD;&#xA;      }&#xD;&#xA;     Format :  &quot;MnemonicFormat[ {0}     pop ]&quot; { &#xD;&#xA;                Format :  &quot;pop&quot;, Length = 3&#xD;&#xA;         FullFormat :  &quot;{0} pop&quot;, Length = 7&#xD;&#xA; }&#xD;&#xA;     IsFrozen : False&#xD;&#xA;      Mnemonic :  { &#xD;&#xA;                IsFrozen : True&#xD;&#xA;               Name :  &quot;pop&quot;, Length = 3&#xD;&#xA;   }&#xD;&#xA;}" />
+    <Node Id="8d339fde-c99d-410a-afac-976bcac886cc" Label="#0:&#xD;&#xA;write$sp(Sum$(read$sp(), const$(1)))&#xD;&#xA;write$outp(read$m_stack:2[read$sp()]())&#xD;&#xA;write$ip(Sum$(read$ip(), const$(1)))" />
+    <Node Id="67cdf8de-fc1c-45b4-bd32-c9ee10fe5b72" Label="instruction halt :  { &#xD;&#xA;     Bytes : 11111111&#xD;&#xA;      DefinitionName :  &quot;halt&quot;&#xD;&#xA;    DescribingMnemonic :  &quot;MnemonicSignatureInfo[ halt ]&quot;&#xD;&#xA;       IsFrozen : True&#xD;&#xA;       Name :  &quot;halt&quot;&#xD;&#xA;} :  &quot;MnemonicSignatureInfo[ halt ]&quot; { &#xD;&#xA;   Arguments :  Count = 0 { &#xD;&#xA;     &#xD;&#xA;      }&#xD;&#xA;     Format :  &quot;MnemonicFormat[ {0}     halt ]&quot; { &#xD;&#xA;               Format :  &quot;halt&quot;, Length = 4&#xD;&#xA;                FullFormat :  &quot;{0} halt&quot;, Length = 8&#xD;&#xA;        }&#xD;&#xA;     IsFrozen : False&#xD;&#xA;      Mnemonic :  { &#xD;&#xA;                IsFrozen : True&#xD;&#xA;               Name :  &quot;halt&quot;, Length = 4&#xD;&#xA;
+        }&#xD;&#xA;}" />
+    <Node Id="0de28a7c-0af1-468b-8c3d-0cddc11d1c08" Label="#0:&#xD;&#xA;&#xD;&#xA;return;" />
+  </Nodes>
+  <Links>
+    <Link Source="7725db85-0c38-4610-ad7b-6c599a7700bb" Target="bc25eac0-6b17-488e-a2d1-59092c1e1dce" />
+    <Link Source="7725db85-0c38-4610-ad7b-6c599a7700bb" Target="dbbeb0e8-1158-45fd-9b12-3413cf692323" />
+    <Link Source="4c67308b-69cc-4c79-8e7a-63a9d9de693e" Target="0c897760-988c-4312-bc7c-79de420c866b" />
+    <Link Source="4c67308b-69cc-4c79-8e7a-63a9d9de693e" Target="9ae59442-560b-4b39-b2d8-7248cf25e4fc" />
+    <Link Source="4c67308b-69cc-4c79-8e7a-63a9d9de693e" Target="a9832c45-35ae-417b-ba90-a303dcc37521" />
+    <Link Source="4c67308b-69cc-4c79-8e7a-63a9d9de693e" Target="b383898a-f68e-4e39-a142-40e840dad710" />
+    <Link Source="c344169c-c9b6-4699-af22-56080a2f47b4" Target="8d339fde-c99d-410a-afac-976bcac886cc" />
+    <Link Source="67cdf8de-fc1c-45b4-bd32-c9ee10fe5b72" Target="0de28a7c-0af1-468b-8c3d-0cddc11d1c08" />
+  </Links>
+</DirectedGraph>
+C:\Users\D34\Downloads\RemoteTasks>Portable.RemoteTasks.Manager.exe -g febc2527-12d7-41fa-a1a5-8f44ec73a7ac -r archInfoGraph.dgml -o ./graph.dgml
+
+C:\Users\D34\Downloads\RemoteTasks>

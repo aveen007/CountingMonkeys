@@ -1,0 +1,6 @@
+Portable.RemoteTasks.Manager.exe -w -id -s VisualizeArchModel archName spo definitionFile d:\cpoCompiler\architecture.pdsl
+Portable.RemoteTasks.Manager.exe -id -w -s Assemble asmListing listingTest.txt definitionFile D:\cpoCompiler\architecture.pdsl archName spo
+Portable.RemoteTasks.Manager.exe -id -w -s AssembleDebug asmListing listingTest.txt definitionFile D:\cpoCompiler\architecture.pdsl archName spo sourcesDir "."
+Portable.RemoteTasks.Manager.exe -g febc2527-12d7-41fa-a1a5-8f44ec73a7ac -r stdout.txt
+Portable.RemoteTasks.Manager.exe -id -w -s DebugBinary asmListing listingTest.txt definitionFile D:\cpoCompiler\architecture.pdsl archName spo binaryFileToRun bi.ptptb finishMnemonicName hlt codeRamBankName ram ipRegStorageName ip
+Portable.RemoteTasks.Manager.exe -il -s DebugBinary asmListing listingTest.txt definitionFile D:\cpoCompiler\architecture.pdsl archName spo binaryFileToRun bi.ptptb finishMnemonicName hlt codeRamBankName ram ipRegStorageName ip

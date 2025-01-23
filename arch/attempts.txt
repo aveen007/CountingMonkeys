@@ -1,0 +1,149 @@
+instruction sub = { 0011, reg as to, reg as from } {
+    to = to - from;
+    ip = ip + 1;
+  };
+
+  instruction mul = { 0100, reg as to, reg as from } {
+    to = to * from;
+    ip = ip + 1;
+  };
+
+  instruction div = { 0101, reg as to, reg as from } {
+    to = to / from;
+    ip = ip + 1;
+  };
+
+  instruction ldc = { 1000, reg as to, imm16 as value } {
+    to = value;
+    ip = ip + 3;
+  };
+
+  instruction jmp = { 1110, 0000, imm16 as target } {
+    ip = target;
+  };
+
+  instruction jz = { 1111, imm16 as target, reg as cond } {
+    if cond == 0 then
+      ip = target;
+    else
+      ip = ip + 3;
+  };
+  
+  mnemonic sub (to, from) "sub {1}, {2}";
+  mnemonic mul (to, from) "mul {1}, {2}";
+  mnemonic div (to, from) "div {1}, {2}";
+
+  mnemonic ldc (to, value) "ldc {1}, {2}";
+
+  mnemonic jmp (target) "jmp {1}";
+  mnemonic jz (target, cond) "jz {1}, {2}";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+architecture spo {
+/*
+	case                18
+	data word length    2
+	code model          m_stack
+	spaces              common ram
+*/
+registers:
+
+  storage sp [16];     // Stack pointer
+  storage ip [16];     // Program counter (Instruction pointer)
+
+  storage inp [8];     // Input register (for input operations)
+  storage outp [8];    // Output register (for output operations)
+
+memory:
+
+  range ram [0x0000..0xffff] {   // Common RAM space for code/data
+    cell = 8;     // 8-bit cells
+    endianess = little-endian;  // Little endian
+    granularity = 2;  // 2-byte chunks
+  }
+
+  range m_stack [0x1000..0x1fff] {   // Stack space
+    cell = 8;
+    endianess = little-endian;
+    granularity = 2;
+  }
+
+instructions:
+	encode imm8 field = immediate [8];
+  // Push immediate value onto the stack
+  instruction push = { 0000, imm8 as value } {
+    m_stack[sp] = value;
+    sp = sp - 1;   // Decrement stack pointer
+    ip = ip + 3;   // Increment instruction pointer
+  };
+
+  // Pop value from the stack into outp
+  instruction pop = { 0001, 0000 } {
+    sp = sp + 1;        // Increment stack pointer
+    outp = m_stack[sp]; // Retrieve value from stack
+    ip = ip + 1;        // Increment instruction pointer
+  };
+
+// Add the top two values on the stack
+  instruction add = { 0010, 0000 } {
+    sp = sp + 1;                // Increment stack pointer
+    inp = m_stack[sp];          // Pop first value into inp (top value of the stack)
+    
+    sp = sp + 1;                // Increment stack pointer
+    outp = m_stack[sp];         // Pop second value into outp (next top value)
+    
+    outp = inp + outp;          // Perform addition
+    
+    m_stack[sp] = outp;         // Push result back onto the stack
+    sp = sp - 1;                // Decrement stack pointer
+    ip = ip + 1;                // Increment instruction pointer
+};
+
+
+  // Input: Push value from inp onto the stack
+  instruction in = { 0100, 0000 } {
+    m_stack[sp] = inp;   // Push input value onto stack
+    sp = sp - 1;         // Decrement stack pointer
+    ip = ip + 1;         // Increment instruction pointer
+  };
+
+  // Output: Pop value from stack into outp
+  instruction out = { 0101, 0000 } {
+    sp = sp + 1;        // Increment stack pointer
+    outp = m_stack[sp]; // Retrieve value from stack
+    ip = ip + 1;        // Increment instruction pointer
+  };
+
+  // Halt execution
+  instruction halt = { 1111 1111 } {
+    // Execution halts
+  };
+
+mnemonics:
+
+  mnemonic push (imm8) "push {1}";
+  mnemonic pop() "pop";
+  mnemonic add() "add";
+  mnemonic in() "in";
+  mnemonic out() "out";
+  mnemonic halt() "halt";
+}

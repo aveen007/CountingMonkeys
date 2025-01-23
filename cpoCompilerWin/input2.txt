@@ -1,8 +1,8 @@
 function a()
 dim arr as int (,)
-dim i as int
-sum = 2;
-i = 0;
+dim k as int
+sum2 = 2;
+k = 0;
 b();
 c();
 processArray(arr);
@@ -11,7 +11,7 @@ function c()
  b();
  processWhile(1,2);
 end function
-function processWhile(i as int,j as int)
+function processWhile(k as int,j as int)
 end function
 function processArray(arr as int(,)) as int
     dim sum as int 

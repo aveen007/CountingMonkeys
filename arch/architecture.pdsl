@@ -1,0 +1,116 @@
+architecture spo {
+/*
+	case				18
+	data word length	2
+	code model			stack
+	spaces				common ram
+*/
+registers:
+
+  storage sp [16];     // Stack pointer
+  storage ip [16];     // Program counter (Instruction pointer)
+  storage r0 [16];     // General purpose register
+  storage r1 [16];
+  storage r2 [16];
+  storage r3 [16];
+
+  storage inp [8];     // Input register
+  storage outp [8];    // Output register
+
+memory:
+
+  range ram [0x0000..0xffff] {   // Common RAM space for code/data
+    cell = 8;     // 8-bit cells
+    endianess = little-endian;  // Little endian
+    granularity = 2;  // 2-byte chunks
+  }
+
+  range stack [0x1000..0x1fff] {   // Stack space
+    cell = 8;
+    endianess = little-endian;
+    granularity = 2;
+  }
+  instructions:
+
+  encode imm16 field = immediate [16];  // 16-bit immediate value
+
+  encode reg field = register {
+    r0 = 00,
+    r1 = 01,
+    r2 = 10,
+    r3 = 11
+  };
+
+  instruction push = { 0000, reg as from } {
+    stack[sp] = from;
+    sp = sp - 1;
+    ip = ip + 1;
+  };
+
+  instruction pop = { 0001, reg as to } {
+    sp = sp + 1;
+    to = stack[sp];
+    ip = ip + 1;
+  };
+
+  instruction add = { 0010, reg as to, reg as from } {
+    to = to + from;
+    ip = ip + 1;
+  };
+
+  instruction sub = { 0011, reg as to, reg as from } {
+    to = to - from;
+    ip = ip + 1;
+  };
+
+  instruction mul = { 0100, reg as to, reg as from } {
+    to = to * from;
+    ip = ip + 1;
+  };
+
+  instruction div = { 0101, reg as to, reg as from } {
+    to = to / from;
+    ip = ip + 1;
+  };
+
+  instruction ldc = { 1000, reg as to, imm16 as value } {
+    to = value;
+    ip = ip + 3;
+  };
+
+  instruction jmp = { 1110, imm16 as target } {
+    ip = target;
+  };
+
+  instruction jz = { 1111, imm16 as target, reg as cond } {
+    if cond == 0 then
+      ip = target;
+    else
+      ip = ip + 3;
+  };
+
+  instruction halt = { 1111 1111 } {
+    // Halt the execution
+  };
+  mnemonics:
+
+  mnemonic push (from) "push {1}";
+  mnemonic pop (to) "pop {1}";
+
+  mnemonic add (to, from) "add {1}, {2}";
+  mnemonic sub (to, from) "sub {1}, {2}";
+  mnemonic mul (to, from) "mul {1}, {2}";
+  mnemonic div (to, from) "div {1}, {2}";
+
+  mnemonic ldc (to, value) "ldc {1}, {2}";
+
+  mnemonic jmp (target) "jmp {1}";
+  mnemonic jz (target, cond) "jz {1}, {2}";
+
+  mnemonic halt() "halt";
+
+
+}
+
+
+

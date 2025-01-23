@@ -77,7 +77,22 @@ instructions:
     sp = sp - 2;                // Decrement stack pointer
     ip = ip + 1;                // Increment instruction pointer
 };
-
+// store the type and the value , maybe I should push the type and value on the top of the stack
+//must test store
+instruction st = { 0101, imm16 as ptr,0000 }
+{
+	sp=sp + 2;
+	ram:2[ptr] = m_stack:2[sp];
+	//ram:1[ptr+1] = from>>8;
+	ip = ip + 3;
+};
+// I will use this to store the size of the array for array type
+instruction a_st = { 0110, imm16 as ptr,0000 }
+{	
+	sp=sp + 2;
+	ram:2[ptr+2] = m_stack:2[sp];
+	ip = ip + 3;
+};
 // to create load I have to have different loads (iload, lload..) I also need a general funciton to dispatch to them, but I also need a to recieve the type
 // and a way to extract it, and a way to handle the labels, in short I need to know how I figuered out how to store it in metadata section
 // were I keep all my variables and their types, or simple just how I am storing so that I can load
@@ -108,7 +123,9 @@ mnemonics:
   mnemonic popOut();
   mnemonic iadd();
   mnemonic ladd() ;
-  mnemonic jmp(target) "{1}";
+  mnemonic jump for jmp(target) "{1}";
   mnemonic jz(target) "{1}";
+  mnemonic store for st(ptr) "{1}";
+  mnemonic astore for a_st(ptr) "{1}";
   mnemonic hlt();
 }

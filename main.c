@@ -3,7 +3,14 @@
 #include <stdlib.h>
 #include "parser.h"
 #include "ControlGraph.h"
+#include "localVariable.h"
 #include <Windows.h>
+#include "asm.h"
+
+#define dataAsmOutFilename "../listingData.txt"
+#define codeAsmOutFilename "../listingCode.txt"
+
+
 //#define _CRT_SECURE_NO_WARNINGS
 char* read_file_to_string(const char* filename);
 
@@ -59,14 +66,40 @@ int main(int argc, char* argv[]) {
 	    }
         free(testText);
     }
+
+    Node* localVars=NULL;
     for (int i = 0; i < numberOfFiles; i++) {
         numberOfProcedures += files[i]->ast->children[0]->childrenCount;
         files[i]->cfgs = CFGInterfacer(files[i]->name, files[i]->ast);
-
-    Subroutine** subroutines = DefineSubprogram(files[i]->name,files[i]->cfgs->cfgs, files[i]->ast);
-    
-     
+        Subroutine** subroutines = DefineSubprogram(files[i]->name,files[i]->cfgs->cfgs, files[i]->ast);
+        localVars= getLocalVars(subroutines,files[i]->ast->children[0]->childrenCount, localVars, files[i]->name);
+       
+        //printf(localVars->next->data->Ids[0]);
     }
+    FILE* data = fopen(dataAsmOutFilename, "w+");
+    if (!data) {
+        fclose(data);
+        printf("The file could not be opened: "dataAsmOutFilename);
+        return 1;
+    }
+    //fprintf(data, "hi");
+     FILE* code = fopen(codeAsmOutFilename, "w+");
+    if (!code) {
+        fclose(code);
+        printf("The file could not be opened: "codeAsmOutFilename);
+        return 1;
+    }
+    asmCodeOut = code;
+    asmDataOut = data;
+
+    generateAsm(localVars);
+    fclose(data);
+    char* dataListing = read_file_to_string(dataAsmOutFilename);
+    fprintf(data, "\n");
+    fprintf(code, dataListing);
+    
+
+    fclose(code);
     files = HandleCallGraphs(files, numberOfFiles);
     for (int i = 0; i < numberOfFiles; i++) {
         ErrorInfoCFG* current = files[i]->cfgs->errors;
