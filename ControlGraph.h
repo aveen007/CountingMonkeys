@@ -181,6 +181,7 @@ typedef struct ErrorInfoCFG {
 typedef struct CfgsInfo {
     controlFlowGraphBlock** cfgs;
     ErrorInfoCFG* errors;
+
 } CfgsInfo;
 
 CfgsInfo* createCfgsInfo(ParseTree* ast);

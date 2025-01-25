@@ -20,6 +20,7 @@
 #define push_i(value) mnemonic_1_i("push", value)
 #define pop() mnemonic_0("pop")
 #define iadd() mnemonic_0("iadd")
+#define wide_add() mnemonic_0("wide_add")
 #define ladd(op1, op2, to) mnemonic_0("ladd")
 
 #define jump(target) mnemonic_1("jump", target)
@@ -29,16 +30,17 @@
 
 
 
+char* labelName() {
+	char* c = malloc(sizeof(char) * 32);
+	sprintf(c, "label_%d", labelCounter++);
+	//c= mystrcat(c, ".type");
+	return c;
+}
 
 
 FILE* asmCodeOut;
 FILE* asmDataOut;
 int labelCounter = 0;
-char* labelName() {
-    char* c = malloc(sizeof(char) * 32);
-    sprintf(c, "label_%d", labelCounter++);
-    return c;
-}
 
 char* labelNameIdent(char* ident) {
     char* c = malloc(sizeof(char) * 32);
@@ -50,15 +52,23 @@ char* labelNameIdent(char* ident) {
 #define put_comment(comment) fprintf(asmCodeOut, "\t\t;%s\n", comment);
 #define put_comment_var(comment) fprintf(asmCodeOut, "\t\t;%s\n", comment);
 #define put_label_var(name, type, value) \
-    fprintf(asmDataOut, "%s: dd 0x0 \n", name); \
-    fprintf(asmDataOut, "    .type: dw 0x%x ; Offset for `type`\n", type); \
-    fprintf(asmDataOut, "    .value: dw 0x%d ; Offset for `value`\n", value);
+    fprintf(asmDataOut, "%s: \n", name); \
+    fprintf(asmDataOut, "    .type: dd 0x%x ; Offset for `type`\n", type); \
+    fprintf(asmDataOut, "    .value: dd 0x%x ; Offset for `value`\n", value);
+#define put_label_literal(name, type, value) \
+    fprintf(asmDataOut, "%s:  \n", name); \
+    fprintf(asmDataOut, "    .type: dd 0x%x ; Offset for `type`\n", type); \
+    fprintf(asmDataOut, "    .value: dd %s ; Offset for `value`\n", value);
+#define put_label_string(name, type, value) \
+    fprintf(asmDataOut, "%s: \n", name); \
+    fprintf(asmDataOut, "    .type: dd 0x%x ; Offset for `type`\n", type); \
+    fprintf(asmDataOut, "    .value: dd '%s' ; Offset for `value`\n", value);
+int labelCnt = 0;
 int generateAsm(Node * localVars) {
     fprintf(asmCodeOut, asm_code_header);
     //fprintf(asmDataOut, asm_data_header);
     translate_var_declarations(localVars);
     fprintf(asmDataOut, asm_footer);
-    jump("halt");
 
 }
 void translate_type(char* id,Type* type) {
@@ -119,7 +129,7 @@ int translate_var_declarations(Node* localVars) {
             }
     }
 }
-void check_type(char* operand) {
+void check_type(char* operand,char * fileName) {
 	// CHECK TYPE OF OPERAND
 					// true, false -> bool
 					// number in C -> number 
@@ -127,16 +137,41 @@ void check_type(char* operand) {
 					// starts with '' -> char
 					// Bits
 	  // Determine the type of operand
+	//TODO: load,  wide add, wide sub.. , how to differentiate adds, .
+
+
+	/// <summary>
+	/// after that I will push 2 values for literals which are the payload and the type and as for the vars
+	/// I will load the var which within its assembly implementation pushes the payload and the type
+	/// </summary>
+	/// <param name="operand"></param>
 	if (operand[0] == '"' && operand[strlen(operand) - 1] == '"') {
 		printf("Type: string\n");
+		char* lab = labelName();
+		labelCnt++;
+		int h = strlen(operand);
+		char* temp=malloc(h);
+		sscanf(operand, "\"%[^\"]\"", temp); // Extract everything between the double quotes
+
+		// Surround the string with single quotes
+		put_label_string(lab, TYPE_STRING, temp);
+		push(lab);
 		// Handle string type
 	}
 	else if (operand[0] == '\'' && operand[strlen(operand) - 1] == '\'') {
 		printf("Type: char\n");
+		char* lab = labelName();
+		labelCnt++;
+		put_label_string(lab, TYPE_CHAR, operand);
+		push(lab);
 		// Handle char type
 	}
 	else if (strcmp(operand, "true") == 0 || strcmp(operand, "false") == 0) {
 		printf("Type: bool\n");
+		char* lab = labelName();
+		labelCnt++;
+		put_label_string(lab , TYPE_BOOL, operand);
+		push(lab);
 		// Handle boolean type
 	}
 	else {
@@ -150,24 +185,42 @@ void check_type(char* operand) {
 
 		if (isNumber) {
 			printf("Type: number\n");
+			char* lab = labelName();
+			labelCnt++;
+	
+			put_label_literal(lab, TYPE_INT, operand);
+			push(lab);
 			// Handle number type
 		}
 		else {
 			printf("Type: variable\n");
+			/*char* suffix = mystrcat("_", remove_last_three_chars(fileName));
+			push(mystrcat(operand, suffix));*/
+			// a variable should have a push for a label with its name and file name only
 			// Handle variable type
+			// THe var definition from multiple 
 		}
 	}
 	return;
 }
-int translateOT(OTNode* tree) {
+int translateOT(OTNode* tree, char * fileName) {
 	
 		switch (tree->type)
 		{
 		case NODE_TYPE_OPERAND:
-			check_type(tree->value.operand);
+			check_type(tree->value.operand, fileName);
 
 			break;
 		case NODE_TYPE_OPERATOR:
+			/////////////////////
+			//////////////////
+			// based on the 2 top values of the stack, we will have a wide_add, wide_sub...
+			// inside those wide functions I will check the types
+			// and jump to different implementations of add, sub 
+			/////////
+			for (int i = 0; i < tree->cntOperands; i++) {
+				translateOT(tree->operands[i], fileName);
+			}
 			if (strcmp(tree->value.operator, "<") == 0) {
 				printf("<");
 				
@@ -190,6 +243,7 @@ int translateOT(OTNode* tree) {
 				printf("==");
 			}
 			if (strcmp(tree->value.operator, "+") == 0) {
+				wide_add();
 				printf("+");
 			}
 
@@ -201,9 +255,6 @@ int translateOT(OTNode* tree) {
 			}
 			if (strcmp(tree->value.operator, "/") == 0) {
 				printf("/");
-			}
-			for (int i = 0; i < tree->cntOperands; i++) {
-				translateOT(tree->operands[i]);
 			}
 			break;
 
@@ -218,7 +269,7 @@ int translateInstructions(controlFlowGraphBlock * node, char* fileName) {
 		for (int i = 0; i < (node->instructions->size); i++) {
 			cfgBlockContent* instruction = node->instructions->content[i]; // Assuming the node holds a pointer to a block
 			if (instruction->type == TYPE_OTNODE) {
-				translateOT(instruction->ot);
+				translateOT(instruction->ot, fileName);
 			}
 			
 		}
@@ -234,6 +285,8 @@ int translate(Subroutine** subroutines, int cnt, char* fileName) {
 	for (int i = 0; i < cnt; i++) {
 		 translateCfg(subroutines[i]->cfg, NULL, fileName);
 	}
+	//jump("halt");
+
 	return 0;
 }
 

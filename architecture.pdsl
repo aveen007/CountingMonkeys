@@ -84,23 +84,24 @@ instruction st = { 0101, imm16 as ptr,0000 }
 	sp=sp + 2;
 	ram:2[ptr] = m_stack:2[sp];
 	//ram:1[ptr+1] = from>>8;
+	
 	ip = ip + 3;
 };
 // I will use this to store the size of the array for array type
 instruction a_st = { 0110, imm16 as ptr,0000 }
 {	
 	sp=sp + 2;
-	ram:2[ptr+2] = m_stack:2[sp];
+	ram:2[ptr+32] = m_stack:2[sp];// we save 8 bytes for each variable , store the type in the first 4 bytes (32 bits from the stack) and the value in the next
 	ip = ip + 3;
 };
 // to create load I have to have different loads (iload, lload..) I also need a general funciton to dispatch to them, but I also need a to recieve the type
 // and a way to extract it, and a way to handle the labels, in short I need to know how I figuered out how to store it in metadata section
 // were I keep all my variables and their types, or simple just how I am storing so that I can load
-  instruction jmp = { 0101, 0000, imm16 as target } {
+  instruction jmp = { 0111, 0000, imm16 as target } {
     ip = target;
   };
 
-  instruction jz = { 0111, imm16 as target,0000 } {
+  instruction jz = { 1000, imm16 as target,0000 } {
 	sp = sp + 2;                // Increment stack pointer
     let x = m_stack:2[sp];          // Pop first value into inp (top value of the stack)
     
@@ -109,6 +110,36 @@ instruction a_st = { 0110, imm16 as ptr,0000 }
     else
       ip = ip + 3;
   };
+instruction wide_add ={1001, 0000} {
+    // Increment stack pointer to "pop" the first operand's pointer
+    sp = sp + 2;                
+    let ptr1 = m_stack:2[sp];         // First operand pointer (address of operand)
+    let type1 = ram:2[ptr1];         // Type of first operand (e.g., 2 for number)
+    
+    // Increment stack pointer to "pop" the second operand's pointer
+    sp = sp + 2;                
+    let ptr2 = m_stack:2[sp];         // Second operand pointer
+    let type2 = ram:2[ptr2];         // Type of second operand
+
+    // Check if both operands are of type "number" (type == 2)
+    if (type1 == 2) && (type2 == 2) then {
+        let x = ram:2[ptr1 + 4];     // Fetch the value of the first operand
+        let y = ram:2[ptr2 + 4];     // Fetch the value of the second operand
+        
+        let r = x + y;                // Perform addition
+        
+        // Push the result back onto the stack
+        m_stack:2[sp] = r;           
+        sp = sp - 2;                  // Decrement stack pointer
+    } else {
+        // Push error code (-1) onto the stack if types don't match
+        m_stack:2[sp] = -1;          
+        sp = sp - 2;                  // Decrement stack pointer
+    }
+
+    // Increment instruction pointer to the next instruction
+    ip = ip + 1;
+};
 
 
 
@@ -130,5 +161,6 @@ mnemonics:
   mnemonic jz(target) "{1}";
   mnemonic store for st(ptr) "{1}";
   mnemonic astore for a_st(ptr) "{1}";
+  mnemonic wide_add();
   mnemonic hlt();
 }

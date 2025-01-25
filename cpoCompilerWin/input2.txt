@@ -1,46 +1,6 @@
-function a()
-dim arr as int (,)
-dim k as int
-sum2 = 2;
-k = 0;
-b();
-c();
-processArray(arr);
-end function
-function c()
- b();
- processWhile(1,2);
-end function
-function processWhile(k as int,j as int)
-end function
-function processArray(arr as int(,)) as int
-    dim sum as int 
-    dim i as int
-    sum = "2";
-    i = 0;
-    processWhile(1,2);
-    if i < -9 then
-        sum = sum + i;
-        i = i + 1;
-    else
-       sum=sum-i;
-       while i>0
-           if i>=sum then
-                  i=i-1;
-               else
-                   i=i+1;
-                   break
-           end if 
-       wend
-    end if
-   
-   
-    if i > 0 then
-            sum = sum + i;
-            i = i + 1;
-    end if
-    if i > 0 then
-            sum = sum + i;
-            i = i + 1;
-    end if
+function calculator()
+    dim i,  sum as int
+    sum = 10 + 2;
+  
+  
 end function

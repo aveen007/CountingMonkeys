@@ -1,58 +1,32 @@
 [section ram, code]
-	push 9
-	store arr_input
-	push 1
-	astore arr_input
-	push 2
-	store arr_input_0
-	push 2
-	store i_input
-	push 2
-	store sum_input
-	push 2
-	store j_input
-	push 9
-	store arr_input2
-	push 1
-	astore arr_input2
-	push 2
-	store arr_input2_0
-	push 2
-	store k_input2
-	push 2
-	store sum_input2
 	push 2
 	store i_input2
+	push 2
+	store sum_input2
+	push label_0
+	push label_1
+	wide_add
+	push label_2
+	push label_3
+	wide_add
 	jump halt
-arr_input: dd 0x0 
-    .type: dw 0x0 ; Offset for `type`
-    .value: dw 0x16 ; Offset for `value`
-arr_input_0: dd 0x0 
-    .type: dw 0x0 ; Offset for `type`
-    .value: dw 0x16 ; Offset for `value`
-i_input: dd 0x0 
-    .type: dw 0x0 ; Offset for `type`
-    .value: dw 0x16 ; Offset for `value`
-sum_input: dd 0x0 
-    .type: dw 0x0 ; Offset for `type`
-    .value: dw 0x16 ; Offset for `value`
-j_input: dd 0x0 
-    .type: dw 0x0 ; Offset for `type`
-    .value: dw 0x16 ; Offset for `value`
-arr_input2: dd 0x0 
-    .type: dw 0x0 ; Offset for `type`
-    .value: dw 0x16 ; Offset for `value`
-arr_input2_0: dd 0x0 
-    .type: dw 0x0 ; Offset for `type`
-    .value: dw 0x16 ; Offset for `value`
-k_input2: dd 0x0 
-    .type: dw 0x0 ; Offset for `type`
-    .value: dw 0x16 ; Offset for `value`
-sum_input2: dd 0x0 
-    .type: dw 0x0 ; Offset for `type`
-    .value: dw 0x16 ; Offset for `value`
-i_input2: dd 0x0 
-    .type: dw 0x0 ; Offset for `type`
-    .value: dw 0x16 ; Offset for `value`
+i_input2: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x10 ; Offset for `value`
+sum_input2: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x10 ; Offset for `value`
 halt:
 	hlt
+label_0:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 2 ; Offset for `value`
+label_1:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 10 ; Offset for `value`
+label_2:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 2 ; Offset for `value`
+label_3:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 10 ; Offset for `value`
