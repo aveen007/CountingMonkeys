@@ -86,6 +86,7 @@
     <Text Include="..\listingData.txt" />
     <Text Include="ugh.txt" />
     <Text Include="..\listingCode.txt" />
+    <Text Include="..\OTListing.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="output.png">

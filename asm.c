@@ -119,4 +119,206 @@ int translate_var_declarations(Node* localVars) {
             }
     }
 }
+void check_type(char* operand) {
+	// CHECK TYPE OF OPERAND
+					// true, false -> bool
+					// number in C -> number 
+					// starts with "" -> string
+					// starts with '' -> char
+					// Bits
+	  // Determine the type of operand
+	if (operand[0] == '"' && operand[strlen(operand) - 1] == '"') {
+		printf("Type: string\n");
+		// Handle string type
+	}
+	else if (operand[0] == '\'' && operand[strlen(operand) - 1] == '\'') {
+		printf("Type: char\n");
+		// Handle char type
+	}
+	else if (strcmp(operand, "true") == 0 || strcmp(operand, "false") == 0) {
+		printf("Type: bool\n");
+		// Handle boolean type
+	}
+	else {
+		int isNumber = 1;
+		for (size_t i = 0; i < strlen(operand); i++) {
+			if (!isdigit(operand[i]) && operand[i] != '.') {
+				isNumber = 0;
+				break;
+			}
+		}
 
+		if (isNumber) {
+			printf("Type: number\n");
+			// Handle number type
+		}
+		else {
+			printf("Type: variable\n");
+			// Handle variable type
+		}
+	}
+	return;
+}
+int translateOT(OTNode* tree) {
+	
+		switch (tree->type)
+		{
+		case NODE_TYPE_OPERAND:
+			check_type(tree->value.operand);
+
+			break;
+		case NODE_TYPE_OPERATOR:
+			if (strcmp(tree->value.operator, "<") == 0) {
+				printf("<");
+				
+				break;
+			}
+			if (strcmp(tree->value.operator, ">") == 0) {
+				printf(">");
+				
+			}
+			if (strcmp(tree->value.operator, "=") == 0) {
+				printf("=");
+			}
+			if (strcmp(tree->value.operator, "<=") == 0) {
+				printf("<=");
+			}
+			if (strcmp(tree->value.operator, ">=") == 0) {
+				printf(">=");
+			}
+			if (strcmp(tree->value.operator, "==") == 0) {
+				printf("==");
+			}
+			if (strcmp(tree->value.operator, "+") == 0) {
+				printf("+");
+			}
+
+			if (strcmp(tree->value.operator, "-") == 0) {
+				printf("-");
+			}
+			if (strcmp(tree->value.operator, "*") == 0) {
+				printf("*");
+			}
+			if (strcmp(tree->value.operator, "/") == 0) {
+				printf("/");
+			}
+			for (int i = 0; i < tree->cntOperands; i++) {
+				translateOT(tree->operands[i]);
+			}
+			break;
+
+		default:
+			break;
+		}
+	
+}
+int translateInstructions(controlFlowGraphBlock * node, char* fileName) {
+	if (node->instructions)
+	{
+		for (int i = 0; i < (node->instructions->size); i++) {
+			cfgBlockContent* instruction = node->instructions->content[i]; // Assuming the node holds a pointer to a block
+			if (instruction->type == TYPE_OTNODE) {
+				translateOT(instruction->ot);
+			}
+			
+		}
+	}
+	return 0;
+}
+
+
+
+
+
+int translate(Subroutine** subroutines, int cnt, char* fileName) {
+	for (int i = 0; i < cnt; i++) {
+		 translateCfg(subroutines[i]->cfg, NULL, fileName);
+	}
+	return 0;
+}
+
+int translateCfgIfStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* start , char* fileName) {
+
+	translateInstructions(node, fileName);
+	controlFlowGraphBlock* ThenNode = node->nodes[0];
+	  translateCfg(ThenNode, node , fileName);
+	int isElseNode = node->outNodeCount > 1 ? 1 : 0;
+
+	if (isElseNode == 1) {
+		controlFlowGraphBlock* ElseNode = node->nodes[1];
+		  translateCfg(ElseNode, node , fileName);
+	}
+	return 0;
+}
+int translateCfgWhileStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* start , char* fileName) {
+	   
+	translateInstructions(node, fileName);
+
+	controlFlowGraphBlock* whilebody = node->nodes[0];
+	  translateCfg(whilebody, node , fileName);
+	controlFlowGraphBlock* exitWhilebody = node->nodes[1];
+	  translateCfg(exitWhilebody, node , fileName);
+	return 0;
+}
+int translateCfgBaseStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* start , char* fileName) {
+	   
+	translateInstructions(node, fileName);
+
+	  translateCfg(node->nodes[0], node , fileName);
+	return 0;
+
+}
+
+int translateCfg(controlFlowGraphBlock* cfg, controlFlowGraphBlock* start , char* fileName) {
+	switch (cfg->blocktype)
+	{
+	case IfBlock:
+		  translateCfgIfStatement(cfg, start , fileName);
+		break;
+	case WhileBlock:
+		if (cfg->drawn == 0) {
+			cfg->drawn = 1;
+			  translateCfgWhileStatement(cfg, start , fileName);
+		}
+		else if (cfg->drawn == 1) {
+			cfg->drawn = 2;
+			return 0;
+		}
+		else {
+			return 0;
+		}
+		break;
+	case BreakBlock:
+		   
+		translateInstructions(cfg, fileName);
+
+		return 0;
+		break;
+	case BaseBlock:
+		if (cfg->outNodeCount <= 0) {
+			   
+			translateInstructions(cfg, fileName);
+
+			return 0;
+		}
+		  translateCfgBaseStatement(cfg, start , fileName);
+		break;
+	default:
+		if (cfg->blocktype == IfExitBlock) {
+			cfg->drawn++;
+		}
+		if (cfg->blocktype == IfExitBlock && cfg->drawn > 1) {
+			break;
+		}
+
+		if (cfg->outNodeCount <= 0) {
+			   
+
+			return 0;
+		}
+		  translateCfgBaseStatement(cfg, start , fileName);
+		break;
+	}
+	return 0;
+
+}

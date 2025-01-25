@@ -101,7 +101,10 @@ instruction a_st = { 0110, imm16 as ptr,0000 }
   };
 
   instruction jz = { 0111, imm16 as target,0000 } {
-    if inp == 0 then
+	sp = sp + 2;                // Increment stack pointer
+    let x = m_stack:2[sp];          // Pop first value into inp (top value of the stack)
+    
+    if x == 0 then
       ip = target;
     else
       ip = ip + 3;

@@ -13,3 +13,6 @@ typedef struct Var {
 	 Data* data;
 	char* id;
 }Var;
+
+
+int translate(Subroutine** subroutines, int cnt, char* fileName);

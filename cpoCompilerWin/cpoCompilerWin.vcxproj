@@ -169,6 +169,7 @@
   <ItemGroup>
     <Text Include="..\listingCode.txt" />
     <Text Include="..\listingData.txt" />
+    <Text Include="..\OTListing.txt" />
     <Text Include="input.txt" />
     <Text Include="input2.txt" />
     <Text Include="ugh.txt" />

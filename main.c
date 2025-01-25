@@ -66,6 +66,9 @@ int main(int argc, char* argv[]) {
 	    }
         free(testText);
     }
+    //&&&&&&&&&&&&&&& DELETE!!!!!!!!!!!!!!!
+    //return;
+    //&&&&&&&&&&&&&&& DELETE!!!!!!!!!!!!!!!
 
     Node* localVars=NULL;
     for (int i = 0; i < numberOfFiles; i++) {
@@ -73,7 +76,7 @@ int main(int argc, char* argv[]) {
         files[i]->cfgs = CFGInterfacer(files[i]->name, files[i]->ast);
         Subroutine** subroutines = DefineSubprogram(files[i]->name,files[i]->cfgs->cfgs, files[i]->ast);
         localVars= getLocalVars(subroutines,files[i]->ast->children[0]->childrenCount, localVars, files[i]->name);
-       
+        translate(subroutines, files[i]->ast->children[0]->childrenCount, files[i]->name);
         //printf(localVars->next->data->Ids[0]);
     }
     FILE* data = fopen(dataAsmOutFilename, "w+");

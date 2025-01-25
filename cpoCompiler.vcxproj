@@ -117,6 +117,7 @@
     <Text Include="input.txt" />
     <Text Include="listingCode.txt" />
     <Text Include="MyListing.txt" />
+    <Text Include="OTListing.txt" />
     <Text Include="output.txt" />
   </ItemGroup>
   <ItemDefinitionGroup />

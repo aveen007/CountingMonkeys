@@ -16,7 +16,7 @@ end function
 function processArray(arr as int(,)) as int
     dim sum as int 
     dim i as int
-    sum = 2;
+    sum = "2";
     i = 0;
     processWhile(1,2);
     if i < -9 then

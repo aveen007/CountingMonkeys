@@ -310,7 +310,14 @@ OTNode* HandleOperationsTree(ParseTree* base) {
 	else {
 		if (strcmp(base->token, "Unary")!=0) {
 
-		OT = createOperatorNode(base->token);
+			if (base->childrenCount > 0) {
+				OT = createOperatorNode(base->token);
+
+			}
+			else {
+				OT = createOperandNode(base->token);
+				return OT;
+			}
 		}
 		else {
 			OT = createOperatorNode(base->children[0]->token);

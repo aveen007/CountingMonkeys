@@ -131,7 +131,7 @@ binOp:
     | GT       
     | LEQ      
     | GEQ;
-    atom  :  ID|Literal|
+    atom  :  (ID|Literal|)
   ;
 // Lexical tokens
 WS  :  (' '|'\r'|'\t'|'\u000C'|'\n') { $channel=HIDDEN; };
