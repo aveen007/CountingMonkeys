@@ -8,7 +8,7 @@
 	wide_store
 	push label_1
 	push i_input2
-	wide_add
+	wide_mult
 	store label_2.type
 	store label_2.value
 	push label_2
@@ -16,7 +16,7 @@
 	wide_store
 	push label_3
 	push i_input2
-	wide_sub
+	wide_div
 	store label_4.type
 	store label_4.value
 	push label_4
@@ -24,20 +24,41 @@
 	wide_store
 	push label_5
 	push i_input2
-	wide_mult
-	store label_6.type
-	store label_6.value
-	push label_6
-	push sum_input2
-	wide_store
-	push label_7
+	wide_sub
+	pop
+	jz label_6
+	push 0
+		;false branch
+	jump label_7
+label_6:
+	push 1
+		;true branch
+label_7:
+		;if
+	jz label_9
+		;then
+	push label_10
 	push i_input2
-	wide_div
-	store label_8.type
-	store label_8.value
-	push label_8
+	wide_add
+	store label_11.type
+	store label_11.value
+	push label_11
 	push sum_input2
 	wide_store
+	jump label_8
+label_9:
+		;else
+	push label_12
+	push i_input2
+	wide_sub
+	store label_13.type
+	store label_13.value
+	push label_13
+	push sum_input2
+	wide_store
+	jump label_8
+		;endif
+label_8:
 	jump halt
 i_input2: 
     .type: dd 0x0 ; Offset for `type`
@@ -52,25 +73,28 @@ label_0:
     .value: dd 3 ; Offset for `value`
 label_1:  
     .type: dd 0x2 ; Offset for `type`
-    .value: dd 2 ; Offset for `value`
+    .value: dd 6 ; Offset for `value`
 label_2: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`
 label_3:  
     .type: dd 0x2 ; Offset for `type`
-    .value: dd 3 ; Offset for `value`
+    .value: dd 2 ; Offset for `value`
 label_4: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`
 label_5:  
     .type: dd 0x2 ; Offset for `type`
-    .value: dd 6 ; Offset for `value`
-label_6: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x0 ; Offset for `value`
-label_7:  
+    .value: dd 0 ; Offset for `value`
+label_10:  
     .type: dd 0x2 ; Offset for `type`
     .value: dd 2 ; Offset for `value`
-label_8: 
+label_11: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x0 ; Offset for `value`
+label_12:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 3 ; Offset for `value`
+label_13: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`

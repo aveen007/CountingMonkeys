@@ -30,18 +30,18 @@ memory:
 instructions:
 	encode imm16 field = immediate [16];
  // Push immediate value onto the stack
-  instruction push = { 0000, imm16 as value,0000 } {
+  instruction push = { 0000 0000, imm16 as value } {
     m_stack:2[sp] = value;
     sp = sp - 2;   // Decrement stack pointer
     ip = ip + 3;   // Increment instruction pointer
   };
   // Pop value from the stack into outp
-  instruction pop = { 0001, 0000 } {
+  instruction pop = { 0000 0001 } {
     sp = sp + 2;        // Increment stack pointer
     ip = ip + 1;        // Increment instruction pointer
   };
 
-  instruction popOut = { 0010, 0000 } {
+  instruction popOut = { 0000 0010 } {
     sp = sp + 2;        // Increment stack pointer
     outp = m_stack:2[sp]; // Retrieve value from stack to standard output
     ip = ip + 1;        // Increment instruction pointer
@@ -50,7 +50,7 @@ instructions:
 
 
 // Add the top two integers on the stack
-  instruction iadd = { 0011, 0000 } {
+  instruction iadd = {0000 0011 } {
     sp = sp + 2;                // Increment stack pointer
     let x = m_stack:2[sp];          // Pop first value into inp (top value of the stack)
     
@@ -64,7 +64,7 @@ instructions:
     ip = ip + 1;                // Increment instruction pointer
 };
 // Add the top two longs on the stack
- instruction ladd = { 0100, 0000 } {
+ instruction ladd = { 0000 0100 } {
     sp = sp + 2;                // Increment stack pointer
     let x = m_stack:2[sp];          // Pop first value into inp (top value of the stack)
     
@@ -79,7 +79,7 @@ instructions:
 };
 // store the type and the value , maybe I should push the type and value on the top of the stack
 //must test store
-instruction st = { 0101, imm16 as ptr,0000 }
+instruction st = { 0000 0101, imm16 as ptr }
 {
 	sp=sp + 2;
 	ram:2[ptr] = m_stack:2[sp];
@@ -88,7 +88,7 @@ instruction st = { 0101, imm16 as ptr,0000 }
 	ip = ip + 3;
 };
 // I will use this to store the size of the array for array type
-instruction a_st = { 0110, imm16 as ptr,0000 }
+instruction a_st = { 0000 0110, imm16 as ptr }
 {	
 	sp=sp + 2;
 	ram:2[ptr+4] = m_stack:2[sp];// we save 8 bytes for each variable , store the type in the first 4 bytes (32 bits from the stack) and the value in the next
@@ -97,20 +97,20 @@ instruction a_st = { 0110, imm16 as ptr,0000 }
 // to create load I have to have different loads (iload, lload..) I also need a general funciton to dispatch to them, but I also need a to recieve the type
 // and a way to extract it, and a way to handle the labels, in short I need to know how I figuered out how to store it in metadata section
 // were I keep all my variables and their types, or simple just how I am storing so that I can load
-  instruction jmp = { 0111, 0000, imm16 as target } {
+  instruction jmp = { 0000 0111, imm16 as target } {
     ip = target;
   };
 
-  instruction jz = { 1000, imm16 as target,0000 } {
+  instruction jz = { 0000 1000, imm16 as target } {
 	sp = sp + 2;                // Increment stack pointer
     let x = m_stack:2[sp];          // Pop first value into inp (top value of the stack)
     
-    if x == 0 then
+    if x == 0x0 then
       ip = target;
     else
       ip = ip + 3;
   };
-instruction wide_add ={1001, 0000} {
+instruction wide_add ={0000 1001} {
     // Increment stack pointer to "pop" the first operand's pointer
     sp = sp + 2;                
     let ptr1 = m_stack:2[sp];         // First operand pointer (address of operand)
@@ -144,7 +144,7 @@ instruction wide_add ={1001, 0000} {
     // Increment instruction pointer to the next instruction
     ip = ip + 1;
 };
-instruction wide_store = { 1010, 0000 }
+instruction wide_store = { 0000 1010 }
 {	sp=sp + 2;
 	let ptr = m_stack:2[sp];// store type
 	
@@ -154,7 +154,7 @@ instruction wide_store = { 1010, 0000 }
 	ram:2[ptr+4] = ram:2[ptr2+4];// store value
 	ip = ip + 1;
 };
-instruction wide_sub ={1011, 0000} {
+instruction wide_sub ={0000 1011} {
     // Increment stack pointer to "pop" the first operand's pointer
     sp = sp + 2;                
     let ptr1 = m_stack:2[sp];         // First operand pointer (address of operand)
@@ -188,7 +188,7 @@ instruction wide_sub ={1011, 0000} {
     // Increment instruction pointer to the next instruction
     ip = ip + 1;
 };
-instruction wide_mult ={1100, 0000} {
+instruction wide_mult ={0000 1100} {
     // Increment stack pointer to "pop" the first operand's pointer
     sp = sp + 2;                
     let ptr1 = m_stack:2[sp];         // First operand pointer (address of operand)
@@ -222,7 +222,7 @@ instruction wide_mult ={1100, 0000} {
     // Increment instruction pointer to the next instruction
     ip = ip + 1;
 };
-instruction wide_div ={1101, 0000} {
+instruction wide_div ={0000 1101} {
     // Increment stack pointer to "pop" the first operand's pointer
     sp = sp + 2;                
     let ptr1 = m_stack:2[sp];         // First operand pointer (address of operand)
@@ -256,10 +256,50 @@ instruction wide_div ={1101, 0000} {
     // Increment instruction pointer to the next instruction
     ip = ip + 1;
 };
+  instruction jgt = { 0000 1111, imm16 as target } {
+	sp = sp + 2;                // Increment stack pointer
+    let x = m_stack:2[sp];          // Pop first value into inp (top value of the stack)
+
+    if (x >> 31 == 0x0) && (x != 0x0) then
+      ip = target;
+    else
+      ip = ip + 3;
+  };
+    instruction jge = { 0001 0000, imm16 as target } {
+	sp = sp + 2;                // Increment stack pointer
+    let x = m_stack:2[sp];          // Pop first value into inp (top value of the stack)
+
+    if (x >> 31 == 0x0)  then
+      ip = target;
+    else
+      ip = ip + 3;
+  };
+
+      instruction jlt = { 0001 0001, imm16 as target } {
+	sp = sp + 2;                // Increment stack pointer
+    let x = m_stack:2[sp];          // Pop first value into inp (top value of the stack)
+
+    if (x >> 31 == 0x1)  then
+      ip = target;
+    else
+      ip = ip + 3;
+  };
+
+        instruction jle = { 0001 0010, imm16 as target } {
+	sp = sp + 2;                // Increment stack pointer
+    let x = m_stack:2[sp];          // Pop first value into inp (top value of the stack)
+
+    if (x >> 31 == 0x1) || (x == 0x0) then
+      ip = target;
+    else
+      ip = ip + 3;
+  };
   // Halt execution
   instruction hlt = { 1111 1111 } {
     // Execution halts
   };
+  
+  
   
   
 
@@ -272,6 +312,11 @@ mnemonics:
   mnemonic ladd() ;
   mnemonic jump for jmp(target) "{1}";
   mnemonic jz(target) "{1}";
+  mnemonic jgt(target) "{1}";
+  mnemonic jge(target) "{1}";
+  mnemonic jlt(target) "{1}";
+  mnemonic jle(target) "{1}";
+
   mnemonic store for st(ptr) "{1}";
   mnemonic astore for a_st(ptr) "{1}";
   mnemonic wide_add();

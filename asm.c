@@ -27,7 +27,13 @@
 #define ladd(op1, op2, to) mnemonic_0("ladd")
 
 #define jump(target) mnemonic_1("jump", target)
-#define jz(target, cond) mnemonic_2("jz", target, cond)
+#define jz(target) mnemonic_1("jz", target)
+#define jgt(target) mnemonic_1("jgt", target)
+#define jge(target) mnemonic_1("jge", target)
+#define jlt(target) mnemonic_1("jlt", target)
+#define jle(target) mnemonic_1("jle", target)
+
+
 #define store(value) mnemonic_1("store", value)
 #define astore(value) mnemonic_1("astore", value)
 #define wide_store() mnemonic_0("wide_store")
@@ -252,6 +258,22 @@ int translateOT(OTNode* tree, char * fileName) {
 				printf(">=");
 			}
 			if (strcmp(tree->value.operator, "==") == 0) {
+				wide_sub();
+				pop();// because sub pushes the type first
+				char* label1 = labelName();
+				char* label2 = labelName();
+				jz(label1);
+				push("0"); //false branch
+				put_comment("false branch");
+				jump(label2);
+				put_label(label1)
+				push("1");//true branch
+				put_comment("true branch");
+
+				put_label(label2)
+				free(label1);
+				free(label2);
+
 				printf("==");
 			}
 			if (strcmp(tree->value.operator, "+") == 0) {
@@ -328,14 +350,47 @@ int translate(Subroutine** subroutines, int cnt, char* fileName) {
 int translateCfgIfStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* start , char* fileName) {
 
 	translateInstructions(node, fileName);
-	controlFlowGraphBlock* ThenNode = node->nodes[0];
-	  translateCfg(ThenNode, node , fileName);
-	int isElseNode = node->outNodeCount > 1 ? 1 : 0;
 
+	put_comment("if")
+	//TODO: type check that the condition is an expression that returns the type bool
+	char* goThrough = labelName();
+	char* elseLabel="";
+		
+	int isElseNode = node->outNodeCount > 1 ? 1 : 0;
 	if (isElseNode == 1) {
-		controlFlowGraphBlock* ElseNode = node->nodes[1];
-		  translateCfg(ElseNode, node , fileName);
+		elseLabel = labelName();
+		jz( elseLabel) // if r0 == 0 goto else conditional statement
+		
 	}
+	else {
+		jz(goThrough) // if r0 == 0 goto else conditional statement
+
+	}
+	
+	put_comment("then")
+	/*	if (translate_statement(ifs.statement.statement, table, lastGoThroughLabel) != 0) {
+			return 1;
+			//TODO: understand this condition
+		}*/
+	controlFlowGraphBlock* ThenNode = node->nodes[0];
+	translateCfg(ThenNode, node, fileName);
+	if (isElseNode==1) {
+		jump(goThrough)
+			put_label(elseLabel)
+			put_comment("else")
+			/*if (translate_statement(ifs.elseStatement, table, lastGoThroughLabel) != 0) {
+				return 1;
+			}*/
+			controlFlowGraphBlock* ElseNode = node->nodes[1];
+		translateCfg(ElseNode, node, fileName);
+		jump(goThrough)
+
+	}
+	put_comment("endif")
+		put_label(goThrough)
+
+
+
 	return 0;
 }
 int translateCfgWhileStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* start , char* fileName) {
