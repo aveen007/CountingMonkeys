@@ -2,6 +2,10 @@ function calculator()
     dim i,  sum as int
     i = 3;
     sum = i + 2;
+    sum = i - 3;
+    sum = i * 6;
+    sum = i / 2;
+
   
   
 end function

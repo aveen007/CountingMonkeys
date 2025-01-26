@@ -21,6 +21,9 @@
 #define pop() mnemonic_0("pop")
 #define iadd() mnemonic_0("iadd")
 #define wide_add() mnemonic_0("wide_add")
+#define wide_sub() mnemonic_0("wide_sub")
+#define wide_mult() mnemonic_0("wide_mult")
+#define wide_div() mnemonic_0("wide_div")
 #define ladd(op1, op2, to) mnemonic_0("ladd")
 
 #define jump(target) mnemonic_1("jump", target)
@@ -262,12 +265,30 @@ int translateOT(OTNode* tree, char * fileName) {
 			}
 
 			if (strcmp(tree->value.operator, "-") == 0) {
+				wide_sub();
+				char* lab = labelName();
+				put_label_var(lab, 0, 0);
+				store_label_type(lab);
+				store_label_value(lab);
+				push(lab);
 				printf("-");
 			}
 			if (strcmp(tree->value.operator, "*") == 0) {
+				wide_mult();
+				char* lab = labelName();
+				put_label_var(lab, 0, 0);
+				store_label_type(lab);
+				store_label_value(lab);
+				push(lab);
 				printf("*");
 			}
 			if (strcmp(tree->value.operator, "/") == 0) {
+				wide_div();
+				char* lab = labelName();
+				put_label_var(lab, 0, 0);
+				store_label_type(lab);
+				store_label_value(lab);
+				push(lab);
 				printf("/");
 			}
 			break;

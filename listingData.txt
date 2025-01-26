@@ -15,3 +15,21 @@ label_1:
 label_2: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`
+label_3:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 3 ; Offset for `value`
+label_4: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x0 ; Offset for `value`
+label_5:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 6 ; Offset for `value`
+label_6: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x0 ; Offset for `value`
+label_7:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 2 ; Offset for `value`
+label_8: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x0 ; Offset for `value`

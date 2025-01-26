@@ -154,8 +154,108 @@ instruction wide_store = { 1010, 0000 }
 	ram:2[ptr+4] = ram:2[ptr2+4];// store value
 	ip = ip + 1;
 };
+instruction wide_sub ={1011, 0000} {
+    // Increment stack pointer to "pop" the first operand's pointer
+    sp = sp + 2;                
+    let ptr1 = m_stack:2[sp];         // First operand pointer (address of operand)
+    let type1 = ram:2[ptr1];         // Type of first operand (e.g., 2 for number)
+    
+    // Increment stack pointer to "pop" the second operand's pointer
+    sp = sp + 2;                
+    let ptr2 = m_stack:2[sp];         // Second operand pointer
+    let type2 = ram:2[ptr2];         // Type of second operand
 
+    // Check if both operands are of type "number" (type == 2)
+    if (type1 == 2) && (type2 == 2) then {
+        let x = ram:2[ptr1 + 4];     // Fetch the value of the first operand
+        let y = ram:2[ptr2 + 4];     // Fetch the value of the second operand
+        
+        let r = x - y;                // Perform addition
+        
+        // Push the result back onto the stack
+        m_stack:2[sp] = r;           
+        sp = sp - 2;                  // Decrement stack pointer
+		m_stack:2[sp]= 2; // push the type
+		sp= sp -2;
+    } else {
+        // Push error code (-1) onto the stack if types don't match
+        m_stack:2[sp] = -1;          
+        sp = sp - 2;                  // Decrement stack pointer
+		m_stack:2[sp] = -1;
+		sp=sp -2; // push type error
+    }
 
+    // Increment instruction pointer to the next instruction
+    ip = ip + 1;
+};
+instruction wide_mult ={1100, 0000} {
+    // Increment stack pointer to "pop" the first operand's pointer
+    sp = sp + 2;                
+    let ptr1 = m_stack:2[sp];         // First operand pointer (address of operand)
+    let type1 = ram:2[ptr1];         // Type of first operand (e.g., 2 for number)
+    
+    // Increment stack pointer to "pop" the second operand's pointer
+    sp = sp + 2;                
+    let ptr2 = m_stack:2[sp];         // Second operand pointer
+    let type2 = ram:2[ptr2];         // Type of second operand
+
+    // Check if both operands are of type "number" (type == 2)
+    if (type1 == 2) && (type2 == 2) then {
+        let x = ram:2[ptr1 + 4];     // Fetch the value of the first operand
+        let y = ram:2[ptr2 + 4];     // Fetch the value of the second operand
+        
+        let r = x * y;                // Perform addition
+        
+        // Push the result back onto the stack
+        m_stack:2[sp] = r;           
+        sp = sp - 2;                  // Decrement stack pointer
+		m_stack:2[sp]= 2; // push the type
+		sp= sp -2;
+    } else {
+        // Push error code (-1) onto the stack if types don't match
+        m_stack:2[sp] = -1;          
+        sp = sp - 2;                  // Decrement stack pointer
+		m_stack:2[sp] = -1;
+		sp=sp -2; // push type error
+    }
+
+    // Increment instruction pointer to the next instruction
+    ip = ip + 1;
+};
+instruction wide_div ={1101, 0000} {
+    // Increment stack pointer to "pop" the first operand's pointer
+    sp = sp + 2;                
+    let ptr1 = m_stack:2[sp];         // First operand pointer (address of operand)
+    let type1 = ram:2[ptr1];         // Type of first operand (e.g., 2 for number)
+    
+    // Increment stack pointer to "pop" the second operand's pointer
+    sp = sp + 2;                
+    let ptr2 = m_stack:2[sp];         // Second operand pointer
+    let type2 = ram:2[ptr2];         // Type of second operand
+
+    // Check if both operands are of type "number" (type == 2)
+    if (type1 == 2) && (type2 == 2) then {
+        let x = ram:2[ptr1 + 4];     // Fetch the value of the first operand
+        let y = ram:2[ptr2 + 4];     // Fetch the value of the second operand
+        
+        let r = x / y;                // Perform addition
+        
+        // Push the result back onto the stack
+        m_stack:2[sp] = r;           
+        sp = sp - 2;                  // Decrement stack pointer
+		m_stack:2[sp]= 2; // push the type
+		sp= sp -2;
+    } else {
+        // Push error code (-1) onto the stack if types don't match
+        m_stack:2[sp] = -1;          
+        sp = sp - 2;                  // Decrement stack pointer
+		m_stack:2[sp] = -1;
+		sp=sp -2; // push type error
+    }
+
+    // Increment instruction pointer to the next instruction
+    ip = ip + 1;
+};
   // Halt execution
   instruction hlt = { 1111 1111 } {
     // Execution halts
@@ -176,5 +276,8 @@ mnemonics:
   mnemonic astore for a_st(ptr) "{1}";
   mnemonic wide_add();
   mnemonic wide_store();
+  mnemonic wide_sub();
+  mnemonic wide_mult();
+  mnemonic wide_div();  
   mnemonic hlt();
 }
