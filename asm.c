@@ -27,6 +27,10 @@
 #define jz(target, cond) mnemonic_2("jz", target, cond)
 #define store(value) mnemonic_1("store", value)
 #define astore(value) mnemonic_1("astore", value)
+#define wide_store() mnemonic_0("wide_store")
+
+#define store_label_value(value) fprintf(asmCodeOut,"\tstore %s.value\n", value)
+#define store_label_type(type) fprintf(asmCodeOut,"\tstore %s.type\n", type)
 
 
 
@@ -194,6 +198,9 @@ void check_type(char* operand,char * fileName) {
 		}
 		else {
 			printf("Type: variable\n");
+			char* suffix = mystrcat("_", remove_last_three_chars(fileName));
+
+			push(mystrcat(operand, suffix));
 			/*char* suffix = mystrcat("_", remove_last_three_chars(fileName));
 			push(mystrcat(operand, suffix));*/
 			// a variable should have a push for a label with its name and file name only
@@ -231,6 +238,8 @@ int translateOT(OTNode* tree, char * fileName) {
 				
 			}
 			if (strcmp(tree->value.operator, "=") == 0) {
+				wide_store();
+
 				printf("=");
 			}
 			if (strcmp(tree->value.operator, "<=") == 0) {
@@ -244,6 +253,11 @@ int translateOT(OTNode* tree, char * fileName) {
 			}
 			if (strcmp(tree->value.operator, "+") == 0) {
 				wide_add();
+				char* lab = labelName();
+				put_label_var(lab, 0, 0);
+				store_label_type(lab);
+				store_label_value(lab);
+				push(lab);
 				printf("+");
 			}
 

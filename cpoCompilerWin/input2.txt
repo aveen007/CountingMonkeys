@@ -1,6 +1,7 @@
 function calculator()
     dim i,  sum as int
-    sum = 10 + 2;
+    i = 3;
+    sum = i + 2;
   
   
 end function

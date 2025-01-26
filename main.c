@@ -71,12 +71,12 @@ int main(int argc, char* argv[]) {
     //&&&&&&&&&&&&&&& DELETE!!!!!!!!!!!!!!!
 
     Node* localVars=NULL;
-    Subroutine** subroutines=NULL;
+    Subroutine*** sub_all_files = malloc(sizeof(Subroutine**)*numberOfFiles);
     for (int i = 0; i < numberOfFiles; i++) {
         numberOfProcedures += files[i]->ast->children[0]->childrenCount;
         files[i]->cfgs = CFGInterfacer(files[i]->name, files[i]->ast);
-        subroutines = DefineSubprogram(files[i]->name,files[i]->cfgs->cfgs, files[i]->ast);
-        localVars= getLocalVars(subroutines,files[i]->ast->children[0]->childrenCount, localVars, files[i]->name);
+        sub_all_files[i] = DefineSubprogram(files[i]->name, files[i]->cfgs->cfgs, files[i]->ast);
+        localVars= getLocalVars(sub_all_files[i],files[i]->ast->children[0]->childrenCount, localVars, files[i]->name);
         //translate(subroutines, files[i]->ast->children[0]->childrenCount, files[i]->name);
         //printf(localVars->next->data->Ids[0]);
     }
@@ -98,7 +98,7 @@ int main(int argc, char* argv[]) {
 
     generateAsm(localVars);
     for (int i = 0; i < numberOfFiles; i++) {
-        translate(subroutines, files[i]->ast->children[0]->childrenCount, files[i]->name);
+        translate(sub_all_files[i], files[i]->ast->children[0]->childrenCount, files[i]->name);
     }
     fprintf(asmCodeOut, "\tjump halt\n");
 

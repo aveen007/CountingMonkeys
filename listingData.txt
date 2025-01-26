@@ -8,13 +8,10 @@ halt:
 	hlt
 label_0:  
     .type: dd 0x2 ; Offset for `type`
-    .value: dd 2 ; Offset for `value`
+    .value: dd 3 ; Offset for `value`
 label_1:  
     .type: dd 0x2 ; Offset for `type`
-    .value: dd 10 ; Offset for `value`
-label_2:  
-    .type: dd 0x2 ; Offset for `type`
     .value: dd 2 ; Offset for `value`
-label_3:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 10 ; Offset for `value`
+label_2: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x0 ; Offset for `value`

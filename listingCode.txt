@@ -4,11 +4,16 @@
 	push 2
 	store sum_input2
 	push label_0
+	push i_input2
+	wide_store
 	push label_1
+	push i_input2
 	wide_add
+	store label_2.type
+	store label_2.value
 	push label_2
-	push label_3
-	wide_add
+	push sum_input2
+	wide_store
 	jump halt
 i_input2: 
     .type: dd 0x0 ; Offset for `type`
@@ -20,13 +25,10 @@ halt:
 	hlt
 label_0:  
     .type: dd 0x2 ; Offset for `type`
-    .value: dd 2 ; Offset for `value`
+    .value: dd 3 ; Offset for `value`
 label_1:  
     .type: dd 0x2 ; Offset for `type`
-    .value: dd 10 ; Offset for `value`
-label_2:  
-    .type: dd 0x2 ; Offset for `type`
     .value: dd 2 ; Offset for `value`
-label_3:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 10 ; Offset for `value`
+label_2: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x0 ; Offset for `value`
