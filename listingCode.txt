@@ -26,7 +26,7 @@
 	push i_input2
 	wide_sub
 	pop
-	jz label_6
+	jgt label_6
 	push 0
 		;false branch
 	jump label_7

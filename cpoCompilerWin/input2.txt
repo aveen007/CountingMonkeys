@@ -3,7 +3,7 @@ function calculator()
     i = 3;
     sum = i * 6;
     sum = i / 2;
-    if i==0 then
+    if i>0 then
          sum = i + 2;
     else
        sum = i - 3;

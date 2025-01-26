@@ -238,11 +238,41 @@ int translateOT(OTNode* tree, char * fileName) {
 				translateOT(tree->operands[i], fileName);
 			}
 			if (strcmp(tree->value.operator, "<") == 0) {
+				wide_sub();
+				pop();// because sub pushes the type first
+				char* label1 = labelName();
+				char* label2 = labelName();
+				jlt(label1);
+				push("0"); //false branch
+				put_comment("false branch");
+				jump(label2);
+				put_label(label1)
+					push("1");//true branch
+				put_comment("true branch");
+
+				put_label(label2)
+					free(label1);
+				free(label2);
 				printf("<");
 				
 				break;
 			}
 			if (strcmp(tree->value.operator, ">") == 0) {
+				wide_sub();
+				pop();// because sub pushes the type first
+				char* label1 = labelName();
+				char* label2 = labelName();
+				jgt(label1);
+				push("0"); //false branch
+				put_comment("false branch");
+				jump(label2);
+				put_label(label1)
+					push("1");//true branch
+				put_comment("true branch");
+
+				put_label(label2)
+					free(label1);
+				free(label2);
 				printf(">");
 				
 			}
@@ -252,9 +282,39 @@ int translateOT(OTNode* tree, char * fileName) {
 				printf("=");
 			}
 			if (strcmp(tree->value.operator, "<=") == 0) {
+				wide_sub();
+				pop();// because sub pushes the type first
+				char* label1 = labelName();
+				char* label2 = labelName();
+				jle(label1);
+				push("0"); //false branch
+				put_comment("false branch");
+				jump(label2);
+				put_label(label1)
+					push("1");//true branch
+				put_comment("true branch");
+
+				put_label(label2)
+					free(label1);
+				free(label2);
 				printf("<=");
 			}
 			if (strcmp(tree->value.operator, ">=") == 0) {
+				wide_sub();
+				pop();// because sub pushes the type first
+				char* label1 = labelName();
+				char* label2 = labelName();
+				jge(label1);
+				push("0"); //false branch
+				put_comment("false branch");
+				jump(label2);
+				put_label(label1)
+					push("1");//true branch
+				put_comment("true branch");
+
+				put_label(label2)
+					free(label1);
+				free(label2);
 				printf(">=");
 			}
 			if (strcmp(tree->value.operator, "==") == 0) {
