@@ -400,7 +400,8 @@ int translateInstructions(controlFlowGraphBlock * node, char* fileName) {
 
 int translate(Subroutine** subroutines, int cnt, char* fileName) {
 	for (int i = 0; i < cnt; i++) {
-		 translateCfg(subroutines[i]->cfg, NULL, fileName);
+
+		translateCfg(subroutines[i]->cfg, NULL, fileName);
 	}
 	//jump("halt");
 
@@ -455,11 +456,29 @@ int translateCfgIfStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* 
 }
 int translateCfgWhileStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* start , char* fileName) {
 	   
-	translateInstructions(node, fileName);
 
+	put_comment("while")
+		char* loopbackLabel = labelName();
+	put_label(loopbackLabel)
+	translateInstructions(node, fileName);
+		//put_comment(whilep.condition.astNode->value)
+		//if (translate_expression(whilep.condition, table) != 0) { // r0 contains bool expression
+		//	return 1;
+		//};
+	char* goThrough = labelName();
+		jz(goThrough) // if r0 == 0 goto else conditional statement
+		put_comment("while body")
+			//TODO: type check the condition
+	/*	if (translate_block(whilep.block, table, goThrough) != 0) {
+			return 1;
+		}*/
 	controlFlowGraphBlock* whilebody = node->nodes[0];
-	  translateCfg(whilebody, node , fileName);
-	controlFlowGraphBlock* exitWhilebody = node->nodes[1];
+	translateCfg(whilebody, node , fileName);
+	jump(loopbackLabel)
+		put_label(goThrough)
+		put_comment("end while")
+
+	  controlFlowGraphBlock* exitWhilebody = node->nodes[1];
 	  translateCfg(exitWhilebody, node , fileName);
 	return 0;
 }
@@ -488,6 +507,7 @@ int translateCfg(controlFlowGraphBlock* cfg, controlFlowGraphBlock* start , char
 			return 0;
 		}
 		else {
+
 			return 0;
 		}
 		break;

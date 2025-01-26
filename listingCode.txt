@@ -22,43 +22,41 @@
 	push label_4
 	push sum_input2
 	wide_store
-	push label_5
+		;while
+label_5:
+	push label_6
 	push i_input2
 	wide_sub
 	pop
-	jgt label_6
+	jgt label_7
 	push 0
 		;false branch
-	jump label_7
-label_6:
+	jump label_8
+label_7:
 	push 1
 		;true branch
-label_7:
-		;if
+label_8:
 	jz label_9
-		;then
+		;while body
 	push label_10
 	push i_input2
-	wide_add
+	wide_sub
 	store label_11.type
 	store label_11.value
 	push label_11
-	push sum_input2
-	wide_store
-	jump label_8
-label_9:
-		;else
-	push label_12
 	push i_input2
-	wide_sub
+	wide_store
+	push label_12
+	push sum_input2
+	wide_mult
 	store label_13.type
 	store label_13.value
 	push label_13
 	push sum_input2
 	wide_store
-	jump label_8
-		;endif
-label_8:
+	jump label_5
+label_9:
+		;end while
 	jump halt
 i_input2: 
     .type: dd 0x0 ; Offset for `type`
@@ -83,18 +81,18 @@ label_3:
 label_4: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`
-label_5:  
+label_6:  
     .type: dd 0x2 ; Offset for `type`
     .value: dd 0 ; Offset for `value`
 label_10:  
     .type: dd 0x2 ; Offset for `type`
-    .value: dd 2 ; Offset for `value`
+    .value: dd 1 ; Offset for `value`
 label_11: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`
 label_12:  
     .type: dd 0x2 ; Offset for `type`
-    .value: dd 3 ; Offset for `value`
+    .value: dd 2 ; Offset for `value`
 label_13: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`

@@ -71,6 +71,7 @@ Node* traverseCfgIfStatement(controlFlowGraphBlock* node, controlFlowGraphBlock*
 		controlFlowGraphBlock* ElseNode = node->nodes[1];
 		var=traverseCfg(ElseNode, node, var, fileName);
 	}
+	node->drawn = 0;
 	return var;
 }
 Node* traverseCfgWhileStatement(controlFlowGraphBlock* node,controlFlowGraphBlock* start, Node * var, char* fileName) {
@@ -80,6 +81,7 @@ Node* traverseCfgWhileStatement(controlFlowGraphBlock* node,controlFlowGraphBloc
 	var=traverseCfg(whilebody, node, var, fileName);
 	controlFlowGraphBlock* exitWhilebody = node->nodes[1];
 	var=traverseCfg(exitWhilebody, node, var, fileName);
+	node->drawn = 0;
 	return var;
 }
 Node* traverseCfgBaseStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* start, Node * var, char* fileName) {

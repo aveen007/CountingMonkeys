@@ -694,6 +694,10 @@ controlFlowGraphBlock* ConstructCFGWhileStatement(Stack* openNodes, controlFlowG
 	insertCFGBlock(start, WhileBlockCfg);
 	InsertInstruction(WhileBlockCfg->instructions, tree->children[0]);
 	controlFlowGraphBlock* whileBodyBlock = createCFGBlock(tree->children[1], WhileBodyBlock);
+	for (int i = 1; i < tree->childrenCount; i++) {
+	InsertInstruction(whileBodyBlock->instructions, tree->children[i]);
+	}
+
 	insertCFGBlock(WhileBlockCfg, whileBodyBlock);
 
 	controlFlowGraphBlock* exitBlock = createCFGBlock(tree->children[1], WhileExitBlock);
@@ -829,6 +833,7 @@ void writeDotGraphIfStatement(controlFlowGraphBlock* node, FILE* file,controlFlo
 
 
 	}
+	node->drawn = 0;
 
 
 	return ;
@@ -849,6 +854,7 @@ void writeDotGraphWhileStatement(controlFlowGraphBlock* node, FILE* file, contro
 	controlFlowGraphBlock* exitWhilebody = node->nodes[1];
 	fprintf(file, "	   n%p -> n%p [ label = \"False\" color=\"red\"]\n", node, exitWhilebody);
 	writeDotGraph(exitWhilebody, file, node);
+	node->drawn = 0;
 
 	
 	return exitWhilebody;
@@ -862,6 +868,7 @@ void writeDotGraphBaseStatement(controlFlowGraphBlock* node, FILE* file, control
 			fprintf(file, "    n%p -> n%p\n", start,node );
 
 		}
+	
 
 		 writeDotGraph(node->nodes[0], file, node);
 		 return ;

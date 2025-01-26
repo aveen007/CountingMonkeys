@@ -4,22 +4,20 @@ ranksep=.4;
 bgcolor="lightgrey";  node [shape=box, fixedsize=false, fontsize=12, fontname="Helvetica-bold", fontcolor="blue"
 width=.25, height=.25, color="black", fillcolor="white", style="filled, solid, bold"];
 
-edge [arrowsize=.5, color="black", style="bold"]    n000012172A4A1400 [label="BaseBlock\n OT: [ =(3 , i)]
+edge [arrowsize=.5, color="black", style="bold"]    n00001154B19A1400 [label="BaseBlock\n OT: [ =(3 , i)]
 OT: [ =( *(6 , i) , sum)]
 OT: [ =( /(2 , i) , sum)]
 "]
-    n000012172A4A1460 [label="IfBlock\n OT: [ >(0 , i)]
+    n00001154B19A1460 [label="WhileBlock\n OT: [ >(0 , i)]
 "]
-    n000012172A4A1400 -> n000012172A4A1460
-    n000012172A4A1460 -> n000012172A4A14C0 [label="True" color="green"]
-    n000012172A4A14C0 [label="ThenBlock\n OT: [ =( +(2 , i) , sum)]
+    n00001154B19A1400 -> n00001154B19A1460
+	   n00001154B19A1460 -> n00001154B19A14C0 [ label = "True" color="green"]
+    n00001154B19A14C0 [label="WhileBodyBlock\n OT: [ =( -(1 , i) , i)]
+OT: [ =( *(2 , sum) , sum)]
 "]
-    n000012172A4A1580 [label="IfExitBlock\n "]
-    n000012172A4A14C0 -> n000012172A4A1580
-    n000012172A4A15E0 [label="BaseBlock\n "]
-    n000012172A4A1580 -> n000012172A4A15E0
-    n000012172A4A1460 -> n000012172A4A1520 [label="True" color="red"]
-    n000012172A4A1520 [label="ElseBlock\n OT: [ =( -(3 , i) , sum)]
-"]
-    n000012172A4A1520 -> n000012172A4A1580
+    n00001154B19A14C0 -> n00001154B19A1460
+	   n00001154B19A1460 -> n00001154B19A1520 [ label = "False" color="red"]
+    n00001154B19A1520 [label="WhileExitBlock\n "]
+    n00001154B19A1580 [label="BaseBlock\n "]
+    n00001154B19A1520 -> n00001154B19A1580
 }

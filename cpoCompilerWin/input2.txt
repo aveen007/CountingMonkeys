@@ -3,14 +3,9 @@ function calculator()
     i = 3;
     sum = i * 6;
     sum = i / 2;
-    if i>0 then
-         sum = i + 2;
-    else
-       sum = i - 3;
-    end if
-
-
-
-  
+    while i>0 
+        i=i-1;
+        sum = sum * 2;
+    wend
   
 end function
