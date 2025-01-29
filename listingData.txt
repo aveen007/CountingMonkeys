@@ -1,3 +1,6 @@
+ret: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd '' ; Offset for `value`
 i_input2: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x10 ; Offset for `value`
@@ -15,24 +18,9 @@ label_1:
 label_2: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`
-label_3:  
+label_4:  
     .type: dd 0x2 ; Offset for `type`
     .value: dd 2 ; Offset for `value`
-label_4: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x0 ; Offset for `value`
-label_6:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 0 ; Offset for `value`
-label_10:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 1 ; Offset for `value`
-label_11: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x0 ; Offset for `value`
-label_12:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 2 ; Offset for `value`
-label_13: 
+label_5: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`

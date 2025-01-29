@@ -97,7 +97,8 @@ int main(int argc, char* argv[]) {
     asmDataOut = data;
 
     generateAsm(localVars);
-    for (int i = 0; i < numberOfFiles; i++) {
+    // TODO: discarding the first file for now
+    for (int i = 1; i < numberOfFiles; i++) {
         translate(sub_all_files[i], files[i]->ast->children[0]->childrenCount, files[i]->name);
     }
     fprintf(asmCodeOut, "\tjump halt\n");

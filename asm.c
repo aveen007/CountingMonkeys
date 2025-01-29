@@ -18,6 +18,7 @@
 
 #define push(value) mnemonic_1("push", value)
 #define push_i(value) mnemonic_1_i("push", value)
+#define write() mnemonic_0("write")
 #define pop() mnemonic_0("pop")
 #define iadd() mnemonic_0("iadd")
 #define wide_add() mnemonic_0("wide_add")
@@ -32,6 +33,7 @@
 #define jge(target) mnemonic_1("jge", target)
 #define jlt(target) mnemonic_1("jlt", target)
 #define jle(target) mnemonic_1("jle", target)
+#define jmp_emp(target) mnemonic_1("jmp_emp", target)
 
 
 #define store(value) mnemonic_1("store", value)
@@ -125,6 +127,8 @@ int translate_variable(char* id, Type * type) {
     return 0;
 }
 int translate_var_declarations(Node* localVars) {
+	put_label_string("ret", 0, "");
+	store_label_value("ret", "hlt");
     while (localVars != NULL) {
         char** currentId = localVars->data->Ids;
 
@@ -255,9 +259,8 @@ int translateOT(OTNode* tree, char * fileName) {
 				free(label2);
 				printf("<");
 				
-				break;
 			}
-			if (strcmp(tree->value.operator, ">") == 0) {
+			else if (strcmp(tree->value.operator, ">") == 0) {
 				wide_sub();
 				pop();// because sub pushes the type first
 				char* label1 = labelName();
@@ -274,14 +277,17 @@ int translateOT(OTNode* tree, char * fileName) {
 					free(label1);
 				free(label2);
 				printf(">");
+
 				
 			}
-			if (strcmp(tree->value.operator, "=") == 0) {
+			else if (strcmp(tree->value.operator, "=") == 0) {
 				wide_store();
 
 				printf("=");
+				break;
+
 			}
-			if (strcmp(tree->value.operator, "<=") == 0) {
+			else if (strcmp(tree->value.operator, "<=") == 0) {
 				wide_sub();
 				pop();// because sub pushes the type first
 				char* label1 = labelName();
@@ -298,8 +304,10 @@ int translateOT(OTNode* tree, char * fileName) {
 					free(label1);
 				free(label2);
 				printf("<=");
+				break;
+
 			}
-			if (strcmp(tree->value.operator, ">=") == 0) {
+			else if (strcmp(tree->value.operator, ">=") == 0) {
 				wide_sub();
 				pop();// because sub pushes the type first
 				char* label1 = labelName();
@@ -316,8 +324,10 @@ int translateOT(OTNode* tree, char * fileName) {
 					free(label1);
 				free(label2);
 				printf(">=");
+				break;
+
 			}
-			if (strcmp(tree->value.operator, "==") == 0) {
+			else if (strcmp(tree->value.operator, "==") == 0) {
 				wide_sub();
 				pop();// because sub pushes the type first
 				char* label1 = labelName();
@@ -335,8 +345,10 @@ int translateOT(OTNode* tree, char * fileName) {
 				free(label2);
 
 				printf("==");
+				break;
+
 			}
-			if (strcmp(tree->value.operator, "+") == 0) {
+			else if (strcmp(tree->value.operator, "+") == 0) {
 				wide_add();
 				char* lab = labelName();
 				put_label_var(lab, 0, 0);
@@ -346,7 +358,7 @@ int translateOT(OTNode* tree, char * fileName) {
 				printf("+");
 			}
 
-			if (strcmp(tree->value.operator, "-") == 0) {
+			else if (strcmp(tree->value.operator, "-") == 0) {
 				wide_sub();
 				char* lab = labelName();
 				put_label_var(lab, 0, 0);
@@ -354,8 +366,10 @@ int translateOT(OTNode* tree, char * fileName) {
 				store_label_value(lab);
 				push(lab);
 				printf("-");
+				break;
+
 			}
-			if (strcmp(tree->value.operator, "*") == 0) {
+			else  if (strcmp(tree->value.operator, "*") == 0) {
 				wide_mult();
 				char* lab = labelName();
 				put_label_var(lab, 0, 0);
@@ -363,8 +377,10 @@ int translateOT(OTNode* tree, char * fileName) {
 				store_label_value(lab);
 				push(lab);
 				printf("*");
+				break;
+
 			}
-			if (strcmp(tree->value.operator, "/") == 0) {
+			else if (strcmp(tree->value.operator, "/") == 0) {
 				wide_div();
 				char* lab = labelName();
 				put_label_var(lab, 0, 0);
@@ -372,10 +388,32 @@ int translateOT(OTNode* tree, char * fileName) {
 				store_label_value(lab);
 				push(lab);
 				printf("/");
+				break;
+			}
+			else {
+
+			printf("indexer");
+			if (strcmp(tree->value.operator,"print") == 0 ){
+				write();
+			}
+			
+			else {
+				char* returnLabel = labelName();
+				push(returnLabel);
+				store_label_value("ret");
+				jump(tree->value.operator);
+				put_label(returnLabel);
+				push("halt");
+				store_label_value("ret");
+
+				
+			}
+
 			}
 			break;
 
 		default:
+			// indexer
 			break;
 		}
 	
@@ -399,9 +437,13 @@ int translateInstructions(controlFlowGraphBlock * node, char* fileName) {
 
 
 int translate(Subroutine** subroutines, int cnt, char* fileName) {
-	for (int i = 0; i < cnt; i++) {
 
+	for (int i = 0; i < cnt; i++) {
+		char* suffix = mystrcat("_", remove_last_three_chars(fileName));
+		put_label(subroutines[i]->name);
 		translateCfg(subroutines[i]->cfg, NULL, fileName);
+		
+		jmp_emp("ret.value");
 	}
 	//jump("halt");
 
@@ -429,19 +471,14 @@ int translateCfgIfStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* 
 	}
 	
 	put_comment("then")
-	/*	if (translate_statement(ifs.statement.statement, table, lastGoThroughLabel) != 0) {
-			return 1;
-			//TODO: understand this condition
-		}*/
+
 	controlFlowGraphBlock* ThenNode = node->nodes[0];
 	translateCfg(ThenNode, node, fileName);
 	if (isElseNode==1) {
 		jump(goThrough)
 			put_label(elseLabel)
 			put_comment("else")
-			/*if (translate_statement(ifs.elseStatement, table, lastGoThroughLabel) != 0) {
-				return 1;
-			}*/
+		
 			controlFlowGraphBlock* ElseNode = node->nodes[1];
 		translateCfg(ElseNode, node, fileName);
 		jump(goThrough)
@@ -461,17 +498,12 @@ int translateCfgWhileStatement(controlFlowGraphBlock* node, controlFlowGraphBloc
 		char* loopbackLabel = labelName();
 	put_label(loopbackLabel)
 	translateInstructions(node, fileName);
-		//put_comment(whilep.condition.astNode->value)
-		//if (translate_expression(whilep.condition, table) != 0) { // r0 contains bool expression
-		//	return 1;
-		//};
+	
 	char* goThrough = labelName();
 		jz(goThrough) // if r0 == 0 goto else conditional statement
 		put_comment("while body")
 			//TODO: type check the condition
-	/*	if (translate_block(whilep.block, table, goThrough) != 0) {
-			return 1;
-		}*/
+
 	controlFlowGraphBlock* whilebody = node->nodes[0];
 	translateCfg(whilebody, node , fileName);
 	jump(loopbackLabel)

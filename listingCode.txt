@@ -1,63 +1,43 @@
 [section ram, code]
+	store ret.value
 	push 2
 	store i_input2
 	push 2
 	store sum_input2
+calculator:
 	push label_0
 	push i_input2
 	wide_store
 	push label_1
 	push i_input2
-	wide_mult
+	wide_add
 	store label_2.type
 	store label_2.value
 	push label_2
 	push sum_input2
 	wide_store
 	push label_3
+	store ret.value
+	jump print_value
+label_3:
+	push halt
+	store ret.value
+	push label_4
 	push i_input2
 	wide_div
-	store label_4.type
-	store label_4.value
-	push label_4
+	store label_5.type
+	store label_5.value
+	push label_5
 	push sum_input2
 	wide_store
-		;while
-label_5:
-	push label_6
-	push i_input2
-	wide_sub
-	pop
-	jgt label_7
-	push 0
-		;false branch
-	jump label_8
-label_7:
-	push 1
-		;true branch
-label_8:
-	jz label_9
-		;while body
-	push label_10
-	push i_input2
-	wide_sub
-	store label_11.type
-	store label_11.value
-	push label_11
-	push i_input2
-	wide_store
-	push label_12
-	push sum_input2
-	wide_mult
-	store label_13.type
-	store label_13.value
-	push label_13
-	push sum_input2
-	wide_store
-	jump label_5
-label_9:
-		;end while
+	jmp_emp ret.value
+print_value:
+	write
+	jmp_emp ret.value
 	jump halt
+ret: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd '' ; Offset for `value`
 i_input2: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x10 ; Offset for `value`
@@ -75,24 +55,9 @@ label_1:
 label_2: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`
-label_3:  
+label_4:  
     .type: dd 0x2 ; Offset for `type`
     .value: dd 2 ; Offset for `value`
-label_4: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x0 ; Offset for `value`
-label_6:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 0 ; Offset for `value`
-label_10:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 1 ; Offset for `value`
-label_11: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x0 ; Offset for `value`
-label_12:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 2 ; Offset for `value`
-label_13: 
+label_5: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`
