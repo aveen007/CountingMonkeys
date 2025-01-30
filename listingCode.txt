@@ -5,6 +5,22 @@
 	push 2
 	store sum_input2
 	push 2
+	store tmp1_input2
+	push 2
+	store tmp2_input2
+	push 2
+	store i1_input2
+	push 2
+	store sum1_input2
+	push 2
+	store tmp11_input2
+	push 2
+	store tmp21_input2
+	push 2
+	store res_input2
+	push 2
+	store x_input2
+	push 2
 	store nextLine_input2
 	push 2
 	store revertedNum_input2
@@ -12,137 +28,379 @@
 	store tmp_input2
 calculator:
 	push label_0
-	push i_input2
+	push tmp1_input2
 	wide_store
 	push label_1
+	push tmp2_input2
+	wide_store
 	push i_input2
-	wide_add
-	store label_2.type
-	store label_2.value
+	read
 	push label_2
-	push sum_input2
-	wide_store
-	push sum_input2
-	push label_3
-	store ret.value
-	jump print_value
-label_3:
-	push halt
-	store ret.value
-	push label_4
 	push i_input2
-	wide_div
-	store label_5.type
-	store label_5.value
-	push label_5
+	wide_sub
+	store label_3.type
+	store label_3.value
+	push label_3
 	push sum_input2
 	wide_store
-	jmp_emp ret.value
-print_value:
-	push label_6
-	push nextLine_input2
-	wide_store
-	push label_7
-	push revertedNum_input2
-	wide_store
+	push i_input2
+	read
 		;while
-label_8:
-	push label_9
-	push sum_input2
+label_4:
+	push label_5
+	push i_input2
 	wide_sub
 	pop
-	jz label_10
+	jz label_6
 	push 1
 		;false branch
-	jump label_11
-label_10:
+	jump label_7
+label_6:
 	push 0
 		;true branch
-label_11:
-	jz label_12
+label_7:
+	jz label_8
 		;while body
-	push label_13
-	push revertedNum_input2
+	push label_9
+	push i_input2
+	wide_sub
+	store label_10.type
+	store label_10.value
+	push label_10
+	push tmp1_input2
+	wide_store
+	push label_11
+	push tmp1_input2
 	wide_mult
-	store label_14.type
-	store label_14.value
+	store label_12.type
+	store label_12.value
+	push label_12
+	push tmp2_input2
+	wide_store
+	push tmp2_input2
+	push sum_input2
+	wide_add
+	store label_13.type
+	store label_13.value
+	push label_13
+	push sum_input2
+	wide_store
+	push i_input2
+	read
+	jump label_4
+label_8:
+		;end while
 	push label_14
-	push revertedNum_input2
+	push tmp11_input2
 	wide_store
 	push label_15
-	push sum_input2
-	wide_mod
-	store label_16.type
-	store label_16.value
+	push tmp21_input2
+	wide_store
+	push i1_input2
+	read
 	push label_16
-	push tmp_input2
-	wide_store
-	push tmp_input2
-	push tmp_input2
-	wide_store
-	push tmp_input2
-	push revertedNum_input2
-	wide_add
+	push i1_input2
+	wide_sub
 	store label_17.type
 	store label_17.value
 	push label_17
-	push revertedNum_input2
+	push sum1_input2
 	wide_store
-	push label_18
-	push sum_input2
-	wide_div
-	store label_19.type
-	store label_19.value
-	push label_19
-	push sum_input2
-	wide_store
-	jump label_8
-label_12:
-		;end while
+	push i1_input2
+	read
 		;while
-label_20:
-	push label_21
-	push revertedNum_input2
+label_18:
+	push label_19
+	push i1_input2
 	wide_sub
 	pop
-	jz label_22
+	jz label_20
 	push 1
 		;false branch
-	jump label_23
-label_22:
+	jump label_21
+label_20:
 	push 0
 		;true branch
-label_23:
-	jz label_24
+label_21:
+	jz label_22
 		;while body
+	push label_23
+	push i1_input2
+	wide_sub
+	store label_24.type
+	store label_24.value
+	push label_24
+	push tmp11_input2
+	wide_store
 	push label_25
-	push revertedNum_input2
-	wide_mod
+	push tmp11_input2
+	wide_mult
 	store label_26.type
 	store label_26.value
 	push label_26
+	push tmp21_input2
+	wide_store
+	push tmp21_input2
+	push sum1_input2
+	wide_add
+	store label_27.type
+	store label_27.value
+	push label_27
+	push sum1_input2
+	wide_store
+	push i1_input2
+	read
+	jump label_18
+label_22:
+		;end while
+	push x_input2
+	read
+	push label_28
+	push x_input2
+	wide_sub
+	pop
+	jz label_29
+	push 0
+		;false branch
+	jump label_30
+label_29:
+	push 1
+		;true branch
+label_30:
+		;if
+	jz label_32
+		;then
+	push sum1_input2
+	push sum_input2
+	wide_add
+	store label_33.type
+	store label_33.value
+	push label_33
+	push res_input2
+	wide_store
+	push res_input2
+	push label_34
+	store ret.value
+	jump print_value
+label_34:
+	push halt
+	store ret.value
+	jump label_31
+label_32:
+		;else
+	push label_35
+	push x_input2
+	wide_sub
+	pop
+	jz label_36
+	push 0
+		;false branch
+	jump label_37
+label_36:
+	push 1
+		;true branch
+label_37:
+		;if
+	jz label_39
+		;then
+	push sum1_input2
+	push sum_input2
+	wide_sub
+	store label_40.type
+	store label_40.value
+	push label_40
+	push res_input2
+	wide_store
+	push res_input2
+	push label_41
+	store ret.value
+	jump print_value
+label_41:
+	push halt
+	store ret.value
+	jump label_38
+label_39:
+		;else
+	push label_42
+	push x_input2
+	wide_sub
+	pop
+	jz label_43
+	push 0
+		;false branch
+	jump label_44
+label_43:
+	push 1
+		;true branch
+label_44:
+		;if
+	jz label_46
+		;then
+	push sum1_input2
+	push sum_input2
+	wide_div
+	store label_47.type
+	store label_47.value
+	push label_47
+	push res_input2
+	wide_store
+	push res_input2
+	push label_48
+	store ret.value
+	jump print_value
+label_48:
+	push halt
+	store ret.value
+	jump label_45
+label_46:
+		;else
+	push label_49
+	push x_input2
+	wide_sub
+	pop
+	jz label_50
+	push 0
+		;false branch
+	jump label_51
+label_50:
+	push 1
+		;true branch
+label_51:
+		;if
+	jz label_52
+		;then
+	push sum1_input2
+	push sum_input2
+	wide_mult
+	store label_53.type
+	store label_53.value
+	push label_53
+	push res_input2
+	wide_store
+	push res_input2
+	push label_54
+	store ret.value
+	jump print_value
+label_54:
+	push halt
+	store ret.value
+		;endif
+label_52:
+	jump label_45
+		;endif
+label_45:
+	jump label_38
+		;endif
+label_38:
+	jump label_31
+		;endif
+label_31:
+	jmp_emp ret.value
+print_value:
+	push label_55
+	push nextLine_input2
+	wide_store
+	push label_56
+	push revertedNum_input2
+	wide_store
+		;while
+label_57:
+	push label_58
+	push res_input2
+	wide_sub
+	pop
+	jz label_59
+	push 1
+		;false branch
+	jump label_60
+label_59:
+	push 0
+		;true branch
+label_60:
+	jz label_61
+		;while body
+	push label_62
+	push revertedNum_input2
+	wide_mult
+	store label_63.type
+	store label_63.value
+	push label_63
+	push revertedNum_input2
+	wide_store
+	push label_64
+	push res_input2
+	wide_mod
+	store label_65.type
+	store label_65.value
+	push label_65
 	push tmp_input2
 	wide_store
-	push label_27
+	push tmp_input2
+	push tmp_input2
+	wide_store
+	push tmp_input2
+	push revertedNum_input2
+	wide_add
+	store label_66.type
+	store label_66.value
+	push label_66
+	push revertedNum_input2
+	wide_store
+	push label_67
+	push res_input2
+	wide_div
+	store label_68.type
+	store label_68.value
+	push label_68
+	push res_input2
+	wide_store
+	jump label_57
+label_61:
+		;end while
+		;while
+label_69:
+	push label_70
+	push revertedNum_input2
+	wide_sub
+	pop
+	jz label_71
+	push 1
+		;false branch
+	jump label_72
+label_71:
+	push 0
+		;true branch
+label_72:
+	jz label_73
+		;while body
+	push label_74
+	push revertedNum_input2
+	wide_mod
+	store label_75.type
+	store label_75.value
+	push label_75
+	push tmp_input2
+	wide_store
+	push label_76
 	push tmp_input2
 	wide_add
-	store label_28.type
-	store label_28.value
-	push label_28
+	store label_77.type
+	store label_77.value
+	push label_77
 	push tmp_input2
 	wide_store
 	push tmp_input2
 	write
-	push label_29
+	push label_78
 	push revertedNum_input2
 	wide_div
-	store label_30.type
-	store label_30.value
-	push label_30
+	store label_79.type
+	store label_79.value
+	push label_79
 	push revertedNum_input2
 	wide_store
-	jump label_20
-label_24:
+	jump label_69
+label_73:
 		;end while
 	jmp_emp ret.value
 	jump halt
@@ -153,6 +411,30 @@ i_input2:
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x10 ; Offset for `value`
 sum_input2: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x10 ; Offset for `value`
+tmp1_input2: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x10 ; Offset for `value`
+tmp2_input2: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x10 ; Offset for `value`
+i1_input2: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x10 ; Offset for `value`
+sum1_input2: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x10 ; Offset for `value`
+tmp11_input2: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x10 ; Offset for `value`
+tmp21_input2: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x10 ; Offset for `value`
+res_input2: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x10 ; Offset for `value`
+x_input2: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x10 ; Offset for `value`
 nextLine_input2: 
@@ -168,67 +450,136 @@ halt:
 	hlt
 label_0:  
     .type: dd 0x2 ; Offset for `type`
-    .value: dd 1200 ; Offset for `value`
+    .value: dd 10 ; Offset for `value`
 label_1:  
     .type: dd 0x2 ; Offset for `type`
-    .value: dd 6 ; Offset for `value`
-label_2: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x0 ; Offset for `value`
-label_4:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 2 ; Offset for `value`
-label_5: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x0 ; Offset for `value`
-label_6:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 10 ; Offset for `value`
-label_7:  
-    .type: dd 0x2 ; Offset for `type`
     .value: dd 0 ; Offset for `value`
+label_2:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 48 ; Offset for `value`
+label_3: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x0 ; Offset for `value`
+label_5:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 32 ; Offset for `value`
 label_9:  
     .type: dd 0x2 ; Offset for `type`
-    .value: dd 0 ; Offset for `value`
-label_13:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 10 ; Offset for `value`
-label_14: 
+    .value: dd 48 ; Offset for `value`
+label_10: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`
+label_11:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 10 ; Offset for `value`
+label_12: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x0 ; Offset for `value`
+label_13: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x0 ; Offset for `value`
+label_14:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 10 ; Offset for `value`
 label_15:  
     .type: dd 0x2 ; Offset for `type`
-    .value: dd 10 ; Offset for `value`
-label_16: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x0 ; Offset for `value`
+    .value: dd 0 ; Offset for `value`
+label_16:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 48 ; Offset for `value`
 label_17: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`
-label_18:  
+label_19:  
     .type: dd 0x2 ; Offset for `type`
-    .value: dd 10 ; Offset for `value`
-label_19: 
+    .value: dd 32 ; Offset for `value`
+label_23:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 48 ; Offset for `value`
+label_24: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`
-label_21:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 0 ; Offset for `value`
 label_25:  
     .type: dd 0x2 ; Offset for `type`
     .value: dd 10 ; Offset for `value`
 label_26: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`
-label_27:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 48 ; Offset for `value`
-label_28: 
+label_27: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`
-label_29:  
+label_28:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 43 ; Offset for `value`
+label_33: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x0 ; Offset for `value`
+label_35:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 45 ; Offset for `value`
+label_40: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x0 ; Offset for `value`
+label_42:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 47 ; Offset for `value`
+label_47: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x0 ; Offset for `value`
+label_49:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 42 ; Offset for `value`
+label_53: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x0 ; Offset for `value`
+label_55:  
     .type: dd 0x2 ; Offset for `type`
     .value: dd 10 ; Offset for `value`
-label_30: 
+label_56:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 0 ; Offset for `value`
+label_58:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 0 ; Offset for `value`
+label_62:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 10 ; Offset for `value`
+label_63: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x0 ; Offset for `value`
+label_64:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 10 ; Offset for `value`
+label_65: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x0 ; Offset for `value`
+label_66: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x0 ; Offset for `value`
+label_67:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 10 ; Offset for `value`
+label_68: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x0 ; Offset for `value`
+label_70:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 0 ; Offset for `value`
+label_74:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 10 ; Offset for `value`
+label_75: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x0 ; Offset for `value`
+label_76:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 48 ; Offset for `value`
+label_77: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x0 ; Offset for `value`
+label_78:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 10 ; Offset for `value`
+label_79: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`

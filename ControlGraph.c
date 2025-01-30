@@ -936,7 +936,7 @@ void writeDotGraph(controlFlowGraphBlock* cfg, FILE* file, controlFlowGraphBlock
 		}
 		if (cfg->blocktype == IfExitBlock&&cfg->drawn>1) {
 			fprintf(file, "    n%p -> n%p\n", start, cfg);
-
+			cfg->drawn = 0;
 			break;
 		}
 	

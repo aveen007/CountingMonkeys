@@ -1,20 +1,62 @@
 function calculator()
-    dim i,  sum as int
-    i = 1200;
-    sum = i + 6;
-    print_value(sum);
-    sum = i / 2;
+    dim i,  sum, tmp1, tmp2 as int
+    tmp1 = 10;
+    tmp2= 0;
+  
+    scan(i);
+    sum =  i - 48;
+    scan(i);
+    while i != 32
+        tmp1= i - 48;
+        tmp2 = tmp1 * 10;
+        sum = sum + tmp2;
+        scan(i);
+    wend
+    dim i1,  sum1, tmp11, tmp21, res, x as int
+    tmp11 = 10;
+    tmp21= 0;
+  
+    scan(i1);
+    sum1 =  i1 - 48;
+    scan(i1);
+    while i1 != 32
+        tmp11= i1 - 48;
+        tmp21 = tmp11 * 10;
+        sum1 = sum1 + tmp21;
+        scan(i1);
+    wend
+
+    scan(x);
+    if x ==43 then
+        res= sum + sum1;
+    else
+         if x ==45 then
+            res= sum - sum1;
+         else
+             if x ==47 then
+                res = sum / sum1;
+             else 
+                if x ==42 then
+                    res = sum * sum1;  
+                end if
+
+             end if
+        end if    
+    end if
+
+    print_value(res);
 end function
-function print_value(sum)
+
+function print_value(res)
     dim nextLine, revertedNum, tmp as int
     nextLine = 10;
     revertedNum = 0;   
-    while sum != 0 
+    while res != 0 
     revertedNum = revertedNum * 10  ;
-    tmp = sum % 10;
+    tmp = res % 10;
     tmp=tmp;
     revertedNum= revertedNum + tmp;
-    sum = sum / 10;
+    res = res / 10;
     wend
     while revertedNum != 0 
     tmp = revertedNum % 10;

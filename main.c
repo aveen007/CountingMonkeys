@@ -114,7 +114,7 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < numberOfFiles; i++) {
         ErrorInfoCFG* current = files[i]->cfgs->errors;
         while (current != NULL) {
-            printf("%s  \n", current->message);
+           // printf("%s  \n", current->message);
             if (current->next != NULL) {
                 current = current->next;
 

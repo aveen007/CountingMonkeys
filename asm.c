@@ -19,6 +19,7 @@
 #define push(value) mnemonic_1("push", value)
 #define push_i(value) mnemonic_1_i("push", value)
 #define write() mnemonic_0("write")
+#define read() mnemonic_0("read")
 #define pop() mnemonic_0("pop")
 #define iadd() mnemonic_0("iadd")
 #define wide_add() mnemonic_0("wide_add")
@@ -429,7 +430,9 @@ int translateOT(OTNode* tree, char * fileName) {
 				write();
 
 			}
-			
+			else if (strcmp(tree->value.operator,"scan") == 0) {
+				read();
+			}
 			else {
 				char* returnLabel = labelName();
 				push(returnLabel);
@@ -595,9 +598,9 @@ int translateCfg(controlFlowGraphBlock* cfg, controlFlowGraphBlock* start , char
 		if (cfg->blocktype == IfExitBlock) {
 			cfg->drawn++;
 		}
-		if (cfg->blocktype == IfExitBlock && cfg->drawn > 1) {
+	/*	if (cfg->blocktype == IfExitBlock && cfg->drawn > 1) {
 			break;
-		}
+		}*/
 
 		if (cfg->outNodeCount <= 0) {
 			   

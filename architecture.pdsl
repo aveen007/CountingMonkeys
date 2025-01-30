@@ -307,9 +307,11 @@ instruction wide_div ={0000 1101} {
     ip = ip + 1;        // Increment instruction pointer
   };
     instruction read = { 0001 0100  } {
-    m_stack:2[sp] = inp;
-    sp = sp - 2;   // Decrement stack pointer
-    ip = ip + 3;   // Increment instruction pointer
+	sp = sp + 2 ;
+	let ptr= m_stack:2[sp];
+	
+    ram:2[ptr+4] = inp;
+    ip = ip + 1;   // Increment instruction pointer
   };
     instruction jmp_emp = { 0001 0101, imm16 as ptr } {
 	sp = sp + 2;                // Increment stack pointer

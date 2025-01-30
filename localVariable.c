@@ -129,6 +129,7 @@ Node* traverseCfg(controlFlowGraphBlock* cfg, controlFlowGraphBlock* start, Node
 			cfg->drawn++;
 		}
 		if (cfg->blocktype == IfExitBlock && cfg->drawn > 1) {
+			cfg->drawn = 0;
 			break;
 		}
 
