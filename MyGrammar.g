@@ -130,7 +130,8 @@ binOp:
     | LARGT       
     | GT       
     | LEQ      
-    | GEQ;
+    | GEQ
+    | '%';
     atom  :  (ID|Literal|)
   ;
 // Lexical tokens

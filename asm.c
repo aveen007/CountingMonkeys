@@ -25,6 +25,7 @@
 #define wide_sub() mnemonic_0("wide_sub")
 #define wide_mult() mnemonic_0("wide_mult")
 #define wide_div() mnemonic_0("wide_div")
+#define wide_mod() mnemonic_0("wide_mod")
 #define ladd(op1, op2, to) mnemonic_0("ladd")
 
 #define jump(target) mnemonic_1("jump", target)
@@ -238,10 +239,30 @@ int translateOT(OTNode* tree, char * fileName) {
 			// inside those wide functions I will check the types
 			// and jump to different implementations of add, sub 
 			/////////
+			
 			for (int i = 0; i < tree->cntOperands; i++) {
 				translateOT(tree->operands[i], fileName);
 			}
-			if (strcmp(tree->value.operator, "<") == 0) {
+			if (strcmp(tree->value.operator, "!=") == 0) {
+				wide_sub();
+				pop();// because sub pushes the type first
+				char* label1 = labelName();
+				char* label2 = labelName();
+				jz(label1)
+				push("1"); //false branch
+				put_comment("false branch");
+				jump(label2);
+				put_label(label1)
+				push("0");//true branch
+				put_comment("true branch");
+
+				put_label(label2)
+
+
+					free(label1);
+				free(label2);
+			}
+			else if (strcmp(tree->value.operator, "<") == 0) {
 				wide_sub();
 				pop();// because sub pushes the type first
 				char* label1 = labelName();
@@ -390,11 +411,23 @@ int translateOT(OTNode* tree, char * fileName) {
 				printf("/");
 				break;
 			}
+			else if (strcmp(tree->value.operator, "%") == 0) {
+			wide_mod();
+			char* lab = labelName();
+			put_label_var(lab, 0, 0);
+			store_label_type(lab);
+			store_label_value(lab);
+			push(lab);
+			printf("%");
+			break;
+			}
 			else {
 
 			printf("indexer");
 			if (strcmp(tree->value.operator,"print") == 0 ){
+				
 				write();
+
 			}
 			
 			else {

@@ -1,10 +1,29 @@
 function calculator()
     dim i,  sum as int
-    i = 3;
+    i = 300;
     sum = i + 6;
-    print_value();
+    print_value(sum);
     sum = i / 2;
 end function
-function print_value()
-    print();
+function print_value(sum)
+    dim nextLine, revertedNum, tmp as int
+    nextLine = 10;
+    revertedNum = 0;
+   
+    while sum != 0 
+    revertedNum = revertedNum * 10  ;
+    tmp = sum % 10;
+    tmp=tmp;
+    revertedNum= revertedNum + tmp;
+    sum = sum / 10;
+    wend
+    while revertedNum != 0 
+    tmp = revertedNum % 10;
+    tmp=tmp + 48;
+    print(tmp);
+    revertedNum = revertedNum / 10;
+    wend
+   
+
+
 end function

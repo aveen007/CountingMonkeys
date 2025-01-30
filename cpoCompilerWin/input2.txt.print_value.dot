@@ -4,8 +4,34 @@ ranksep=.4;
 bgcolor="lightgrey";  node [shape=box, fixedsize=false, fontsize=12, fontname="Helvetica-bold", fontcolor="blue"
 width=.25, height=.25, color="black", fillcolor="white", style="filled, solid, bold"];
 
-edge [arrowsize=.5, color="black", style="bold"]    n0000126738C21A00 [label="BaseBlock\n OT: [ print]
+edge [arrowsize=.5, color="black", style="bold"]    n00001248E52A1C40 [label="BaseBlock\n OT: [ =(10 , nextLine)]
+OT: [ =(0 , revertedNum)]
 "]
-    n0000126738C21A60 [label="BaseBlock\n "]
-    n0000126738C21A00 -> n0000126738C21A60
+    n00001248E52A1CA0 [label="WhileBlock\n OT: [ !=(0 , sum)]
+"]
+    n00001248E52A1C40 -> n00001248E52A1CA0
+	   n00001248E52A1CA0 -> n00001248E52A1D00 [ label = "True" color="green"]
+    n00001248E52A1D00 [label="WhileBodyBlock\n OT: [ =( *(10 , revertedNum) , revertedNum)]
+OT: [ =( %(10 , sum) , tmp)]
+OT: [ =(tmp , tmp)]
+OT: [ =( +(tmp , revertedNum) , revertedNum)]
+OT: [ =( /(10 , sum) , sum)]
+"]
+    n00001248E52A1D00 -> n00001248E52A1CA0
+	   n00001248E52A1CA0 -> n00001248E52A1D60 [ label = "False" color="red"]
+    n00001248E52A1D60 [label="WhileExitBlock\n "]
+    n00001248E52A1DC0 [label="WhileBlock\n OT: [ !=(0 , revertedNum)]
+"]
+    n00001248E52A1D60 -> n00001248E52A1DC0
+	   n00001248E52A1DC0 -> n00001248E52A1E20 [ label = "True" color="green"]
+    n00001248E52A1E20 [label="WhileBodyBlock\n OT: [ =( %(10 , revertedNum) , tmp)]
+OT: [ =( +(48 , tmp) , tmp)]
+OT: [ print(tmp)]
+OT: [ =( /(10 , revertedNum) , revertedNum)]
+"]
+    n00001248E52A1E20 -> n00001248E52A1DC0
+	   n00001248E52A1DC0 -> n00001248E52A1E80 [ label = "False" color="red"]
+    n00001248E52A1E80 [label="WhileExitBlock\n "]
+    n00001248E52A1EE0 [label="BaseBlock\n "]
+    n00001248E52A1E80 -> n00001248E52A1EE0
 }
