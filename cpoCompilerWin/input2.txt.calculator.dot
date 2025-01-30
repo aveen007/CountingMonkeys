@@ -4,11 +4,11 @@ ranksep=.4;
 bgcolor="lightgrey";  node [shape=box, fixedsize=false, fontsize=12, fontname="Helvetica-bold", fontcolor="blue"
 width=.25, height=.25, color="black", fillcolor="white", style="filled, solid, bold"];
 
-edge [arrowsize=.5, color="black", style="bold"]    n00001248E52A1580 [label="BaseBlock\n OT: [ =(300 , i)]
+edge [arrowsize=.5, color="black", style="bold"]    n0000122BFB421580 [label="BaseBlock\n OT: [ =(1200 , i)]
 OT: [ =( +(6 , i) , sum)]
 OT: [ print_value(sum)]
 OT: [ =( /(2 , i) , sum)]
 "]
-    n00001248E52A15E0 [label="BaseBlock\n "]
-    n00001248E52A1580 -> n00001248E52A15E0
+    n0000122BFB4215E0 [label="BaseBlock\n "]
+    n0000122BFB421580 -> n0000122BFB4215E0
 }

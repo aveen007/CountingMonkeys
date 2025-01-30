@@ -168,7 +168,7 @@ halt:
 	hlt
 label_0:  
     .type: dd 0x2 ; Offset for `type`
-    .value: dd 300 ; Offset for `value`
+    .value: dd 1200 ; Offset for `value`
 label_1:  
     .type: dd 0x2 ; Offset for `type`
     .value: dd 6 ; Offset for `value`

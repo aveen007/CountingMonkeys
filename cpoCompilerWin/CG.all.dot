@@ -5,8 +5,8 @@ bgcolor="lightgrey";  node [shape=box, fixedsize=false, fontsize=12, fontname="H
 width=.25, height=.25, color="black", fillcolor="white", style="filled, solid, bold"];
 
 edge [arrowsize=.5, color="black", style="bold"]
-    n00001248E52A12E0 [label="temp\n "]
-    n00001248E52A1580 [label="calculator\n "]
-    n00001248E52A1580 -> n00001248E52A1C40
-    n00001248E52A1C40 [label="print_value\n "]
+    n0000122BFB4212E0 [label="temp\n "]
+    n0000122BFB421580 [label="calculator\n "]
+    n0000122BFB421580 -> n0000122BFB421C40
+    n0000122BFB421C40 [label="print_value\n "]
 }
