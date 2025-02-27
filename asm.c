@@ -53,6 +53,12 @@ char* labelName() {
 	//c= mystrcat(c, ".type");
 	return c;
 }
+char* labelNameOffsetted( int offset) {
+	char* c = malloc(sizeof(char) * 32);
+	sprintf(c, "label_%d", offset);
+	//c= mystrcat(c, ".type");
+	return c;
+}
 
 
 FILE* asmCodeOut;
@@ -130,7 +136,7 @@ int translate_variable(char* id, Type * type) {
 }
 int translate_var_declarations(Node* localVars) {
 	put_label_string("ret", 0, "");
-	store_label_value("ret", "hlt");
+	store("ret", "hlt");
     while (localVars != NULL) {
         char** currentId = localVars->data->Ids;
 
@@ -436,11 +442,11 @@ int translateOT(OTNode* tree, char * fileName) {
 			else {
 				char* returnLabel = labelName();
 				push(returnLabel);
-				store_label_value("ret");
+				store("ret");
 				jump(tree->value.operator);
 				put_label(returnLabel);
 				push("halt");
-				store_label_value("ret");
+				store("ret");
 
 				
 			}
@@ -479,20 +485,24 @@ int translate(Subroutine** subroutines, int cnt, char* fileName) {
 		put_label(subroutines[i]->name);
 		translateCfg(subroutines[i]->cfg, NULL, fileName);
 		
-		jmp_emp("ret.value");
+		jmp_emp("ret.type");
 	}
 	//jump("halt");
 
 	return 0;
 }
+int goThroughLabelCount=0;
 
 int translateCfgIfStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* start , char* fileName) {
 
 	translateInstructions(node, fileName);
 
 	put_comment("if")
-	//TODO: type check that the condition is an expression that returns the type bool
+		//TODO: type check that the condition is an expression that returns the type bool
+	goThroughLabelCount = labelCounter;
 	char* goThrough = labelName();
+		//print(goThroughLabelCount);
+
 	char* elseLabel="";
 		
 	int isElseNode = node->outNodeCount > 1 ? 1 : 0;
@@ -511,17 +521,20 @@ int translateCfgIfStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* 
 	controlFlowGraphBlock* ThenNode = node->nodes[0];
 	translateCfg(ThenNode, node, fileName);
 	if (isElseNode==1) {
-		jump(goThrough)
+		//jump(goThrough)//prbbly not needed //TODO check
 			put_label(elseLabel)
 			put_comment("else")
 		
 			controlFlowGraphBlock* ElseNode = node->nodes[1];
 		translateCfg(ElseNode, node, fileName);
-		jump(goThrough)
+		//jump(goThrough)
 
 	}
+
 	put_comment("endif")
-		put_label(goThrough)
+
+		//put_label(goThrough)
+
 
 
 
@@ -596,6 +609,10 @@ int translateCfg(controlFlowGraphBlock* cfg, controlFlowGraphBlock* start , char
 		break;
 	default:
 		if (cfg->blocktype == IfExitBlock) {
+			char* goThrough = labelNameOffsetted(goThroughLabelCount);
+			//printf(goThroughLabelCount);
+			jump(goThrough)
+			put_label(goThrough);
 			cfg->drawn++;
 		}
 	/*	if (cfg->blocktype == IfExitBlock && cfg->drawn > 1) {

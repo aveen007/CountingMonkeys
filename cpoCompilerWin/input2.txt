@@ -29,20 +29,20 @@ function calculator()
     scan(x);
     if x ==43 then
         res= sum + sum1;
-    else
-         if x ==45 then
-            res= sum - sum1;
-         else
-             if x ==47 then
-                res = sum / sum1;
-             else 
-                if x ==42 then
-                    res = sum * sum1;  
-                end if
-
-             end if
-        end if    
     end if
+
+    if x ==45 then
+        res= sum - sum1;
+    end if
+
+    if x ==47 then
+        res = sum / sum1;
+    end if 
+    if x ==42 then
+        res = sum * sum1;  
+    end if
+
+         
 
     print_value(res);
 end function

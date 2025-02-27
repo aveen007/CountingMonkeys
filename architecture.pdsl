@@ -301,6 +301,7 @@ instruction wide_div ={0000 1101} {
   };
   
     instruction write = { 0001 0011 } {
+	sp = sp +2 ;
 	let x = m_stack:2[sp];          // Pop first value into inp (top value of the stack)
 
     outp = ram:2[x + 4]; // Retrieve value from stack to standard output
