@@ -1,3 +1,21 @@
-function temp()
-
+function fib(n as int)
+  dim r, l as int
+  if n < 2 then
+      r = 1;
+  
+  end if
+  r;
+end function
+ 
+function printf(n)
+    print(n);
+end function
+ 
+function main()
+  dim i as int
+  i = 0;
+  while i < 11
+    printf(fib(i));
+    i = i + 1;
+  wend
 end function

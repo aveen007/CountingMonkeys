@@ -10,6 +10,9 @@
 #define dataAsmOutFilename "../listingData.txt"
 #define codeAsmOutFilename "../listingCode.txt"
 
+#define asm_code_header "[section ram, code]\n\tinit CodeEnd\n\tjump main\n"
+#define asm_data_header "data:\n"
+#define asm_footer "halt:\n\thlt\n"
 
 //#define _CRT_SECURE_NO_WARNINGS
 char* read_file_to_string(const char* filename);
@@ -70,16 +73,25 @@ int main(int argc, char* argv[]) {
     //return;
     //&&&&&&&&&&&&&&& DELETE!!!!!!!!!!!!!!!
 
-    Node* localVars=NULL;
-    Subroutine*** sub_all_files = malloc(sizeof(Subroutine**)*numberOfFiles);
+    //VarNode* localVars=NULL;
+
+
+
+    // define a list of all the funcs, for their vars
+
+
+    Subroutine*** sub_all_files = malloc(sizeof(Subroutine**) * numberOfFiles);
+    FunctionVariables*** funcVarsInFile = malloc(sizeof(FunctionVariables**)*numberOfFiles);
     for (int i = 0; i < numberOfFiles; i++) {
         numberOfProcedures += files[i]->ast->children[0]->childrenCount;
         files[i]->cfgs = CFGInterfacer(files[i]->name, files[i]->ast);
         sub_all_files[i] = DefineSubprogram(files[i]->name, files[i]->cfgs->cfgs, files[i]->ast);
-        localVars= getLocalVars(sub_all_files[i],files[i]->ast->children[0]->childrenCount, localVars, files[i]->name);
+        funcVarsInFile [i] = getLocalVars(sub_all_files[i], files[i]->ast->children[0]->childrenCount, files[i]->name);
         //translate(subroutines, files[i]->ast->children[0]->childrenCount, files[i]->name);
         //printf(localVars->next->data->Ids[0]);
     }
+
+
     FILE* data = fopen(dataAsmOutFilename, "w+");
     if (!data) {
         fclose(data);
@@ -95,19 +107,32 @@ int main(int argc, char* argv[]) {
     }
     asmCodeOut = code;
     asmDataOut = data;
+    //TODO, do sth w/vars
 
-    generateAsm(localVars);
+    fprintf(asmCodeOut, asm_code_header);
+    //fprintf(asmDataOut, asm_data_header);
+    // TODO
+    // I am not translating var declarations, 
+    //translate_var_declarations(localVars);
+    //generateAsm(localVars);
     // TODO: discarding the first file for now
+
+
+    //let's assume this will put my pointers in the right place
+    //fprintf(asmCodeOut, "init CodeEnd\n");
+
     for (int i = 1; i < numberOfFiles; i++) {
-        translate(sub_all_files[i], files[i]->ast->children[0]->childrenCount, files[i]->name);
+        translate(sub_all_files[i], funcVarsInFile[i], files[i]->ast->children[0]->childrenCount, files[i]->name);
     }
     fprintf(asmCodeOut, "\tjump halt\n");
+    fprintf(asmDataOut, asm_footer);
 
     fclose(data);
     char* dataListing = read_file_to_string(dataAsmOutFilename);
     fprintf(data, "\n");
     fprintf(code, dataListing);
-    
+    fprintf(asmCodeOut, "CodeEnd:\n");
+
 
     fclose(code);
     files = HandleCallGraphs(files, numberOfFiles);

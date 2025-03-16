@@ -4,7 +4,7 @@
 extern int labelCounter;
 extern FILE* asmCodeOut;
 extern FILE* asmDataOut;
-int generateAsm(Node* localVars);
+int generateAsm(FunctionVariables*** funcVars);
 typedef struct Data {
 	Type type;
 	void* value;
@@ -15,4 +15,4 @@ typedef struct Var {
 }Var;
 
 
-int translate(Subroutine** subroutines, int cnt, char* fileName);
+int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, char* fileName);

@@ -1,0 +1,37 @@
+digraph G {
+ordering=out;
+ranksep=.4;
+bgcolor="lightgrey";  node [shape=box, fixedsize=false, fontsize=12, fontname="Helvetica-bold", fontcolor="blue"
+width=.25, height=.25, color="black", fillcolor="white", style="filled, solid, bold"];
+
+edge [arrowsize=.5, color="black", style="bold"]    n0000120CD9422AE0 [label="BaseBlock\n OT: [ =(10 , nextLine)]
+OT: [ =(0 , revertedNum)]
+"]
+    n0000120CD9422B40 [label="WhileBlock\n OT: [ !=(0 , res)]
+"]
+    n0000120CD9422AE0 -> n0000120CD9422B40
+	   n0000120CD9422B40 -> n0000120CD9422BA0 [ label = "True" color="green"]
+    n0000120CD9422BA0 [label="WhileBodyBlock\n OT: [ =( *(10 , revertedNum) , revertedNum)]
+OT: [ =( %(10 , res) , tmp)]
+OT: [ =(tmp , tmp)]
+OT: [ =( +(tmp , revertedNum) , revertedNum)]
+OT: [ =( /(10 , res) , res)]
+"]
+    n0000120CD9422BA0 -> n0000120CD9422B40
+	   n0000120CD9422B40 -> n0000120CD9422C00 [ label = "False" color="red"]
+    n0000120CD9422C00 [label="WhileExitBlock\n "]
+    n0000120CD9422C60 [label="WhileBlock\n OT: [ !=(0 , revertedNum)]
+"]
+    n0000120CD9422C00 -> n0000120CD9422C60
+	   n0000120CD9422C60 -> n0000120CD9422CC0 [ label = "True" color="green"]
+    n0000120CD9422CC0 [label="WhileBodyBlock\n OT: [ =( %(10 , revertedNum) , tmp)]
+OT: [ =( +(48 , tmp) , tmp)]
+OT: [ print(tmp)]
+OT: [ =( /(10 , revertedNum) , revertedNum)]
+"]
+    n0000120CD9422CC0 -> n0000120CD9422C60
+	   n0000120CD9422C60 -> n0000120CD9422D20 [ label = "False" color="red"]
+    n0000120CD9422D20 [label="WhileExitBlock\n "]
+    n0000120CD9422D80 [label="BaseBlock\n "]
+    n0000120CD9422D20 -> n0000120CD9422D80
+}

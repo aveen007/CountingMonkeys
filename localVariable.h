@@ -5,24 +5,62 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Node structure for the linked list
-typedef struct Node {
-    struct varDeclaration* data;
-    struct Node* next;
+// VarNode structure for the linked list
+typedef struct VarNode {
+    //struct varDeclaration* data;
+    char* id;
+    struct Type* type;
+    int offset;
+    int cntVars;
+    struct VarNode* next;
     char* fileName;
-} Node;
+} VarNode;
+typedef struct FunctionVariables {
+
+    VarNode* localVariables;
+    VarNode* parameters; // signature variables
+    char* funcName;
+    int cntVars;
+    int cntArgs;
+
+}FunctionVariables;
+
 // Function to create a new node
-Node* createNode(varDeclaration * data, char  *fileName);
+VarNode* createNode(char* id, Type* type ,  char  *fileName);
 
 // Function to add a node to the end of the linked list
-void addNode(Node** head, varDeclaration * data, char * fileName);
+void addNode(VarNode** head, char * id, Type * type,int offset, char * fileName);
 
 // Function to free the linked list
-void freeList(Node* head);
-Node* getLocalVars(Subroutine** subroutines, int cnt, Node* head, char * fileName);
-Node* newVar(controlFlowGraphBlock* node, Node* var,  char* fileName);
-Node* traverseCfgIfStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* start, Node* var, char* fileName);
-Node* traverseCfgWhileStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* start, Node* var, char* fileName);
-Node* traverseCfgBaseStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* start, Node* var, char* fileName);
-Node* traverseCfg(controlFlowGraphBlock* cfg, controlFlowGraphBlock* start, Node* var, char* fileName);
+void freeList(VarNode* head);
+
+
+
+/// <summary>
+/// this is for the functions linked list
+/// </summary>
+/// <param name="subroutines"></param>
+/// <param name="cnt"></param>
+/// <param name="head"></param>
+/// <param name="fileName"></param>
+/// <returns></returns>
+/// 
+/// 
+// Function to create a new node
+FunctionVariables* createFuncVar( FunctionVariables** head,VarNode* localVars, VarNode * parameters, char* fileName);
+
+// Function to add a node to the end of the linked list
+void addFuncVar(FunctionVariables** head, FunctionVariables* funcVar, char* fileName);
+
+// Function to free the linked list
+void freeFuncVars(FunctionVariables* head);
+
+
+
+FunctionVariables** getLocalVars(Subroutine** subroutines, int cnt, char* fileName);
+VarNode* newVar(controlFlowGraphBlock* node, VarNode* var, char* fileName);
+VarNode* traverseCfgIfStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* start, VarNode* var , char* fileName);
+VarNode* traverseCfgWhileStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* start, VarNode* var , char* fileName);
+VarNode* traverseCfgBaseStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* start, VarNode* var , char* fileName);
+VarNode* traverseCfg(controlFlowGraphBlock* cfg, controlFlowGraphBlock* start, VarNode* var , char* fileName);
 

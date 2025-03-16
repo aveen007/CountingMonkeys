@@ -9,7 +9,8 @@ registers:
 
   storage sp [16];     // Stack pointer
   storage ip [16];     // Program counter (Instruction pointer)
-
+  storage ebp [16];
+  storage esp [16];
   storage inp [16];     // Input register (for input operations)
   storage outp [16];    // Output register (for output operations)
 
@@ -29,6 +30,10 @@ memory:
 
 instructions:
 	encode imm16 field = immediate [16];
+	encode reg field = register {
+		esp = 0,
+		ebp = 1};
+		
  // Push immediate value onto the stack
   instruction push = { 0000 0000, imm16 as value } {
     m_stack:2[sp] = value;
@@ -87,6 +92,12 @@ instruction st = { 0000 0101, imm16 as ptr }
 	
 	ip = ip + 3;
 };
+//instruction r_st = { 0000 1100,  reg as target}
+//{
+//	sp=sp + 2;
+//	target = m_stack:2[sp];	
+//	ip = ip + 3;
+//};
 // I will use this to store the size of the array for array type
 instruction a_st = { 0000 0110, imm16 as ptr }
 {	
@@ -147,10 +158,10 @@ instruction wide_add ={0000 1001} {
 };
 instruction wide_store = { 0000 1010 }
 {	sp=sp + 2;
-	let ptr = m_stack:2[sp];// store type
+	let ptr = m_stack:2[sp];// TO
 	
 	sp=sp + 2;
-	let ptr2=m_stack:2[sp];
+	let ptr2=m_stack:2[sp];//From
 	ram:2[ptr] = ram:2[ptr2];// store type
 	ram:2[ptr+4] = ram:2[ptr2+4];// store value
 	ip = ip + 1;
@@ -280,7 +291,7 @@ instruction wide_div ={0000 1101} {
 	sp = sp + 2;                // Increment stack pointer
     let x = m_stack:2[sp];          // Pop first value into inp (top value of the stack)
 
-    if (x >> 31 == 0x1)  then
+    if (x >> 15 == 0x1)  then
       ip = target;
     else
       ip = ip + 3;
@@ -290,7 +301,7 @@ instruction wide_div ={0000 1101} {
 	sp = sp + 2;                // Increment stack pointer
     let x = m_stack:2[sp];          // Pop first value into inp (top value of the stack)
 
-    if (x >> 31 == 0x1) || (x == 0x0) then
+    if (x >> 15 == 0x1) || (x == 0x0) then
       ip = target;
     else
       ip = ip + 3;
@@ -354,13 +365,77 @@ instruction wide_div ={0000 1101} {
     ip = ip + 1;
 };
 
+  instruction push_sf ={0001 0111 , imm16 as value} {
+	ram[esp]= value;
+    esp = esp - 4;   // Decrement stack pointer
+    ip = ip + 3;   // Increment instruction pointer
+  };
+  instruction pop_sf ={0001 1000} {
+	esp = esp + 4;        // Increment stack pointer
+	   
+    ip = ip + 1;        // Increment instruction pointer
+};
+
+  instruction call = { 0001 1010, imm16 as ptr, 0000 0000 } {
+	esp = esp + 4;
+	ram:2[esp] = ip + 4; // save return point
+	esp=esp + 4;
+	ram:2[esp]= ebp; // save the old ebp	
+	
+
+	ebp = esp;
+	ip = ptr;
+  };
+  instruction ret = { 0001 1011  } {
+		//if ebp != 0 then {
+			esp = ebp;
+			ebp = ram:2[esp] ;
+			esp = esp - 4;			
+			ip = ram:2[esp];
+			esp = esp - 4;
+			//	}
+		//ip = ip + 4;
+	//	ip=ip + 1;
+};
+  instruction load = { 0001 1100 } {
+		m_stack:2[sp]=esp;
+		sp = sp - 2;
+		ip=ip+3; 
+};
+instruction add_reg_imm = { 0001 1101, imm16 as value } {
+		if value ==1 then {
+		m_stack:2[sp] = ebp +4 *value;// the size of the cell is 2 bytes (16 bits) and I need 4 for value and 4 for type
+		}
+		else {
+		m_stack:2[sp] = ebp +4 *value +4;
+		}
+		sp = sp - 2;   // Decrement stack pointer
+		ip=ip+3; 
+};
+
+instruction sub_reg_imm = { 0001 1110, imm16 as value } {
+		if value ==1 then {
+		m_stack:2[sp] = ebp -4 * value +8;
+		}
+		else {
+		m_stack:2[sp] = ebp -4 * value + 4;
+		}
+		sp = sp - 2;   // Decrement stack pointer
+
+		ip=ip+3; 
+};
+
+instruction init ={ 0001 1111,imm16 as target }{
+	ebp=target;
+	esp=ebp;
+	
+	ip=ip + 3;
+};
 
 
-  
-  
 
 mnemonics:
-
+  mnemonic init for init(target) "{1}";
   mnemonic push (value) "{1}";
   mnemonic pop() ;
   mnemonic popOut();
@@ -384,5 +459,16 @@ mnemonics:
   mnemonic read();
   mnemonic write();
   mnemonic jmp_emp(ptr) "{1}";
+  
+  mnemonic push_sf (value) "{1}" ;
+  mnemonic pop_sf () ;
+  mnemonic call ( ptr) "{1}" ;
+  mnemonic ret() ;
+  mnemonic load() ;
+  mnemonic add_s for add_reg_imm(value) "{1}" ;
+  mnemonic sub_s for sub_reg_imm(value) "{1}" ;
+  
+  
+  
   mnemonic hlt();
 }

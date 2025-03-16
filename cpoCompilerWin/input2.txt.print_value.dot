@@ -4,34 +4,35 @@ ranksep=.4;
 bgcolor="lightgrey";  node [shape=box, fixedsize=false, fontsize=12, fontname="Helvetica-bold", fontcolor="blue"
 width=.25, height=.25, color="black", fillcolor="white", style="filled, solid, bold"];
 
-edge [arrowsize=.5, color="black", style="bold"]    n000011823B023920 [label="BaseBlock\n OT: [ =(10 , nextLine)]
+edge [arrowsize=.5, color="black", style="bold"]    n000011C2D70A4A60 [label="BaseBlock\n OT: [ =(10 , nextLine)]
 OT: [ =(0 , revertedNum)]
 "]
-    n000011823B023980 [label="WhileBlock\n OT: [ !=(0 , res)]
+    n000011C2D70A4AC0 [label="WhileBlock\n OT: [ !=(0 , res)]
 "]
-    n000011823B023920 -> n000011823B023980
-	   n000011823B023980 -> n000011823B0239E0 [ label = "True" color="green"]
-    n000011823B0239E0 [label="WhileBodyBlock\n OT: [ =( *(10 , revertedNum) , revertedNum)]
+    n000011C2D70A4A60 -> n000011C2D70A4AC0
+	   n000011C2D70A4AC0 -> n000011C2D70A4B20 [ label = "True" color="green"]
+    n000011C2D70A4B20 [label="WhileBodyBlock\n OT: [ =( *(10 , revertedNum) , revertedNum)]
 OT: [ =( %(10 , res) , tmp)]
 OT: [ =(tmp , tmp)]
 OT: [ =( +(tmp , revertedNum) , revertedNum)]
 OT: [ =( /(10 , res) , res)]
 "]
-    n000011823B0239E0 -> n000011823B023980
-	   n000011823B023980 -> n000011823B023A40 [ label = "False" color="red"]
-    n000011823B023A40 [label="WhileExitBlock\n "]
-    n000011823B023AA0 [label="WhileBlock\n OT: [ !=(0 , revertedNum)]
+    n000011C2D70A4B20 -> n000011C2D70A4AC0
+	   n000011C2D70A4AC0 -> n000011C2D70A4B80 [ label = "False" color="red"]
+    n000011C2D70A4B80 [label="WhileExitBlock\n "]
+    n000011C2D70A4BE0 [label="WhileBlock\n OT: [ !=(0 , revertedNum)]
 "]
-    n000011823B023A40 -> n000011823B023AA0
-	   n000011823B023AA0 -> n000011823B023B00 [ label = "True" color="green"]
-    n000011823B023B00 [label="WhileBodyBlock\n OT: [ =( %(10 , revertedNum) , tmp)]
+    n000011C2D70A4B80 -> n000011C2D70A4BE0
+	   n000011C2D70A4BE0 -> n000011C2D70A4C40 [ label = "True" color="green"]
+    n000011C2D70A4C40 [label="WhileBodyBlock\n OT: [ =( %(10 , revertedNum) , tmp)]
 OT: [ =( +(48 , tmp) , tmp)]
 OT: [ print(tmp)]
 OT: [ =( /(10 , revertedNum) , revertedNum)]
 "]
-    n000011823B023B00 -> n000011823B023AA0
-	   n000011823B023AA0 -> n000011823B023B60 [ label = "False" color="red"]
-    n000011823B023B60 [label="WhileExitBlock\n "]
-    n000011823B023BC0 [label="BaseBlock\n "]
-    n000011823B023B60 -> n000011823B023BC0
+    n000011C2D70A4C40 -> n000011C2D70A4BE0
+	   n000011C2D70A4BE0 -> n000011C2D70A4CA0 [ label = "False" color="red"]
+    n000011C2D70A4CA0 [label="WhileExitBlock\n OT: [ print(10)]
+"]
+    n000011C2D70A4D00 [label="BaseBlock\n "]
+    n000011C2D70A4CA0 -> n000011C2D70A4D00
 }

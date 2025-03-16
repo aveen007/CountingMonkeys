@@ -106,12 +106,20 @@ Subroutine** DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, Pars
 					ParseTree* argsTree = funcSigNode->children[0];
 					if (argsTree) {
 						subprograms[i]->signatureDetails->arguments = (ArgumentDef**)malloc(sizeof(ArgumentDef*) * argsTree->childrenCount);
+						subprograms[i]->signatureDetails->cntArgs = argsTree->childrenCount;
 						for (int j = 0; j < argsTree->childrenCount; j++) {
 							subprograms[i]->signatureDetails->arguments[j] = (ArgumentDef*)malloc(sizeof(ArgumentDef));
 							subprograms[i]->signatureDetails->arguments[j]->name = argsTree->children[j]->children[0]->token;
-							if (argsTree->childrenCount > 1) {
+							if (argsTree->childrenCount > 0) {
+								if (argsTree->children[j]->childrenCount > 1) {
 
-								subprograms[i]->signatureDetails->arguments[j]->type = HandleType(argsTree->children[1]);
+								subprograms[i]->signatureDetails->arguments[j]->type = HandleType(argsTree->children[j]->children[1]);
+								}
+								else {
+									subprograms[i]->signatureDetails->arguments[j]->type = malloc(sizeof(Type));
+									subprograms[i]->signatureDetails->arguments[j]->type->kind = TYPE_NONE;
+
+								}
 							}
 
 							///Questions

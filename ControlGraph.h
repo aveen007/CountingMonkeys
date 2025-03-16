@@ -87,13 +87,15 @@ typedef struct Array {
 typedef union {
     SimpleTypeStruct simpleType;
     ArrayType arrayType;
+    
 } TypeData;
 
 // Define a struct to encapsulate our Type
 typedef struct Type {
     enum {
         TYPE_SIMPLE,
-        TYPE_ARRAY
+        TYPE_ARRAY,
+        TYPE_NONE
     } kind;               // To keep track of whether it's a simple type or array
     TypeData data;       // Union to hold the type data
 } Type;
@@ -115,6 +117,7 @@ typedef struct SignatureDetails {
     struct ArgumentDef** arguments;  ///< An array of argument definitions for the function/method.
     struct Type* returnType;      ///< The return type of the function/method.
     struct Position* position; ///< The position of the signature in the source code.
+    int cntArgs;
 } SignatureDetails;
 
 // Structure to represent a variable declaration

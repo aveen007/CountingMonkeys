@@ -5,7 +5,7 @@
 
 
 
-#define asm_code_header "[section ram, code]\n"
+#define asm_code_header "[section ram, code]\n\tjump start\n"
 #define asm_data_header "data:\n"
 #define asm_footer "halt:\n\thlt\n"
 
@@ -15,6 +15,20 @@
 #define mnemonic_2_i(mnemonic, arg1, arg2) fprintf(asmCodeOut, "\t%s %d, %s\n", mnemonic, arg1, arg2);
 #define mnemonic_3(mnemonic, arg1, arg2, arg3) fprintf(asmCodeOut, "\t%s %s, %s, %s\n", mnemonic, arg1, arg2, arg3);
 #define mnemonic_0(mnemonic) fprintf(asmCodeOut, "\t%s\n", mnemonic);
+//instruction push_sf(value) "{1}";
+//instruction pop_sf();
+//instruction init(target);
+//instruction call(ptr) "{1}";
+//instruction ret();
+
+#define push_sf() mnemonic_0("push_sf")
+#define pop_sf() mnemonic_0("pop_sf")
+
+#define call(value) mnemonic_1("call", value)
+#define ret() mnemonic_0("ret")
+#define load() mnemonic_0("load")
+
+
 
 #define push(value) mnemonic_1("push", value)
 #define push_i(value) mnemonic_1_i("push", value)
@@ -39,13 +53,16 @@
 
 
 #define store(value) mnemonic_1("store", value)
-#define astore(value) mnemonic_1("astore", value)
+#define r_st(value) mnemonic_1("r_st %d", value)
+#define astore(value) mnemonic_1("astore %d", value)
 #define wide_store() mnemonic_0("wide_store")
 
 #define store_label_value(value) fprintf(asmCodeOut,"\tstore %s.value\n", value)
 #define store_label_type(type) fprintf(asmCodeOut,"\tstore %s.type\n", type)
 
 
+#define add_s(offset) mnemonic_1_i("add_s", offset)
+#define sub_s(offset) mnemonic_1_i("sub_s", offset)
 
 char* labelName() {
 	char* c = malloc(sizeof(char) * 32);
@@ -65,6 +82,9 @@ FILE* asmCodeOut;
 FILE* asmDataOut;
 int labelCounter = 0;
 
+FunctionVariables* curFuncVars;
+FunctionVariables** fileFuncs;
+int cntFuncs;
 char* labelNameIdent(char* ident) {
     char* c = malloc(sizeof(char) * 32);
     sprintf(c, "%s_%d", ident, labelCounter++);
@@ -87,11 +107,8 @@ char* labelNameIdent(char* ident) {
     fprintf(asmDataOut, "    .type: dd 0x%x ; Offset for `type`\n", type); \
     fprintf(asmDataOut, "    .value: dd '%s' ; Offset for `value`\n", value);
 int labelCnt = 0;
-int generateAsm(Node * localVars) {
-    fprintf(asmCodeOut, asm_code_header);
-    //fprintf(asmDataOut, asm_data_header);
-    translate_var_declarations(localVars);
-    fprintf(asmDataOut, asm_footer);
+int generateAsm(FunctionVariables*** funVars) {
+
 
 }
 void translate_type(char* id,Type* type) {
@@ -134,26 +151,27 @@ int translate_variable(char* id, Type * type) {
   
     return 0;
 }
-int translate_var_declarations(Node* localVars) {
-	put_label_string("ret", 0, "");
-	store("ret", "hlt");
-    while (localVars != NULL) {
-        char** currentId = localVars->data->Ids;
-
-        for (int i = 0; i < localVars->data->cntId;i++) { // Loop until we hit a NULL pointer
-            char* suffix = mystrcat("_",remove_last_three_chars( localVars->fileName));
-            translate_variable(mystrcat( * currentId, suffix) , localVars->data->type);
-            currentId++; // Move to the next ID
-         
-        }
-            if (localVars->next != NULL) {
-                localVars = localVars->next;
-            }
-            else {
-                break;
-            }
-    }
-}
+//TODO: check if removed correctly
+//int translate_var_declarations(VarNode* localVars) {
+//	put_label_string("ret", 0, "");
+//	store("ret", "hlt");
+//    while (localVars != NULL) {
+//        char** currentId = localVars->data->Ids;
+//
+//        for (int i = 0; i < localVars->data->cntId;i++) { // Loop until we hit a NULL pointer
+//            char* suffix = mystrcat("_",remove_last_three_chars( localVars->fileName));
+//            translate_variable(mystrcat( * currentId, suffix) , localVars->data->type);
+//            currentId++; // Move to the next ID
+//         
+//        }
+//            if (localVars->next != NULL) {
+//                localVars = localVars->next;
+//            }
+//            else {
+//                break;
+//            }
+//    }
+//}
 void check_type(char* operand,char * fileName) {
 	// CHECK TYPE OF OPERAND
 					// true, false -> bool
@@ -220,16 +238,65 @@ void check_type(char* operand,char * fileName) {
 		else {
 			printf("Type: variable\n");
 			char* suffix = mystrcat("_", remove_last_three_chars(fileName));
+			//load the variable from ram
+			// push it and it's type
+		
+			int offset = findVar(operand);
+			if (offset >= 0) {
+				add_s(offset)
+			}
+			else {
+				sub_s(-1*offset)
+			}
 
-			push(mystrcat(operand, suffix));
-			/*char* suffix = mystrcat("_", remove_last_three_chars(fileName));
-			push(mystrcat(operand, suffix));*/
-			// a variable should have a push for a label with its name and file name only
-			// Handle variable type
-			// THe var definition from multiple 
+
 		}
 	}
 	return;
+}
+int findVar(char * operand) {
+	//int offset;
+	VarNode* curr;
+	
+	curr = curFuncVars->localVariables;
+	for (int i = 0; i < curFuncVars->cntVars; i++) {
+		if (strcmp(curr->id, operand) == 0)
+		{
+
+		return curr->offset;
+
+		}
+		curr = curr->next;
+
+	}
+	curr = curFuncVars->parameters;
+	for (int i = 0; i < curFuncVars->cntArgs; i++) {
+		if (strcmp(curr->id, operand) == 0)
+		{
+
+			return -1*curr->offset;
+
+		}
+		curr = curr->next;
+
+	}
+	return 0;
+}
+FunctionVariables * findFunc(char* operand) {
+	//int offset;
+	FunctionVariables* curr;
+
+	for (int i = 0; i < cntFuncs; i++) {
+		curr = fileFuncs[i];
+		if (strcmp(curr->funcName, operand) == 0)
+		{
+
+			return curr;
+
+		}
+
+	}
+	
 }
 int translateOT(OTNode* tree, char * fileName) {
 	
@@ -309,8 +376,11 @@ int translateOT(OTNode* tree, char * fileName) {
 				
 			}
 			else if (strcmp(tree->value.operator, "=") == 0) {
-				wide_store();
 
+			    // find offset of the var
+				
+				wide_store();
+				//TODO
 				printf("=");
 				break;
 
@@ -440,14 +510,22 @@ int translateOT(OTNode* tree, char * fileName) {
 				read();
 			}
 			else {
-				char* returnLabel = labelName();
-				push(returnLabel);
-				store("ret");
-				jump(tree->value.operator);
-				put_label(returnLabel);
+				// function call
+				//char* returnLabel = labelName();
+			/*	push(returnLabel);
+				store("ret");*/
+				//jump(tree->value.operator);
+		/*		put_label(returnLabel);
 				push("halt");
-				store("ret");
+				store("ret");*/
+				//TODO: when func args are stored add(1, 2) store those las values in the end of the old sf
+				FunctionVariables* func = findFunc(tree->value.operator);
+				for (int i = 0; i < func->cntArgs; i++) {
+					pop_sf();//here I am just saving a place for the called function's args in the SF of
 
+					pop_sf(); //I am poping for the type and value					// the caller function 
+				}
+				call(tree->value.operator);
 				
 			}
 
@@ -476,16 +554,71 @@ int translateInstructions(controlFlowGraphBlock * node, char* fileName) {
 
 
 
-
-
-int translate(Subroutine** subroutines, int cnt, char* fileName) {
-
+//TODO : translate stack frame, 
+// need to store the value of the last label in the ebp
+// push the old value each time I get a new func
+//start counting vars from last space, 
+//BUT , before all of this check if the local variables have the correct offset
+//int curFuncCnt;
+int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, char* fileName) {
+	//curFuncCnt = cnt;
 	for (int i = 0; i < cnt; i++) {
+		curFuncVars = funcVars[i];
+		fileFuncs = funcVars;
+		cntFuncs = cnt;
 		char* suffix = mystrcat("_", remove_last_three_chars(fileName));
 		put_label(subroutines[i]->name);
-		translateCfg(subroutines[i]->cfg, NULL, fileName);
 		
-		jmp_emp("ret.type");
+		//push_sf()
+		//TODO must also before call save a place for the args
+			int size_args = funcVars[i]->cntArgs;// added one for old_ret
+			//TODO: when func args are stored add(1, 2) store those las values in the end of the old sf
+			if (funcVars[i]->parameters) {
+
+			for (int i = 0; i < size_args; i++) {
+				// here I should push the first 2 args on top of the stack in the offsets -1 -2 ...
+				
+				sub_s(i + 1)
+				wide_store()
+			}
+			}
+			if (funcVars[i]->localVariables) {
+
+			for (int j = 0; j < funcVars[i]->localVariables->cntVars; j++) {
+	
+
+				pop_sf()
+				pop_sf()
+			}
+			VarNode* locals = funcVars[i]->localVariables;
+			for (int j = 0; j < funcVars[i]->cntVars;j++) {
+
+			//HERE : I am initializing the type 
+				// create a label with the type of the variable and value zero
+				// push the label
+				// sub_s the offset of the var
+				// wide_store the initialized value 
+				char* lab = labelName();
+				translate_variable(lab, locals->type);
+				push(lab);
+				add_s(locals->offset)
+					wide_store()
+					locals = locals->next;
+
+			}
+
+			}
+			// The args from the called function should be stored in the frame of the previous one, 
+			// I am saving a place for the local vars and not for the value places I mean in i+2
+			// I save a place in the frame for i , but not for 2...
+			// if that makes sense,  where in the code is it best to save a place for args of the 
+			// called func?
+			// 
+			//TODO: add a function that will put the reg value on the top 
+			// here maybe add the args size and r_st
+		translateCfg(subroutines[i]->cfg, NULL, fileName);
+		ret()
+		/*jmp_emp("ret.type");*/
 	}
 	//jump("halt");
 
@@ -610,6 +743,9 @@ int translateCfg(controlFlowGraphBlock* cfg, controlFlowGraphBlock* start , char
 	default:
 		if (cfg->blocktype == IfExitBlock) {
 			char* goThrough = labelNameOffsetted(goThroughLabelCount);
+			//labelCnt++;
+			//TODO: check and test 
+			// 
 			//printf(goThroughLabelCount);
 			jump(goThrough)
 			put_label(goThrough);

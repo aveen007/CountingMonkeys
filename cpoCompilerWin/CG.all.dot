@@ -5,8 +5,16 @@ bgcolor="lightgrey";  node [shape=box, fixedsize=false, fontsize=12, fontname="H
 width=.25, height=.25, color="black", fillcolor="white", style="filled, solid, bold"];
 
 edge [arrowsize=.5, color="black", style="bold"]
-    n000011823B021340 [label="temp\n "]
-    n000011823B0215E0 [label="calculator\n "]
-    n000011823B0215E0 -> n000011823B023920
-    n000011823B023920 [label="print_value\n "]
+    n0000120CD9421BE0 [label="fib\n "]
+    n0000120CD9421FA0 [label="printf\n "]
+    n0000120CD9422240 [label="main\n "]
+    n0000120CD9422240 -> n0000120CD9421FA0
+    n0000120CD9422240 -> n0000120CD9421BE0
+    n0000120CD9422600 [label="fib\n "]
+    n0000120CD9422600 -> n0000120CD9421FA0
+    n0000120CD9422AE0 [label="printf\n "]
+    n0000120CD9423F20 [label="main\n "]
+    n0000120CD9423F20 -> n0000120CD9421BE0
+    n0000120CD9423F20 -> n0000120CD9421BE0
+    n0000120CD9423F20 -> n0000120CD9421BE0
 }
