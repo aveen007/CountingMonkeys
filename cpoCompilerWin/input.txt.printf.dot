@@ -4,8 +4,8 @@ ranksep=.4;
 bgcolor="lightgrey";  node [shape=box, fixedsize=false, fontsize=12, fontname="Helvetica-bold", fontcolor="blue"
 width=.25, height=.25, color="black", fillcolor="white", style="filled, solid, bold"];
 
-edge [arrowsize=.5, color="black", style="bold"]    n0000120CD9421FA0 [label="BaseBlock\n OT: [ print(n)]
+edge [arrowsize=.5, color="black", style="bold"]    n000011C7BD721FA0 [label="BaseBlock\n OT: [ print(n)]
 "]
-    n0000120CD9422000 [label="BaseBlock\n "]
-    n0000120CD9421FA0 -> n0000120CD9422000
+    n000011C7BD722000 [label="BaseBlock\n "]
+    n000011C7BD721FA0 -> n000011C7BD722000
 }

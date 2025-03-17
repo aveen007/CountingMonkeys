@@ -13,82 +13,79 @@ label_6:
 label_7:  
     .type: dd 0x2 ; Offset for `type`
     .value: dd 2 ; Offset for `value`
-label_11:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 2 ; Offset for `value`
+label_11: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x10 ; Offset for `value`
 label_12: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x10 ; Offset for `value`
 label_13: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x10 ; Offset for `value`
-label_14: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x10 ; Offset for `value`
+label_14:  
+    .type: dd 0x2 ; Offset for `type`
+    .value: dd 10 ; Offset for `value`
 label_15:  
     .type: dd 0x2 ; Offset for `type`
-    .value: dd 10 ; Offset for `value`
-label_16:  
+    .value: dd 0 ; Offset for `value`
+label_17:  
     .type: dd 0x2 ; Offset for `type`
     .value: dd 0 ; Offset for `value`
-label_18:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 0 ; Offset for `value`
-label_22:  
+label_21:  
     .type: dd 0x2 ; Offset for `type`
     .value: dd 10 ; Offset for `value`
-label_23: 
+label_22: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`
-label_24:  
+label_23:  
     .type: dd 0x2 ; Offset for `type`
     .value: dd 10 ; Offset for `value`
+label_24: 
+    .type: dd 0x0 ; Offset for `type`
+    .value: dd 0x0 ; Offset for `value`
 label_25: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`
-label_26: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x0 ; Offset for `value`
-label_27:  
+label_26:  
     .type: dd 0x2 ; Offset for `type`
     .value: dd 10 ; Offset for `value`
-label_28: 
+label_27: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`
-label_30:  
+label_29:  
     .type: dd 0x2 ; Offset for `type`
     .value: dd 0 ; Offset for `value`
-label_34:  
+label_33:  
     .type: dd 0x2 ; Offset for `type`
     .value: dd 10 ; Offset for `value`
-label_35: 
+label_34: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`
-label_36:  
+label_35:  
     .type: dd 0x2 ; Offset for `type`
     .value: dd 48 ; Offset for `value`
-label_37: 
+label_36: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`
-label_38:  
+label_37:  
     .type: dd 0x2 ; Offset for `type`
     .value: dd 10 ; Offset for `value`
-label_39: 
+label_38: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x0 ; Offset for `value`
-label_40: 
+label_39: 
     .type: dd 0x0 ; Offset for `type`
     .value: dd 0x10 ; Offset for `value`
-label_41:  
+label_40:  
     .type: dd 0x2 ; Offset for `type`
     .value: dd 0 ; Offset for `value`
-label_42:  
+label_41:  
     .type: dd 0x2 ; Offset for `type`
     .value: dd 1 ; Offset for `value`
-label_43:  
+label_42:  
     .type: dd 0x2 ; Offset for `type`
     .value: dd 2 ; Offset for `value`
-label_44:  
+label_43:  
     .type: dd 0x2 ; Offset for `type`
     .value: dd 3 ; Offset for `value`
 halt:

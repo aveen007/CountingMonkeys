@@ -617,7 +617,10 @@ int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, c
 			//TODO: add a function that will put the reg value on the top 
 			// here maybe add the args size and r_st
 		translateCfg(subroutines[i]->cfg, NULL, fileName);
-		ret()
+		if (strcmp(subroutines[i]->name, "main") != 0) {
+			ret()
+
+		}
 		/*jmp_emp("ret.type");*/
 	}
 	//jump("halt");

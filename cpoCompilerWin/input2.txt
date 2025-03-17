@@ -4,12 +4,12 @@ function fib(n as int)
       r = 1;
   end if
   if n >= 2 then
-      r = 2;
+      r = n;
   end if
   printf(r);
 end function
  
-function printf(n)
+function printf(res as int)
     dim nextLine, revertedNum, tmp as int
     nextLine = 10;
     revertedNum = 0;   

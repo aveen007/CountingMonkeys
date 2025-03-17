@@ -272,7 +272,7 @@ instruction wide_div ={0000 1101} {
 	sp = sp + 2;                // Increment stack pointer
     let x = m_stack:2[sp];          // Pop first value into inp (top value of the stack)
 
-    if (x >> 31 == 0x0) && (x != 0x0) then
+    if (x >> 15 == 0x0) && (x != 0x0) then
       ip = target;
     else
       ip = ip + 3;
@@ -281,7 +281,7 @@ instruction wide_div ={0000 1101} {
 	sp = sp + 2;                // Increment stack pointer
     let x = m_stack:2[sp];          // Pop first value into inp (top value of the stack)
 
-    if (x >> 31 == 0x0)  then
+    if (x >> 15 == 0x0)  then
       ip = target;
     else
       ip = ip + 3;
@@ -404,10 +404,10 @@ instruction wide_div ={0000 1101} {
 };
 instruction add_reg_imm = { 0001 1101, imm16 as value } {
 		if value ==1 then {
-		m_stack:2[sp] = ebp +4 *value;// the size of the cell is 2 bytes (16 bits) and I need 4 for value and 4 for type
+		m_stack:2[sp] = ebp + 4 ;// the size of the cell is 2 bytes (16 bits) and I need 4 for value and 4 for type
 		}
 		else {
-		m_stack:2[sp] = ebp +4 *value +4;
+		m_stack:2[sp] = ebp +8 *(value - 1) +4 ;
 		}
 		sp = sp - 2;   // Decrement stack pointer
 		ip=ip+3; 
@@ -418,7 +418,7 @@ instruction sub_reg_imm = { 0001 1110, imm16 as value } {
 		m_stack:2[sp] = ebp -4 * value +8;
 		}
 		else {
-		m_stack:2[sp] = ebp -4 * value + 4;
+		m_stack:2[sp] = ebp - (8 * (value - 1)) + 4;
 		}
 		sp = sp - 2;   // Decrement stack pointer
 
