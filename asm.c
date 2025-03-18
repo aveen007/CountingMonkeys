@@ -618,6 +618,13 @@ int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, c
 			// here maybe add the args size and r_st
 		translateCfg(subroutines[i]->cfg, NULL, fileName);
 		if (strcmp(subroutines[i]->name, "main") != 0) {
+			//here I want to take the last variable which I put on top of the stack and put it inside the return label and push that to the stack instead
+			char* lab = labelName();
+			put_label_var(lab, 2, 16);// 2 bytes for the value, the 0 is a dynamic thing for type
+
+			push(lab);
+			wide_store()
+			push(lab)
 			ret()
 
 		}

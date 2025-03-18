@@ -1,12 +1,14 @@
 function fib(n as int)
-  dim r, l as int
+  dim r, l, k,m as int
   if n < 2 then
       r = 1;
   end if
   if n >= 2 then
-      r = n;
+      m = fib(n-1);
+      k= fib(n-2);
+      r = m + k;
   end if
-  printf(r);
+  r;
 end function
  
 function printf(res as int)
@@ -26,12 +28,14 @@ function printf(res as int)
         print(tmp);
         revertedNum = revertedNum / 10;
     wend
+    print(10);
 end function
  
 function main()
   dim i as int
   i = 0;
-  fib (1);
-  fib (2);
-  fib (3);
+  while i < 11
+    printf(fib(i));
+    i = i + 1;
+  wend
 end function

@@ -4,24 +4,26 @@ ranksep=.4;
 bgcolor="lightgrey";  node [shape=box, fixedsize=false, fontsize=12, fontname="Helvetica-bold", fontcolor="blue"
 width=.25, height=.25, color="black", fillcolor="white", style="filled, solid, bold"];
 
-edge [arrowsize=.5, color="black", style="bold"]    n000011C7BD722600 [label="BaseBlock\n "]
-    n000011C7BD722660 [label="IfBlock\n OT: [ <(2 , n)]
+edge [arrowsize=.5, color="black", style="bold"]    n000011EC12C22600 [label="BaseBlock\n "]
+    n000011EC12C22660 [label="IfBlock\n OT: [ <(2 , n)]
 "]
-    n000011C7BD722600 -> n000011C7BD722660
-    n000011C7BD722660 -> n000011C7BD7226C0 [label="True" color="green"]
-    n000011C7BD7226C0 [label="ThenBlock\n OT: [ =(1 , r)]
+    n000011EC12C22600 -> n000011EC12C22660
+    n000011EC12C22660 -> n000011EC12C226C0 [label="True" color="green"]
+    n000011EC12C226C0 [label="ThenBlock\n OT: [ =(1 , r)]
 "]
-    n000011C7BD722720 [label="IfExitBlock\n "]
-    n000011C7BD7226C0 -> n000011C7BD722720
-    n000011C7BD722780 [label="IfBlock\n OT: [ >=(2 , n)]
+    n000011EC12C22720 [label="IfExitBlock\n "]
+    n000011EC12C226C0 -> n000011EC12C22720
+    n000011EC12C22780 [label="IfBlock\n OT: [ >=(2 , n)]
 "]
-    n000011C7BD722720 -> n000011C7BD722780
-    n000011C7BD722780 -> n000011C7BD7227E0 [label="True" color="green"]
-    n000011C7BD7227E0 [label="ThenBlock\n OT: [ =(n , r)]
+    n000011EC12C22720 -> n000011EC12C22780
+    n000011EC12C22780 -> n000011EC12C227E0 [label="True" color="green"]
+    n000011EC12C227E0 [label="ThenBlock\n OT: [ =( fib( -(1 , n)) , m)]
+OT: [ =( fib( -(2 , n)) , k)]
+OT: [ =( +(k , m) , r)]
 "]
-    n000011C7BD722840 [label="IfExitBlock\n OT: [ printf(r)]
+    n000011EC12C22840 [label="IfExitBlock\n OT: [r]
 "]
-    n000011C7BD7227E0 -> n000011C7BD722840
-    n000011C7BD7228A0 [label="BaseBlock\n "]
-    n000011C7BD722840 -> n000011C7BD7228A0
+    n000011EC12C227E0 -> n000011EC12C22840
+    n000011EC12C228A0 [label="BaseBlock\n "]
+    n000011EC12C22840 -> n000011EC12C228A0
 }

@@ -4,11 +4,18 @@ ranksep=.4;
 bgcolor="lightgrey";  node [shape=box, fixedsize=false, fontsize=12, fontname="Helvetica-bold", fontcolor="blue"
 width=.25, height=.25, color="black", fillcolor="white", style="filled, solid, bold"];
 
-edge [arrowsize=.5, color="black", style="bold"]    n000011C7BD723F20 [label="BaseBlock\n OT: [ =(0 , i)]
-OT: [ fib(1)]
-OT: [ fib(2)]
-OT: [ fib(3)]
+edge [arrowsize=.5, color="black", style="bold"]    n000011EC12C24520 [label="BaseBlock\n OT: [ =(0 , i)]
 "]
-    n000011C7BD723F80 [label="BaseBlock\n "]
-    n000011C7BD723F20 -> n000011C7BD723F80
+    n000011EC12C24580 [label="WhileBlock\n OT: [ <(11 , i)]
+"]
+    n000011EC12C24520 -> n000011EC12C24580
+	   n000011EC12C24580 -> n000011EC12C245E0 [ label = "True" color="green"]
+    n000011EC12C245E0 [label="WhileBodyBlock\n OT: [ printf( fib(i))]
+OT: [ =( +(1 , i) , i)]
+"]
+    n000011EC12C245E0 -> n000011EC12C24580
+	   n000011EC12C24580 -> n000011EC12C24640 [ label = "False" color="red"]
+    n000011EC12C24640 [label="WhileExitBlock\n "]
+    n000011EC12C246A0 [label="BaseBlock\n "]
+    n000011EC12C24640 -> n000011EC12C246A0
 }
