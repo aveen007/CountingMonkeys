@@ -3,10 +3,8 @@ function fib(n as int)
   if n < 2 then
       r = 1;
   end if
-  if n >= 2 then
-      m = fib(n-1);
-      k= fib(n-2);
-      r = m + k;
+  if n >= 2 then     
+      r =   fib(n-2) + fib(n-1) ;
   end if
   r;
 end function
@@ -33,9 +31,7 @@ end function
  
 function main()
   dim i as int
-  i = 0;
-  while i < 11
-    printf(fib(i));
-    i = i + 1;
-  wend
+  i = 4;
+  printf(fib(i));
+    
 end function

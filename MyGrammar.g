@@ -79,15 +79,15 @@ array : '(' (',' )* ')' typeRef* ->^(Array ^(typeRef)* ^(Elements  (',')*) );
 builtin: 'bool' | 'byte' | 'int' | 'uint' | 'long' | 'ulong' | 'char' | 'string';
 custom: ID;
 
-expr 	:	
+expr 	: expr3|	
        (expr0) expr4 ->^(expr4 expr0)
      ; 
 expr0	:	(unary   | braces  | place  | atom);
 expr1	:	 (assignmentExpr);
 expr2	:	 (binaryExpression);
-expr3	:	 (listExpr)->^(CallOrIndexer listExpr);
+expr3	:	 expr0 '(' listExpr ')' expr->^(expr ^(CallOrIndexer listExpr expr0));
 
-expr4	:	(expr1|expr2|expr3)? ;
+expr4	:	(expr1|expr2)? ;
 assignmentExpr
 	:	 (AssignmentOp  ) expr -> ^(AssignmentOp expr);
 
@@ -98,7 +98,7 @@ binaryExpression
   :  ('+'|'-'|'*'|'/'|'%'|'<<'|'>>'|'&'|'^'|'|')? '='
   ;    
 listExpr:
-  '(' ( expr (',' expr)* )?')' expr->^(ListExpr  ( expr (expr)*)? );
+   ( expr (',' expr)* )? ->^(ListExpr  ( expr (expr)*)? ) ;
 
 listIdentifier:
     (ID (',' ID)*)-> ^(ListIdentifier ID+)
@@ -113,7 +113,7 @@ braces: '(' expr ')'->^(Braces expr);
 unOp:
     '&'
     | '*'
-    | '+'
+   
     | '-'
     | '~'
     | '!';

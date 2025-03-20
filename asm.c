@@ -526,7 +526,12 @@ int translateOT(OTNode* tree, char * fileName) {
 					pop_sf(); //I am poping for the type and value					// the caller function 
 				}
 				call(tree->value.operator);
-				
+				char* lab = labelName();
+				put_label_var(lab, 2, 16);// 2 bytes for the value, the 0 is a dynamic thing for type
+				push(lab);
+				wide_store()
+				push(lab);
+
 			}
 
 			}
