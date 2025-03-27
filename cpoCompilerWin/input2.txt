@@ -16,7 +16,6 @@ function printf(res as int)
     while res != 0 
         revertedNum = revertedNum * 10  ;
         tmp = res % 10;
-        tmp=tmp;
         revertedNum= revertedNum + tmp;
         res = res / 10;
     wend
@@ -31,7 +30,10 @@ end function
  
 function main()
   dim i as int
-  i = 4;
-  printf(fib(i));
+  i = 0;
+ while i < 11
+     printf(fib(i));
+     i = i + 1;
+   wend
     
 end function

@@ -12,99 +12,87 @@ fib:
 	pop_sf
 	pop_sf
 	pop_sf
+	push 0
 	push 2
-	store label_0
-	push label_0
 	add_s 1
 	wide_store
+	push 0
 	push 2
-	store label_1
-	push label_1
 	add_s 2
 	wide_store
+	push 0
 	push 2
-	store label_2
-	push label_2
 	add_s 3
 	wide_store
+	push 0
 	push 2
-	store label_3
-	push label_3
 	add_s 4
 	wide_store
-	push label_4
+	push 2
+	push 2
 	sub_s 1
+	load
 	wide_sub
 	pop
-	jlt label_5
+	jlt label_1
 	push 0
 		;false branch
-	jump label_6
-label_5:
+	jump label_2
+label_1:
 	push 1
 		;true branch
-label_6:
+label_2:
 		;if
-	jz label_7
+	jz label_3
 		;then
-	push label_8
+	push 1
+	push 2
 	add_s 1
 	wide_store
+	jump label_3
+label_3:
+	push 2
+	push 2
+	sub_s 1
+	load
+	wide_sub
+	pop
+	jge label_6
+	push 0
+		;false branch
 	jump label_7
-label_7:
-	push label_9
-	sub_s 1
-	wide_sub
-	pop
-	jge label_10
-	push 0
-		;false branch
-	jump label_11
-label_10:
+label_6:
 	push 1
 		;true branch
-label_11:
+label_7:
 		;if
-	jz label_12
+	jz label_8
 		;then
-	push label_13
+	push 1
+	push 2
 	sub_s 1
+	load
 	wide_sub
-	store label_14.type
-	store label_14.value
-	push label_14
 	pop_sf
 	pop_sf
 	call fib
-	push label_15
-	wide_store
-	push label_15
-	push label_16
+	push 2
+	push 2
 	sub_s 1
+	load
 	wide_sub
-	store label_17.type
-	store label_17.value
-	push label_17
 	pop_sf
 	pop_sf
 	call fib
-	push label_18
-	wide_store
-	push label_18
 	wide_add
-	store label_19.type
-	store label_19.value
-	push label_19
 	add_s 1
 	wide_store
-	jump label_12
-label_12:
+	jump label_8
+label_8:
 	add_s 1
+	load
 		;endif
 		;endif
-	push label_20
-	wide_store
-	push label_20
 	ret
 printf:
 	sub_s 1
@@ -115,280 +103,174 @@ printf:
 	pop_sf
 	pop_sf
 	pop_sf
+	push 0
 	push 2
-	store label_21
-	push label_21
 	add_s 1
 	wide_store
+	push 0
 	push 2
-	store label_22
-	push label_22
 	add_s 2
 	wide_store
+	push 0
 	push 2
-	store label_23
-	push label_23
 	add_s 3
 	wide_store
-	push label_24
+	push 10
+	push 2
 	add_s 1
 	wide_store
-	push label_25
+	push 0
+	push 2
 	add_s 2
 	wide_store
 		;while
-label_26:
-	push label_27
+label_15:
+	push 0
+	push 2
 	sub_s 1
+	load
 	wide_sub
 	pop
-	jz label_28
+	jz label_17
 	push 1
 		;false branch
-	jump label_29
-label_28:
+	jump label_18
+label_17:
 	push 0
 		;true branch
-label_29:
-	jz label_30
+label_18:
+	jz label_19
 		;while body
-	push label_31
+	push 10
+	push 2
 	add_s 2
+	load
 	wide_mult
-	store label_32.type
-	store label_32.value
-	push label_32
 	add_s 2
 	wide_store
-	push label_33
+	push 10
+	push 2
 	sub_s 1
+	load
 	wide_mod
-	store label_34.type
-	store label_34.value
-	push label_34
 	add_s 3
 	wide_store
 	add_s 3
-	add_s 3
-	wide_store
-	add_s 3
+	load
 	add_s 2
+	load
 	wide_add
-	store label_35.type
-	store label_35.value
-	push label_35
 	add_s 2
 	wide_store
-	push label_36
+	push 10
+	push 2
 	sub_s 1
+	load
 	wide_div
-	store label_37.type
-	store label_37.value
-	push label_37
 	sub_s 1
 	wide_store
-	jump label_26
-label_30:
+	jump label_15
+label_19:
 		;end while
 		;while
-label_38:
-	push label_39
+label_23:
+	push 0
+	push 2
 	add_s 2
+	load
 	wide_sub
 	pop
-	jz label_40
+	jz label_25
 	push 1
 		;false branch
-	jump label_41
-label_40:
+	jump label_26
+label_25:
 	push 0
 		;true branch
-label_41:
-	jz label_42
+label_26:
+	jz label_27
 		;while body
-	push label_43
+	push 10
+	push 2
 	add_s 2
+	load
 	wide_mod
-	store label_44.type
-	store label_44.value
-	push label_44
 	add_s 3
 	wide_store
-	push label_45
+	push 48
+	push 2
 	add_s 3
+	load
 	wide_add
-	store label_46.type
-	store label_46.value
-	push label_46
 	add_s 3
 	wide_store
 	add_s 3
+	load
+	pop
 	write
-	push label_47
+	push 10
+	push 2
 	add_s 2
+	load
 	wide_div
-	store label_48.type
-	store label_48.value
-	push label_48
 	add_s 2
 	wide_store
-	jump label_38
-label_42:
+	jump label_23
+label_27:
 		;end while
-	push label_49
+	push 10
+	push 2
+	pop
 	write
-	push label_50
-	wide_store
-	push label_50
 	ret
 main:
 	pop_sf
 	pop_sf
+	push 0
 	push 2
-	store label_51
-	push label_51
 	add_s 1
 	wide_store
-	push label_52
+	push 0
+	push 2
 	add_s 1
 	wide_store
+		;while
+label_33:
+	push 11
+	push 2
 	add_s 1
+	load
+	wide_sub
+	pop
+	jlt label_35
+	push 0
+		;false branch
+	jump label_36
+label_35:
+	push 1
+		;true branch
+label_36:
+	jz label_37
+		;while body
+	add_s 1
+	load
 	pop_sf
 	pop_sf
 	call fib
-	push label_53
-	wide_store
-	push label_53
 	pop_sf
 	pop_sf
 	call printf
-	push label_54
+	push 1
+	push 2
+	add_s 1
+	load
+	wide_add
+	add_s 1
 	wide_store
-	push label_54
+	jump label_33
+label_37:
+		;end while
 	jump halt
-label_0: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x10 ; Offset for `value`
-label_1: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x10 ; Offset for `value`
-label_2: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x10 ; Offset for `value`
-label_3: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x10 ; Offset for `value`
-label_4:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 2 ; Offset for `value`
-label_8:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 1 ; Offset for `value`
-label_9:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 2 ; Offset for `value`
-label_13:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 1 ; Offset for `value`
-label_14: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x0 ; Offset for `value`
-label_15: 
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 0x10 ; Offset for `value`
-label_16:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 2 ; Offset for `value`
-label_17: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x0 ; Offset for `value`
-label_18: 
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 0x10 ; Offset for `value`
-label_19: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x0 ; Offset for `value`
-label_20: 
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 0x10 ; Offset for `value`
-label_21: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x10 ; Offset for `value`
-label_22: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x10 ; Offset for `value`
-label_23: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x10 ; Offset for `value`
-label_24:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 10 ; Offset for `value`
-label_25:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 0 ; Offset for `value`
-label_27:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 0 ; Offset for `value`
-label_31:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 10 ; Offset for `value`
-label_32: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x0 ; Offset for `value`
-label_33:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 10 ; Offset for `value`
-label_34: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x0 ; Offset for `value`
-label_35: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x0 ; Offset for `value`
-label_36:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 10 ; Offset for `value`
-label_37: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x0 ; Offset for `value`
-label_39:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 0 ; Offset for `value`
-label_43:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 10 ; Offset for `value`
-label_44: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x0 ; Offset for `value`
-label_45:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 48 ; Offset for `value`
-label_46: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x0 ; Offset for `value`
-label_47:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 10 ; Offset for `value`
-label_48: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x0 ; Offset for `value`
-label_49:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 10 ; Offset for `value`
-label_50: 
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 0x10 ; Offset for `value`
-label_51: 
-    .type: dd 0x0 ; Offset for `type`
-    .value: dd 0x10 ; Offset for `value`
-label_52:  
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 4 ; Offset for `value`
-label_53: 
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 0x10 ; Offset for `value`
-label_54: 
-    .type: dd 0x2 ; Offset for `type`
-    .value: dd 0x10 ; Offset for `value`
 halt:
 	hlt
 CodeEnd:

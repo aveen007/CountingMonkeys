@@ -122,23 +122,24 @@ instruction a_st = { 0000 0110, imm16 as ptr }
     else
       ip = ip + 3;
   };
+  // for now, everywhere I pushed the value and then pushed the type to the stack
 instruction wide_add ={0000 1001} {
     // Increment stack pointer to "pop" the first operand's pointer
     sp = sp + 2;                
-    let ptr1 = m_stack:2[sp];         // First operand pointer (address of operand)
-    let type1 = ram:2[ptr1];         // Type of first operand (e.g., 2 for number)
+    let type1 = m_stack:2[sp];         // First operand type (address of operand)
+    sp = sp + 2;                
+    let value1 = m_stack:2[sp];         // Type of first operand (e.g., 2 for number)
     
     // Increment stack pointer to "pop" the second operand's pointer
     sp = sp + 2;                
-    let ptr2 = m_stack:2[sp];         // Second operand pointer
-    let type2 = ram:2[ptr2];         // Type of second operand
+    let type2 = m_stack:2[sp];         // Second operand pointer
+    sp = sp + 2;                
+    let value2 = m_stack:2[sp];          // Type of second operand
 
     // Check if both operands are of type "number" (type == 2)
     if (type1 == 2) && (type2 == 2) then {
-        let x = ram:2[ptr1 + 4];     // Fetch the value of the first operand
-        let y = ram:2[ptr2 + 4];     // Fetch the value of the second operand
         
-        let r = x + y;                // Perform addition
+        let r = value1 + value2;                // Perform addition
         
         // Push the result back onto the stack
         m_stack:2[sp] = r;           
@@ -161,28 +162,31 @@ instruction wide_store = { 0000 1010 }
 	let ptr = m_stack:2[sp];// TO
 	
 	sp=sp + 2;
-	let ptr2=m_stack:2[sp];//From
-	ram:2[ptr] = ram:2[ptr2];// store type
-	ram:2[ptr+4] = ram:2[ptr2+4];// store value
+	let type=m_stack:2[sp];//pop type
+	sp=sp + 2;
+	let value=m_stack:2[sp];//pop value
+	ram:2[ptr] = type;// store type
+	
+	ram:2[ptr+4] = value;// store value
 	ip = ip + 1;
 };
 instruction wide_sub ={0000 1011} {
     // Increment stack pointer to "pop" the first operand's pointer
     sp = sp + 2;                
-    let ptr1 = m_stack:2[sp];         // First operand pointer (address of operand)
-    let type1 = ram:2[ptr1];         // Type of first operand (e.g., 2 for number)
+    let type1 = m_stack:2[sp];         // First operand type (address of operand)
+    sp = sp + 2;                
+    let value1 = m_stack:2[sp];         // Type of first operand (e.g., 2 for number)
     
     // Increment stack pointer to "pop" the second operand's pointer
     sp = sp + 2;                
-    let ptr2 = m_stack:2[sp];         // Second operand pointer
-    let type2 = ram:2[ptr2];         // Type of second operand
+    let type2 = m_stack:2[sp];         // Second operand pointer
+    sp = sp + 2;                
+    let value2 = m_stack:2[sp];          // Type of second operand
 
     // Check if both operands are of type "number" (type == 2)
     if (type1 == 2) && (type2 == 2) then {
-        let x = ram:2[ptr1 + 4];     // Fetch the value of the first operand
-        let y = ram:2[ptr2 + 4];     // Fetch the value of the second operand
         
-        let r = x - y;                // Perform addition
+        let r = value1 - value2;                // Perform addition
         
         // Push the result back onto the stack
         m_stack:2[sp] = r;           
@@ -198,25 +202,26 @@ instruction wide_sub ={0000 1011} {
     }
 
     // Increment instruction pointer to the next instruction
+    
     ip = ip + 1;
 };
 instruction wide_mult ={0000 1100} {
     // Increment stack pointer to "pop" the first operand's pointer
     sp = sp + 2;                
-    let ptr1 = m_stack:2[sp];         // First operand pointer (address of operand)
-    let type1 = ram:2[ptr1];         // Type of first operand (e.g., 2 for number)
+    let type1 = m_stack:2[sp];         // First operand type (address of operand)
+    sp = sp + 2;                
+    let value1 = m_stack:2[sp];         // Type of first operand (e.g., 2 for number)
     
     // Increment stack pointer to "pop" the second operand's pointer
     sp = sp + 2;                
-    let ptr2 = m_stack:2[sp];         // Second operand pointer
-    let type2 = ram:2[ptr2];         // Type of second operand
+    let type2 = m_stack:2[sp];         // Second operand pointer
+    sp = sp + 2;                
+    let value2 = m_stack:2[sp];          // Type of second operand
 
     // Check if both operands are of type "number" (type == 2)
     if (type1 == 2) && (type2 == 2) then {
-        let x = ram:2[ptr1 + 4];     // Fetch the value of the first operand
-        let y = ram:2[ptr2 + 4];     // Fetch the value of the second operand
         
-        let r = x * y;                // Perform addition
+        let r = value1 * value2;                // Perform addition
         
         // Push the result back onto the stack
         m_stack:2[sp] = r;           
@@ -235,22 +240,22 @@ instruction wide_mult ={0000 1100} {
     ip = ip + 1;
 };
 instruction wide_div ={0000 1101} {
-    // Increment stack pointer to "pop" the first operand's pointer
+     // Increment stack pointer to "pop" the first operand's pointer
     sp = sp + 2;                
-    let ptr1 = m_stack:2[sp];         // First operand pointer (address of operand)
-    let type1 = ram:2[ptr1];         // Type of first operand (e.g., 2 for number)
+    let type1 = m_stack:2[sp];         // First operand type (address of operand)
+    sp = sp + 2;                
+    let value1 = m_stack:2[sp];         // Type of first operand (e.g., 2 for number)
     
     // Increment stack pointer to "pop" the second operand's pointer
     sp = sp + 2;                
-    let ptr2 = m_stack:2[sp];         // Second operand pointer
-    let type2 = ram:2[ptr2];         // Type of second operand
+    let type2 = m_stack:2[sp];         // Second operand pointer
+    sp = sp + 2;                
+    let value2 = m_stack:2[sp];          // Type of second operand
 
     // Check if both operands are of type "number" (type == 2)
     if (type1 == 2) && (type2 == 2) then {
-        let x = ram:2[ptr1 + 4];     // Fetch the value of the first operand
-        let y = ram:2[ptr2 + 4];     // Fetch the value of the second operand
         
-        let r = x / y;                // Perform addition
+        let r = value1 / value2;                // Perform addition
         
         // Push the result back onto the stack
         m_stack:2[sp] = r;           
@@ -315,7 +320,7 @@ instruction wide_div ={0000 1101} {
 	sp = sp +2 ;
 	let x = m_stack:2[sp];          // Pop first value into inp (top value of the stack)
 
-    outp = ram:2[x + 4]; // Retrieve value from stack to standard output
+    outp = x; // Retrieve value from stack to standard output
     ip = ip + 1;        // Increment instruction pointer
   };
     instruction read = { 0001 0100  } {
@@ -331,22 +336,21 @@ instruction wide_div ={0000 1101} {
     ip = target;
   };
   instruction wide_mod ={0001 0110} {
-    // Increment stack pointer to "pop" the first operand's pointer
+     sp = sp + 2;                
+    let type1 = m_stack:2[sp];         // First operand type (address of operand)
     sp = sp + 2;                
-    let ptr1 = m_stack:2[sp];         // First operand pointer (address of operand)
-    let type1 = ram:2[ptr1];         // Type of first operand (e.g., 2 for number)
+    let value1 = m_stack:2[sp];         // Type of first operand (e.g., 2 for number)
     
     // Increment stack pointer to "pop" the second operand's pointer
     sp = sp + 2;                
-    let ptr2 = m_stack:2[sp];         // Second operand pointer
-    let type2 = ram:2[ptr2];         // Type of second operand
+    let type2 = m_stack:2[sp];         // Second operand pointer
+    sp = sp + 2;                
+    let value2 = m_stack:2[sp];          // Type of second operand
 
     // Check if both operands are of type "number" (type == 2)
     if (type1 == 2) && (type2 == 2) then {
-        let x = ram:2[ptr1 + 4];     // Fetch the value of the first operand
-        let y = ram:2[ptr2 + 4];     // Fetch the value of the second operand
         
-        let r = x % y;                // Perform addition
+        let r = value1 % value2;                // Perform addition
         
         // Push the result back onto the stack
         m_stack:2[sp] = r;           
@@ -398,9 +402,15 @@ instruction wide_div ={0000 1101} {
 	//	ip=ip + 1;
 };
   instruction load = { 0001 1100 } {
-		m_stack:2[sp]=esp;
-		sp = sp - 2;
-		ip=ip+3; 
+		sp= sp + 2; // pop the pointer to the value in ram
+		let ptr= m_stack:2[sp];		
+		let type = ram:2[ptr];
+		let value = ram:2[ptr + 4];
+		m_stack[sp]= value;
+		sp =sp -2; //push the value 
+		m_stack[sp]= type;
+		sp =sp -2; //push the type 
+		ip=ip+1; 
 };
 instruction add_reg_imm = { 0001 1101, imm16 as value } {
 		if value ==1 then {

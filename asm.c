@@ -111,7 +111,7 @@ int generateAsm(FunctionVariables*** funVars) {
 
 
 }
-void translate_type(char* id,Type* type) {
+void translate_type(Type* type) {
     //here I push some encoding of the type 
     switch (type->kind)
     {
@@ -125,15 +125,15 @@ void translate_type(char* id,Type* type) {
             push_i(type->data.simpleType.type);
             break;
         }
-        store(id);
+        //store(id);
         break;
     case TYPE_ARRAY:
         push_i(9);
-        store(id);
+       // store(id);
         push_i(type->data.arrayType.length);
-        astore(id);
-
-        translate_variable(mystrcat(id, "_0"), type->data.arrayType.elementType);
+       // astore(id);
+		//TODO: see what I would do about arrays
+       // translate_variable(mystrcat(id, "_0"), type->data.arrayType.elementType);
         break;
     default:
         break;
@@ -172,7 +172,7 @@ int translate_variable(char* id, Type * type) {
 //            }
 //    }
 //}
-void check_type(char* operand,char * fileName) {
+void check_type(char* operand,char * fileName, int isAssignment) {
 	// CHECK TYPE OF OPERAND
 					// true, false -> bool
 					// number in C -> number 
@@ -198,7 +198,9 @@ void check_type(char* operand,char * fileName) {
 
 		// Surround the string with single quotes
 		put_label_string(lab, TYPE_STRING, temp);
-		push(lab);
+		push(operand)
+		push(TYPE_STRING)
+		//push(lab);
 		// Handle string type
 	}
 	else if (operand[0] == '\'' && operand[strlen(operand) - 1] == '\'') {
@@ -206,7 +208,9 @@ void check_type(char* operand,char * fileName) {
 		char* lab = labelName();
 		labelCnt++;
 		put_label_string(lab, TYPE_CHAR, operand);
-		push(lab);
+		push(operand)
+		push(TYPE_CHAR)
+		// push(lab);
 		// Handle char type
 	}
 	else if (strcmp(operand, "true") == 0 || strcmp(operand, "false") == 0) {
@@ -214,7 +218,9 @@ void check_type(char* operand,char * fileName) {
 		char* lab = labelName();
 		labelCnt++;
 		put_label_string(lab , TYPE_BOOL, operand);
-		push(lab);
+		push(operand)
+		push(TYPE_BOOL)
+		//push(lab);
 		// Handle boolean type
 	}
 	else {
@@ -231,8 +237,10 @@ void check_type(char* operand,char * fileName) {
 			char* lab = labelName();
 			labelCnt++;
 	
-			put_label_literal(lab, TYPE_INT, operand);
-			push(lab);
+		//	put_label_literal(lab, TYPE_INT, operand);
+			push(operand)
+			push_i(TYPE_INT)
+			//push(lab);
 			// Handle number type
 		}
 		else {
@@ -242,11 +250,19 @@ void check_type(char* operand,char * fileName) {
 			// push it and it's type
 		
 			int offset = findVar(operand);
+
 			if (offset >= 0) {
 				add_s(offset)
 			}
 			else {
 				sub_s(-1*offset)
+			}
+			if (isAssignment == 0) {
+		load()// so load takes the pointer from the top of the stack and pushes the 
+			// type and value of the var
+			// so if it's not assignement we want those values and we want to pop
+			// the pointer
+			//if it is though, no we want to know where to store to 
 			}
 
 
@@ -298,12 +314,12 @@ FunctionVariables * findFunc(char* operand) {
 	}
 	
 }
-int translateOT(OTNode* tree, char * fileName) {
+int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 	
 		switch (tree->type)
 		{
 		case NODE_TYPE_OPERAND:
-			check_type(tree->value.operand, fileName);
+			check_type(tree->value.operand, fileName, isAssignement);
 
 			break;
 		case NODE_TYPE_OPERATOR:
@@ -314,10 +330,11 @@ int translateOT(OTNode* tree, char * fileName) {
 			// and jump to different implementations of add, sub 
 			/////////
 			
-			for (int i = 0; i < tree->cntOperands; i++) {
-				translateOT(tree->operands[i], fileName);
-			}
+		
 			if (strcmp(tree->value.operator, "!=") == 0) {
+				for (int i = 0; i < tree->cntOperands; i++) {
+					translateOT(tree->operands[i], fileName, isAssignement);
+				}
 				wide_sub();
 				pop();// because sub pushes the type first
 				char* label1 = labelName();
@@ -337,6 +354,9 @@ int translateOT(OTNode* tree, char * fileName) {
 				free(label2);
 			}
 			else if (strcmp(tree->value.operator, "<") == 0) {
+				for (int i = 0; i < tree->cntOperands; i++) {
+					translateOT(tree->operands[i], fileName, isAssignement);
+				}
 				wide_sub();
 				pop();// because sub pushes the type first
 				char* label1 = labelName();
@@ -356,6 +376,9 @@ int translateOT(OTNode* tree, char * fileName) {
 				
 			}
 			else if (strcmp(tree->value.operator, ">") == 0) {
+				for (int i = 0; i < tree->cntOperands; i++) {
+					translateOT(tree->operands[i], fileName, isAssignement);
+				}
 				wide_sub();
 				pop();// because sub pushes the type first
 				char* label1 = labelName();
@@ -376,7 +399,10 @@ int translateOT(OTNode* tree, char * fileName) {
 				
 			}
 			else if (strcmp(tree->value.operator, "=") == 0) {
-
+				for (int i = 0; i < tree->cntOperands; i++) {
+					translateOT(tree->operands[i], fileName, 1);
+				}
+				isAssignement = 0;
 			    // find offset of the var
 				
 				wide_store();
@@ -386,6 +412,9 @@ int translateOT(OTNode* tree, char * fileName) {
 
 			}
 			else if (strcmp(tree->value.operator, "<=") == 0) {
+				for (int i = 0; i < tree->cntOperands; i++) {
+					translateOT(tree->operands[i], fileName, isAssignement);
+				}
 				wide_sub();
 				pop();// because sub pushes the type first
 				char* label1 = labelName();
@@ -406,6 +435,9 @@ int translateOT(OTNode* tree, char * fileName) {
 
 			}
 			else if (strcmp(tree->value.operator, ">=") == 0) {
+				for (int i = 0; i < tree->cntOperands; i++) {
+					translateOT(tree->operands[i], fileName, 0);
+				}
 				wide_sub();
 				pop();// because sub pushes the type first
 				char* label1 = labelName();
@@ -426,6 +458,9 @@ int translateOT(OTNode* tree, char * fileName) {
 
 			}
 			else if (strcmp(tree->value.operator, "==") == 0) {
+			for (int i = 0; i < tree->cntOperands; i++) {
+				translateOT(tree->operands[i], fileName, 0);
+			}
 				wide_sub();
 				pop();// because sub pushes the type first
 				char* label1 = labelName();
@@ -447,54 +482,70 @@ int translateOT(OTNode* tree, char * fileName) {
 
 			}
 			else if (strcmp(tree->value.operator, "+") == 0) {
+			for (int i = 0; i < tree->cntOperands; i++) {
+				translateOT(tree->operands[i], fileName, 0);
+			}
 				wide_add();
-				char* lab = labelName();
-				put_label_var(lab, 0, 0);
-				store_label_type(lab);
-				store_label_value(lab);
-				push(lab);
+				/*char* lab = labelName();
+				put_label_var(lab, 0, 0);*/
+			/*	store_label_type(lab);
+				store_label_value(lab);*/
+				
+				//push(lab);
 				printf("+");
 			}
 
 			else if (strcmp(tree->value.operator, "-") == 0) {
+			for (int i = 0; i < tree->cntOperands; i++) {
+				translateOT(tree->operands[i], fileName, 0);
+			}
 				wide_sub();
-				char* lab = labelName();
+			/*	char* lab = labelName();
 				put_label_var(lab, 0, 0);
 				store_label_type(lab);
 				store_label_value(lab);
-				push(lab);
+				push(lab);*/
 				printf("-");
 				break;
 
 			}
 			else  if (strcmp(tree->value.operator, "*") == 0) {
+			for (int i = 0; i < tree->cntOperands; i++) {
+				translateOT(tree->operands[i], fileName ,0);
+			}
 				wide_mult();
-				char* lab = labelName();
+				/*char* lab = labelName();
 				put_label_var(lab, 0, 0);
 				store_label_type(lab);
 				store_label_value(lab);
-				push(lab);
+				push(lab);*/
 				printf("*");
 				break;
 
 			}
 			else if (strcmp(tree->value.operator, "/") == 0) {
+				for (int i = 0; i < tree->cntOperands; i++) {
+					translateOT(tree->operands[i], fileName, 0);
+				}
 				wide_div();
-				char* lab = labelName();
+				/*char* lab = labelName();
 				put_label_var(lab, 0, 0);
 				store_label_type(lab);
 				store_label_value(lab);
-				push(lab);
+				push(lab);*/
 				printf("/");
 				break;
 			}
 			else if (strcmp(tree->value.operator, "%") == 0) {
+			for (int i = 0; i < tree->cntOperands; i++) {
+				translateOT(tree->operands[i], fileName, 0);
+			}
 			wide_mod();
-			char* lab = labelName();
+		/*	char* lab = labelName();
 			put_label_var(lab, 0, 0);
 			store_label_type(lab);
 			store_label_value(lab);
-			push(lab);
+			push(lab);*/
 			printf("%");
 			break;
 			}
@@ -502,14 +553,26 @@ int translateOT(OTNode* tree, char * fileName) {
 
 			printf("indexer");
 			if (strcmp(tree->value.operator,"print") == 0 ){
-				
+				for (int i = 0; i < tree->cntOperands; i++) {
+
+					translateOT(tree->operands[i], fileName, 0);
+					
+				}
+			
+				pop()
 				write();
 
 			}
 			else if (strcmp(tree->value.operator,"scan") == 0) {
+				for (int i = 0; i < tree->cntOperands; i++) {
+					translateOT(tree->operands[i], fileName, 0);
+				}
 				read();
 			}
 			else {
+				for (int i = 0; i < tree->cntOperands; i++) {
+					translateOT(tree->operands[i], fileName, 0);
+				}
 				// function call
 				//char* returnLabel = labelName();
 			/*	push(returnLabel);
@@ -527,10 +590,13 @@ int translateOT(OTNode* tree, char * fileName) {
 				}
 				call(tree->value.operator);
 				char* lab = labelName();
-				put_label_var(lab, 2, 16);// 2 bytes for the value, the 0 is a dynamic thing for type
-				push(lab);
-				wide_store()
-				push(lab);
+				//I don't remember what this code was for?
+				// yeah so I remember, this is so that I save the value that I returned in some label and push the label
+				// but I don't need that cuz I already pushed the value that I want
+				//put_label_var(lab, 2, 16);// 2 bytes for the value, the 0 is a dynamic thing for type
+				//push(lab);
+				//wide_store()
+				//push(lab);
 
 			}
 
@@ -549,7 +615,7 @@ int translateInstructions(controlFlowGraphBlock * node, char* fileName) {
 		for (int i = 0; i < (node->instructions->size); i++) {
 			cfgBlockContent* instruction = node->instructions->content[i]; // Assuming the node holds a pointer to a block
 			if (instruction->type == TYPE_OTNODE) {
-				translateOT(instruction->ot, fileName);
+				translateOT(instruction->ot, fileName, 0);
 			}
 			
 		}
@@ -575,7 +641,6 @@ int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, c
 		put_label(subroutines[i]->name);
 		
 		//push_sf()
-		//TODO must also before call save a place for the args
 			int size_args = funcVars[i]->cntArgs;// added one for old_ret
 			//TODO: when func args are stored add(1, 2) store those las values in the end of the old sf
 			if (funcVars[i]->parameters) {
@@ -603,9 +668,12 @@ int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, c
 				// push the label
 				// sub_s the offset of the var
 				// wide_store the initialized value 
-				char* lab = labelName();
-				translate_variable(lab, locals->type);
-				push(lab);
+				/*char* lab = labelName();*/
+				/*translate_variable(lab, locals->type);*/
+				//push(lab);
+				//Everywhere else I push value and then push type
+				push_i(0)//some randome init value 
+				translate_type(locals->type);
 				add_s(locals->offset)
 					wide_store()
 					locals = locals->next;
@@ -613,23 +681,16 @@ int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, c
 			}
 
 			}
-			// The args from the called function should be stored in the frame of the previous one, 
-			// I am saving a place for the local vars and not for the value places I mean in i+2
-			// I save a place in the frame for i , but not for 2...
-			// if that makes sense,  where in the code is it best to save a place for args of the 
-			// called func?
-			// 
-			//TODO: add a function that will put the reg value on the top 
-			// here maybe add the args size and r_st
+		
 		translateCfg(subroutines[i]->cfg, NULL, fileName);
 		if (strcmp(subroutines[i]->name, "main") != 0) {
 			//here I want to take the last variable which I put on top of the stack and put it inside the return label and push that to the stack instead
-			char* lab = labelName();
-			put_label_var(lab, 2, 16);// 2 bytes for the value, the 0 is a dynamic thing for type
+			//char* lab = labelName();
+			//put_label_var(lab, 2, 16);// 2 bytes for the value, the 0 is a dynamic thing for type
 
-			push(lab);
-			wide_store()
-			push(lab)
+			//push(lab);
+			//wide_store()
+			//push(lab)
 			ret()
 
 		}
@@ -769,6 +830,11 @@ int translateCfg(controlFlowGraphBlock* cfg, controlFlowGraphBlock* start , char
 	/*	if (cfg->blocktype == IfExitBlock && cfg->drawn > 1) {
 			break;
 		}*/
+		//TODO: with storing/loading from variables, I need a version of store that gets
+		// the value and the type to the stack (possibly after sub_s add_s) and I need a 
+		// version that stores in both the addresse, because in other senses we do it differently
+		// something after sub_s, that takes this address, gets type and value, and pushes it to stack
+		// as for store, I think we only store in vars these days right?
 
 		if (cfg->outNodeCount <= 0) {
 			   
