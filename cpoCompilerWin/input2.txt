@@ -1,3 +1,16 @@
+class ExampleClass extends Example
+
+    public declare function MessageBoxA (hWnd as int,  uType as int ) lib "user32dll" alias "MessageBoxA"
+        
+
+    private message as ExampleClass
+    public function ShowMessage() as int
+       message = message.message;
+       
+       MessageBoxA(0, 0);
+    end function
+
+end class
 function fib(n as int)
   dim r, l, k,m as int
   if n < 2 then

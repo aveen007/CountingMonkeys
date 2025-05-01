@@ -4,7 +4,7 @@ options {
     output=AST;
     language=C;
     backtrack=true;
-   memoize=true;
+    memoize=true;
     k=3; 
 }
 tokens{
@@ -39,10 +39,24 @@ BinaryExpr;
 AssignmentExpr;
 Elements;
 CallOrIndexer;
+ExternFuncDef;
+ClassDef;
+Field;
+Member;
+Base;
 }
-sourcer	:	 source  EOF -> ^(Sourcer source);
-source: funcDef*  ->^(Source funcDef*);
+sourcer	:	  source* EOF  -> ^(Sourcer source*);
+source: funcDef |externFuncDef|classDef;
 
+externFuncDef: 'declare' 'function' funcSignature 'lib' dllName ('alias' dllEntryName)? -> ^(ExternFuncDef funcSignature dllName dllEntryName?);
+classDef: 'class' ID ('extends' ID)? member* 'end' 'class' -> ^(ClassDef ID ^(Base ID)? ^(Member member*)) ;
+	
+dllName:Sth;
+dllEntryName:Sth;
+Sth: Str;
+member: modifier? (funcDef|field|externFuncDef);
+field: listIdentifier ('as' typeRef)? -> ^(Field listIdentifier typeRef?);
+modifier: 'public'|'private';
 funcDef: 'function' funcSignature statement* 'end' 'function' -> ^(FuncDef funcSignature statement* 'end');
 
 funcSignature: ID '(' listArgdef ')' ( 'as' typeRef )? ->^(FuncSignature ^(ID listArgdef) (typeRef)? );
@@ -131,7 +145,8 @@ binOp:
     | GT       
     | LEQ      
     | GEQ
-    | '%';
+    | '%'
+    | '.';
     atom  :  (ID|Literal|)
   ;
 // Lexical tokens

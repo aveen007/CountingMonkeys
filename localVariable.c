@@ -14,8 +14,6 @@ VarNode* createNode(char* id, Type* type , char * fileName) {
 	newNode->id = id;
 	newNode->type = type;
 	newNode->offset = varCounter;
-	//TODO: not sure if this is the right place to update the counter, but the idea is that t
-	// offset numbers start from the parameters , so n param
 	varCounter++;
 	
     newNode->next = NULL;
@@ -100,9 +98,7 @@ VarNode* newVar(controlFlowGraphBlock* node, VarNode * var ,char* fileName) {
 		}
 	}
 	return var;
-	//TODO: here I will handle adding the var to the var list
 }
-//TODO: the offset should probably be a global
 
 VarNode* traverseCfgIfStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* start, VarNode * var , char* fileName) {
 
@@ -188,7 +184,6 @@ VarNode* traverseCfg(controlFlowGraphBlock* cfg, controlFlowGraphBlock* start, V
 	return var;
 
 }
-//TODO: scopes, so that the same variable name can be used by more than one function
 
 
 

@@ -143,35 +143,13 @@ void translate_type(Type* type) {
     // Store the variable type 
 }
 int translate_variable(char* id, Type * type) {
-    // TODO : code to find out the type of the identifier based on types in C
-    //TODO: some table to match 0 to int for example 1 long... 
     put_label_var(id, 0, 16);// 2 bytes for the value, the 0 is a dynamic thing for type
   
     translate_type(id, type);
   
     return 0;
 }
-//TODO: check if removed correctly
-//int translate_var_declarations(VarNode* localVars) {
-//	put_label_string("ret", 0, "");
-//	store("ret", "hlt");
-//    while (localVars != NULL) {
-//        char** currentId = localVars->data->Ids;
-//
-//        for (int i = 0; i < localVars->data->cntId;i++) { // Loop until we hit a NULL pointer
-//            char* suffix = mystrcat("_",remove_last_three_chars( localVars->fileName));
-//            translate_variable(mystrcat( * currentId, suffix) , localVars->data->type);
-//            currentId++; // Move to the next ID
-//         
-//        }
-//            if (localVars->next != NULL) {
-//                localVars = localVars->next;
-//            }
-//            else {
-//                break;
-//            }
-//    }
-//}
+
 void check_type(char* operand,char * fileName, int isAssignment) {
 	// CHECK TYPE OF OPERAND
 					// true, false -> bool
@@ -180,7 +158,6 @@ void check_type(char* operand,char * fileName, int isAssignment) {
 					// starts with '' -> char
 					// Bits
 	  // Determine the type of operand
-	//TODO: load,  wide add, wide sub.. , how to differentiate adds, .
 
 
 	/// <summary>
@@ -406,7 +383,6 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 			    // find offset of the var
 				
 				wide_store();
-				//TODO
 				printf("=");
 				break;
 
@@ -569,6 +545,9 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 				}
 				read();
 			}
+			else if (strcmp(tree->value.operator,".") == 0) {
+			//TODO: here I will process the dot for class
+			}
 			else {
 				for (int i = 0; i < tree->cntOperands; i++) {
 					translateOT(tree->operands[i], fileName, 0);
@@ -581,7 +560,6 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 		/*		put_label(returnLabel);
 				push("halt");
 				store("ret");*/
-				//TODO: when func args are stored add(1, 2) store those las values in the end of the old sf
 				FunctionVariables* func = findFunc(tree->value.operator);
 				for (int i = 0; i < func->cntArgs; i++) {
 					pop_sf();//here I am just saving a place for the called function's args in the SF of
@@ -625,14 +603,7 @@ int translateInstructions(controlFlowGraphBlock * node, char* fileName) {
 
 
 
-//TODO : translate stack frame, 
-// need to store the value of the last label in the ebp
-// push the old value each time I get a new func
-//start counting vars from last space, 
-//BUT , before all of this check if the local variables have the correct offset
-//int curFuncCnt;
 int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, char* fileName) {
-	//curFuncCnt = cnt;
 	for (int i = 0; i < cnt; i++) {
 		curFuncVars = funcVars[i];
 		fileFuncs = funcVars;
@@ -640,13 +611,10 @@ int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, c
 		char* suffix = mystrcat("_", remove_last_three_chars(fileName));
 		put_label(subroutines[i]->name);
 		
-		//push_sf()
 			int size_args = funcVars[i]->cntArgs;// added one for old_ret
-			//TODO: when func args are stored add(1, 2) store those las values in the end of the old sf
 			if (funcVars[i]->parameters) {
 
 			for (int i = 0; i < size_args; i++) {
-				// here I should push the first 2 args on top of the stack in the offsets -1 -2 ...
 				
 				sub_s(i + 1)
 				wide_store()
@@ -819,22 +787,10 @@ int translateCfg(controlFlowGraphBlock* cfg, controlFlowGraphBlock* start , char
 	default:
 		if (cfg->blocktype == IfExitBlock) {
 			char* goThrough = labelNameOffsetted(goThroughLabelCount);
-			//labelCnt++;
-			//TODO: check and test 
-			// 
-			//printf(goThroughLabelCount);
 			jump(goThrough)
 			put_label(goThrough);
 			cfg->drawn++;
 		}
-	/*	if (cfg->blocktype == IfExitBlock && cfg->drawn > 1) {
-			break;
-		}*/
-		//TODO: with storing/loading from variables, I need a version of store that gets
-		// the value and the type to the stack (possibly after sub_s add_s) and I need a 
-		// version that stores in both the addresse, because in other senses we do it differently
-		// something after sub_s, that takes this address, gets type and value, and pushes it to stack
-		// as for store, I think we only store in vars these days right?
 
 		if (cfg->outNodeCount <= 0) {
 			   

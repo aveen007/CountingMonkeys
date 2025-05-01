@@ -19,7 +19,7 @@ typedef enum {
     TYPE_ULONG,
     TYPE_CHAR,
     TYPE_STRING,
-    TYPE_CUSTOM // For custom types (e.g., ID)
+    TYPE_CUSTOM, // For custom types (e.g., ID)
 } SimpleType;
 static const char* SimpleType_STRING[] = {
 
@@ -83,21 +83,29 @@ typedef struct Array {
     size_t length;            // Number of elements
 } ArrayType;
 
+typedef struct GenericType {
+    char* name;
+    struct Type** parameters;
+    int parametersCount;
+} GenericType;
+
 // Define a union to represent either a simple type or an array type
 typedef union {
     SimpleTypeStruct simpleType;
     ArrayType arrayType;
-    
+    GenericType genericType;
 } TypeData;
 
 // Define a struct to encapsulate our Type
 typedef struct Type {
     enum {
         TYPE_SIMPLE,
+        TYPE_GENERIC,
         TYPE_ARRAY,
         TYPE_NONE
     } kind;               // To keep track of whether it's a simple type or array
     TypeData data;       // Union to hold the type data
+    struct classDef* def; // not NULL when references custom type
 } Type;
 
 // Define the argument definition structure
@@ -184,6 +192,7 @@ typedef struct ErrorInfoCFG {
 typedef struct CfgsInfo {
     controlFlowGraphBlock** cfgs;
     ErrorInfoCFG* errors;
+    struct classDefInfo* classes;
 
 } CfgsInfo;
 
@@ -215,6 +224,111 @@ typedef struct cfgFile {
     struct CfgsInfo* cfgs;
 
 }cfgFile;
+
+#pragma region classes
+typedef enum {
+    MODIFIER_PUBLIC,
+    MODIFIER_PRIVATE,
+    MODIFIER_PROTECTED
+} AccessModifier;
+
+typedef struct FunctionInfo {
+    enum AccessModifier modifier;
+    int offset;
+    struct Subroutine* subroutine;  // For internal functions
+} FunctionInfo;
+
+typedef struct ExternalFunctionInfo {
+    enum AccessModifier modifier;
+    int offset;
+    struct ExternFuncDef* externalFunction;
+} ExternalFunctionInfo;
+
+typedef struct ArgumentInfo {
+    enum AccessModifier modifier;
+    int offset;
+    struct ArgumentDef* argument;
+} ArgumentInfo;
+
+
+
+
+// class stuff
+typedef struct classDef {
+
+    char* name;
+    char** parameterNames;
+    int parametersCount;
+
+    Type* baseType;
+    
+    // Internal functions
+    FunctionInfo** functions;
+    int functionCount;
+
+    // External functions
+    ExternalFunctionInfo** externalFunctions;
+    int externalFunctionCount;
+
+    // Arguments
+    ArgumentInfo** arguments;
+    int argumentCount;
+
+}classDef;
+typedef struct classDefInfo {
+
+    struct  classDef** classes;
+    int classCount;
+}classDefInfo;
+// externFuncDef: 'declare' 'function' funcSignature 'lib' dllName('alias'
+//    dllEntryName) ? {
+//};
+
+typedef struct ExternFuncDef {
+    char* name;                            ///< The name of the subroutine.
+    //struct controlFlowGraphBlock* cfg;    ///< Pointer to the control flow graph associated with the subroutine.
+    struct SignatureDetails* signatureDetails; ///< Poin
+    char* dllName;
+    char* dllEntryName;
+}ExternFuncDef;
+
+
+ExternFuncDef* createExternFuncDef(ParseTree* ast);
+
+
+
+
+
+
+
+// Creates a new class definition
+classDef* createClassDef(const char* name, const char* baseClassName);
+classDefInfo* createClassDefInfo();
+classDefInfo * addClassDefInfo(classDefInfo* classes, classDef* classdef);
+// Creates a new internal function info
+FunctionInfo* createFunctionInfo(AccessModifier modifier, int offset, Subroutine* subroutine);
+
+// Creates a new external function info
+ExternalFunctionInfo* createExternalFunctionInfo(AccessModifier modifier, int offset, ExternFuncDef* externalFunction);
+
+// Creates a new argument info
+ArgumentInfo* createArgumentInfo(AccessModifier modifier, int offset, ArgumentDef* argument);
+
+
+
+// Add internal function to class
+void addFunctionToClass(classDef* cls, FunctionInfo* funcInfo);
+
+// Add external function to class
+void addExternalFunctionToClass(classDef* cls, ExternalFunctionInfo* extFuncInfo);
+
+// Add argument to class
+void addArgumentToClass(classDef* cls, ArgumentInfo* argInfo);
+// Frees memory allocated for a classDef and all its contents
+void freeClassDef(classDef* cls);
+
+#pragma endregion
+
 
 cfgFile** HandleCallGraphs(cfgFile** allFiles, int fileCnt);
 
@@ -265,7 +379,9 @@ void writeDotGraphIfStatement(controlFlowGraphBlock* node, FILE* file, controlFl
 void writeDotGraphWhileStatement(controlFlowGraphBlock* node, FILE* file, controlFlowGraphBlock* start);
 void writeDotGraphBaseStatement(controlFlowGraphBlock* node, FILE* file, controlFlowGraphBlock* start);
 void printBlockToFile(char* blockType, FILE* file, controlFlowGraphBlock* node);
-
+controlFlowGraphBlock** processCfg(ParseTree* tree, CfgsInfo* cfgsInfo, char* fileName);
+Subroutine* createSubroutine();
+SignatureDetails* createSignatureDetails(ParseTree* ast);
 void writeDotGraph(controlFlowGraphBlock* cfg, FILE* file, controlFlowGraphBlock* start);
 void CFGToDotFile(controlFlowGraphBlock* cfgs, char* fileName);
 
@@ -281,3 +397,5 @@ int stringLen(char* str);
 void CreateFilePrint(char* fileName, CfgsInfo* info, controlFlowGraphBlock* cfg);
 void intToStr(int num, char* str);
 char* remove_last_three_chars(const char* fileName);
+Subroutine** addSubroutine(Subroutine** list, Subroutine* newSub);
+Type* create_simple_type(SimpleType simple_type, const char* custom_id);

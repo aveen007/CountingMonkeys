@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
         files[i]->name =argv[i+1];
         char* testText = read_file_to_string(files[i]->name);
         ParseResult result = parse(testText, strlen(testText), files[i]->name);
-        ParseTree* myTree = result.tree->children[0]->children[0];
+        ParseTree* myTree = result.tree;
     	ErrorInfo* current = result.errors;
         files[i]->ast = result.tree;
 	    while (current != NULL) {
@@ -79,18 +79,20 @@ int main(int argc, char* argv[]) {
 
     // define a list of all the funcs, for their vars
 
-
+    //TODO:::: Add the types as parameters to the grammar
     Subroutine*** sub_all_files = malloc(sizeof(Subroutine**) * numberOfFiles);
     FunctionVariables*** funcVarsInFile = malloc(sizeof(FunctionVariables**)*numberOfFiles);
     for (int i = 0; i < numberOfFiles; i++) {
-        numberOfProcedures += files[i]->ast->children[0]->childrenCount;
+        numberOfProcedures += files[i]->ast->childrenCount;
+        //TODO: return the classes
         files[i]->cfgs = CFGInterfacer(files[i]->name, files[i]->ast);
         sub_all_files[i] = DefineSubprogram(files[i]->name, files[i]->cfgs->cfgs, files[i]->ast);
-        funcVarsInFile [i] = getLocalVars(sub_all_files[i], files[i]->ast->children[0]->childrenCount, files[i]->name);
-        //translate(subroutines, files[i]->ast->children[0]->childrenCount, files[i]->name);
-        //printf(localVars->next->data->Ids[0]);
+        // the function count is not the childeren count 
+        funcVarsInFile [i] = getLocalVars(sub_all_files[i], files[i]->ast->childrenCount, files[i]->name);
+
     }
 
+    // TODO traverse all Type and set def field
 
     FILE* data = fopen(dataAsmOutFilename, "w+");
     if (!data) {
@@ -107,22 +109,11 @@ int main(int argc, char* argv[]) {
     }
     asmCodeOut = code;
     asmDataOut = data;
-    //TODO, do sth w/vars
 
     fprintf(asmCodeOut, asm_code_header);
-    //fprintf(asmDataOut, asm_data_header);
-    // TODO
-    // I am not translating var declarations, 
-    //translate_var_declarations(localVars);
-    //generateAsm(localVars);
-    // TODO: discarding the first file for now
-
-
-    //let's assume this will put my pointers in the right place
-    //fprintf(asmCodeOut, "init CodeEnd\n");
 
     for (int i = 1; i < numberOfFiles; i++) {
-        translate(sub_all_files[i], funcVarsInFile[i], files[i]->ast->children[0]->childrenCount, files[i]->name);
+        translate(sub_all_files[i], funcVarsInFile[i], files[i]->ast->childrenCount, files[i]->name);
     }
     fprintf(asmCodeOut, "\tjump halt\n");
     fprintf(asmDataOut, asm_footer);

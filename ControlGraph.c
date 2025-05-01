@@ -10,6 +10,7 @@ callGraph** CG;
 int procedures;
 ErrorInfoCFG* errors;
 controlFlowGraphBlock** cfgs;
+int cfgsCount;
 
 #pragma endregion
 
@@ -20,13 +21,24 @@ CfgsInfo* createCfgsInfo(ParseTree* ast) {
 	CfgsInfo* info = malloc(sizeof(CfgsInfo));
 	info->cfgs = createCfgs(ast);
 	info->errors = NULL;
+	info->classes = createClassDefInfo();
 
 	return info;
 }
 controlFlowGraphBlock** createCfgs(ParseTree* ast) {
-	controlFlowGraphBlock** cfgs = (controlFlowGraphBlock**)malloc(sizeof(controlFlowGraphBlock*) * ast->childrenCount);
+	
+	controlFlowGraphBlock** cfgs = (controlFlowGraphBlock**)malloc(sizeof(controlFlowGraphBlock*) );
 
 	procedures = 0;
+	cfgsCount = 0;
+
+	return cfgs;
+}
+controlFlowGraphBlock** addCfgs(controlFlowGraphBlock* cfg) {
+	cfgsCount++;
+	cfgs = (controlFlowGraphBlock**)realloc(cfgs, sizeof(controlFlowGraphBlock*)*cfgsCount);
+	cfgs[cfgsCount - 1] = cfg;
+	procedures ++;
 
 	return cfgs;
 }
@@ -71,70 +83,104 @@ void addErrorCFG(ErrorInfoCFG** errors, ErrorInfoCFG* newError) {
 	return;
 }
 #pragma endregion
-
+int countSubroutines;
 # pragma region subprogram detail construction
 Subroutine** createSubroutines(ParseTree* ast) {
-	Subroutine** subroutines = (Subroutine**)malloc(sizeof(Subroutine*) * ast->childrenCount);
-	for (int i = 0; i < ast->childrenCount; i++) {
-		subroutines[i] = malloc(sizeof(Subroutine));
-	}
+	Subroutine** subroutines = (Subroutine**)malloc(sizeof(Subroutine*));
+	countSubroutines = 0;
 	return subroutines;
+}
+Subroutine** addSubroutine(Subroutine** list, Subroutine* newSub) {
+	countSubroutines++;
+	list = (Subroutine**)realloc(list, sizeof(Subroutine*) * (countSubroutines));
+
+	list[countSubroutines-1] = newSub;
+	return list;
+}
+Subroutine* createSubroutine() {
+	Subroutine* subroutine = malloc(sizeof(Subroutine));
+
+	
+	return subroutine;
 }
 Subroutine** DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, ParseTree* tree) {
 
 
-	if (tree) {
 		// get the funcDefs, attach each one to a subroutine and get for each subroutine the required details
 		  // construct the proper cfg for each subroutine
-		tree = tree->children[0];
-
+		//tree = tree->children[0];
+		//refractor all of the code , 
 		Subroutine** subprograms = createSubroutines(tree);
-		for (int i = 0; i < tree->childrenCount; i++) {
-			ParseTree* funcSigNode = tree->children[i]->children[0]->children[0];
-			if (funcSigNode) {
+		if (tree) {
+			//tree = tree->children[0];
 
-				char* name = funcSigNode->token;
-				Position* pos = (Position*)malloc(sizeof(Position));
-				pos->line = funcSigNode->line;
-				pos->width = funcSigNode->position;
-				subprograms[i]->signatureDetails = (SignatureDetails*)malloc(sizeof(SignatureDetails));
-				if (tree->children[i]->children[0]->childrenCount > 1) {
-					subprograms[i]->signatureDetails->returnType = HandleType(tree->children[i]->children[0]->children[1]);
-				}
-				//list arg defs
-				if (funcSigNode->childrenCount != 0) {
-					ParseTree* argsTree = funcSigNode->children[0];
-					if (argsTree) {
-						subprograms[i]->signatureDetails->arguments = (ArgumentDef**)malloc(sizeof(ArgumentDef*) * argsTree->childrenCount);
-						subprograms[i]->signatureDetails->cntArgs = argsTree->childrenCount;
-						for (int j = 0; j < argsTree->childrenCount; j++) {
-							subprograms[i]->signatureDetails->arguments[j] = (ArgumentDef*)malloc(sizeof(ArgumentDef));
-							subprograms[i]->signatureDetails->arguments[j]->name = argsTree->children[j]->children[0]->token;
-							if (argsTree->childrenCount > 0) {
-								if (argsTree->children[j]->childrenCount > 1) {
+			for (int i = 0; i < tree->childrenCount; i++) {
+				//TODO: here the association of cfg to subprogram is broken because i does not match the correct cfg, but the tree
+				// child count
+				//TODO: classes
+				// here I need to check if it's a class and if so fill in the class, if it's external
+				// fill in external, 
+				// if it's a func, get cfg
+				// if class, check to find child functions, and get their cfgs
+				Subroutine* sub = createSubroutine();
+				if (strcmp(tree->children[i]->token, "ClassDef") == 0) {
 
-								subprograms[i]->signatureDetails->arguments[j]->type = HandleType(argsTree->children[j]->children[1]);
+					classDef* class = createClassDef(tree->children[i]->children[0]->token, tree->children[i]->children[1]->children[0]->token);
+					for (int x = 1; x < tree->children[i]->childrenCount; x++) {
+						AccessModifier modifire;
+						if (strcmp(tree->children[i]->children[x]->token, "Member") == 0) {
+							ParseTree* memberTree = tree->children[i]->children[x];
+
+							for (int j = 1; j < memberTree->childrenCount; j++) {
+
+
+								if (strcmp(memberTree->children[j]->token, "FuncDef") == 0) {
+									char* name = memberTree->children[j]->children[0]->children[0]->token;
+									Position* pos = (Position*)malloc(sizeof(Position));
+									pos->line = memberTree->children[j]->children[0]->line;
+									pos->width = memberTree->children[j]->children[0]->position;
+
+									sub->name = name;
+									sub->cfg = cfgs[countSubroutines];
+
+									sub->signatureDetails = createSignatureDetails(memberTree->children[j]->children[0]);
+									sub->signatureDetails->position = pos;
+									subprograms = addSubroutine(subprograms, sub);
+
+									//TODO: make sure what I was using procedure numbers for, and if I changed correctly 
 								}
-								else {
-									subprograms[i]->signatureDetails->arguments[j]->type = malloc(sizeof(Type));
-									subprograms[i]->signatureDetails->arguments[j]->type->kind = TYPE_NONE;
 
-								}
 							}
-
-							///Questions
-							//Payload
-
 						}
+						else {
+							if (strcmp(tree->children[i]->children[x]->token, "Base") == 0) {
+								Type* base = create_simple_type(TYPE_CUSTOM, tree->children[i]->children[x]->children[0]->token);
+								class->baseType = base;
+							}
+						}
+
 					}
 				}
-				subprograms[i]->signatureDetails->position = pos;
-				subprograms[i]->name = name;
-				subprograms[i]->cfg = cfgs[i];
+
+
+				if (strcmp(tree->children[i]->token, "FuncDef") == 0) {
+					char* name = tree->children[i]->children[0]->children[0]->token;
+					Position* pos = (Position*)malloc(sizeof(Position));
+					pos->line = tree->children[i]->children[0]->line;
+					pos->width = tree->children[i]->children[0]->position;
+
+					sub->name = name;
+					sub->cfg = cfgs[countSubroutines];
+					sub->signatureDetails = createSignatureDetails(tree->children[i]->children[0]);
+					sub->signatureDetails->position = pos;
+					//TODO: make sure what I was using procedure numbers for, and if I changed correctly 
+					subprograms = addSubroutine(subprograms, sub);
+				}
+
 			}
+				return subprograms;
 		}
-		return subprograms;
-	}
+			
 	return;
 
 }
@@ -148,6 +194,7 @@ Type* create_simple_type(SimpleType simple_type, const char* custom_id) {
 	Type* type = (Type*)malloc(sizeof(Type));
 	type->kind = TYPE_SIMPLE;
 	type->data.simpleType.type = simple_type;
+	type->def = NULL;
 
 	if (custom_id) {
 		strncpy(type->data.simpleType.custom_id, custom_id, sizeof(type->data.simpleType.custom_id) - 1);
@@ -164,6 +211,7 @@ Type* create_array_type(Type* element_type, size_t length) {
 	type->kind = TYPE_ARRAY;
 	type->data.arrayType.elementType = element_type;
 	type->data.arrayType.length = length;
+	type->def = NULL;
 	return type;
 }
 void free_type(Type* type) {
@@ -436,14 +484,14 @@ cfgFile** HandleCallGraphs(cfgFile** allFiles, int fileCnt) {
 
 	//here I will try to find for a given cfg from a file if it's called procedures do exist anywhere in any other file 
 	for (int i = 0; i < fileCnt; i++) {
-		for (int j = 0; j < allFiles[i]->ast->children[0]->childrenCount; j++) {
+		for (int j = 0; j < allFiles[i]->ast->childrenCount; j++) {
 			for (int k = 0; k < allFiles[i]->cfgs->cfgs[j]->called->cntNames; k++) {
 				int found = 0; // have we found the called proc
 				controlFlowGraphBlock* calledFunc = NULL;
 				for (int l = 0; l < fileCnt; l++) {
 
 
-					calledFunc = FindCFG(allFiles[l]->cfgs->cfgs, allFiles[l]->ast->children[0]->childrenCount, allFiles[i]->cfgs->cfgs[j]->called->calledTokens[k]);
+					calledFunc = FindCFG(allFiles[l]->cfgs->cfgs, allFiles[l]->ast->childrenCount, allFiles[i]->cfgs->cfgs[j]->called->calledTokens[k]);
 					if (calledFunc != NULL) {
 						found = 1;
 						break;
@@ -455,7 +503,6 @@ cfgFile** HandleCallGraphs(cfgFile** allFiles, int fileCnt) {
 					insertCG(allFiles[i]->cfgs->cfgs[j], calledFunc);
 				}
 				else {
-					//TODO: add line and posiion to called graph
 					char* errorString;
 					size_t errSize = (size_t)snprintf(NULL, 0, "call to undefined function : %s", allFiles[i]->cfgs->cfgs[j]->called->calledTokens[k]);
 					errorString = malloc(errSize + 2);
@@ -501,7 +548,7 @@ void printCallGraph(cfgFile** allFiles, int fileCnt) {
 
 		// Write each control flow graph to the dot file
 
-		for (int i = 0; i < allFiles[k]->ast->children[0]->childrenCount; i++) {
+		for (int i = 0; i < allFiles[k]->ast->childrenCount; i++) {
 
 			fprintf(myfile, "    n%p ", allFiles[k]->cfgs->cfgs[i]);
 
@@ -584,31 +631,121 @@ void deleteStack(Stack* stack) {
 
 CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree, int procedure) {
 	if (tree) {
-		tree = tree->children[0];
+		//tree = tree->children[0];
 		CfgsInfo* cfgsInfo = createCfgsInfo(tree);
 		cfgs = cfgsInfo->cfgs;
+		
 
 		for (int i = 0; i < tree->childrenCount; i++) {
 			procedure++;
 			procedures = procedure;
-			controlFlowGraphBlock* cfg = createCFGBlock(tree->children[i], BaseBlock);
-			// here I am just creating the start block
-			cfgs[i] = cfg;
-			current = cfg;
-			currentCG = cfg->called;
-			Stack* openNodes = createStack();
-			push(openNodes, tree->children[i]);
-			controlFlowGraphBlock*  end=ConstructCFG(openNodes, cfg, cfgsInfo->errors);
-			controlFlowGraphBlock* cfgEnd = createCFGBlock(tree->children[i], BaseBlock);
-			insertCFGBlock(end, cfgEnd);
-			// print the result to a file
-			 CreateFilePrint(fileName, cfgsInfo,cfgs[i]);
+			//TODO: classes
+			// here I need to check if it's a class and if so fill in the class, if it's external
+			// fill in external, 
+			// if it's a func, get cfg
+			// if class, check to find child functions, and get their cfgs
+			if (strcmp(tree->children[i]->token, "ClassDef") == 0) {
+				char* baseClassName = NULL; // TODO get base type name if presented, otherwise NULL
+				classDef* class = createClassDef(tree->children[i]->children[0]->token, baseClassName);
+				for (int x = 1; x < tree->children[i]->childrenCount; x++) {
+					if (strcmp(tree->children[i]->children[x]->token, "Member") == 0) {
+						ParseTree* memberTree = tree->children[i]->children[x];
+						for (int j = 1; j < memberTree->childrenCount; j++) {
+
+							AccessModifier modifire;
+							if (strcmp(memberTree->children[j - 1]->token, "private") == 0) {
+								modifire = MODIFIER_PRIVATE;
+							}
+							else {
+								modifire = MODIFIER_PUBLIC;
+							}
+							if (strcmp(memberTree->children[j]->token, "ExternFuncDef") == 0) {
+								ExternFuncDef* exter = createExternFuncDef(memberTree->children[j]);
+								ExternalFunctionInfo* exterInfo = createExternalFunctionInfo(modifire, class->externalFunctionCount, exter);
+								addExternalFunctionToClass(class, exterInfo);
+							}
+							else {
+								if (strcmp(memberTree->children[j]->token, "FuncDef") == 0) {
+									Subroutine* func = createSubroutine();
+									func->signatureDetails = createSignatureDetails(memberTree->children[j]->children[0]);
+									cfgsInfo->cfgs = processCfg(memberTree->children[j], cfgsInfo, fileName);
+									func->cfg = cfgsInfo->cfgs[cfgsCount-1];
+									FunctionInfo* funcInfo = createFunctionInfo(modifire, class->functionCount, func);
+									addFunctionToClass(class, funcInfo);
+									//TODO: make sure what I was using procedure numbers for, and if I changed correctly 
+								}
+								else {
+									if (strcmp(memberTree->children[j]->token, "Field") == 0) {
+										ParseTree* argsTree = memberTree->children[j]->children[0];
+										for (int k = 0; k < argsTree->childrenCount; k++) {
+											ArgumentDef* argDef = (ArgumentDef*)malloc(sizeof(ArgumentDef));
+											argDef->name = argsTree->children[k]->token;
+											if (memberTree->children[j]->childrenCount > 1) {
+
+												argDef->type = HandleType(memberTree->children[j]->children[1]);
+											}
+											else {
+												argDef->type = malloc(sizeof(Type));
+												argDef->type->kind = TYPE_NONE;
+
+											}
+											/*	if (argsTree->childrenCount > 0) {
+												}*/
+											ArgumentInfo* argInfo = createArgumentInfo(modifire, class->argumentCount, argDef);
+											addArgumentToClass(class, argInfo);
+										}
+									}
+								}
+							}
+						}
+					}
+						else {
+								if (strcmp(tree->children[i]->children[x]->token, "Base") == 0) {
+									Type* base = create_simple_type(TYPE_CUSTOM, tree->children[i]->children[x]->children[0]->token);
+									class->baseType = base;
+								}
+						}
+					}
+
+				cfgsInfo->classes = addClassDefInfo(cfgsInfo->classes, class);
+				}
+			
+			if (strcmp(tree->children[i]->token, "ExternFuncDef") == 0) {
+				ExternFuncDef* exter = createExternFuncDef(tree->children[i]);
+			}
+			else {
+				if (strcmp(tree->children[i]->token, "FuncDef") == 0) {
+
+					cfgsInfo->cfgs=processCfg(tree->children[i], cfgsInfo, fileName);
+
+				}
+
+
+
+			}
 
 		}
-		cfgsInfo->errors = errors;
-		return cfgsInfo;
+
+				cfgsInfo->errors = errors;
+				return cfgsInfo;
 	}
 	return;
+}
+controlFlowGraphBlock** processCfg(ParseTree* tree, CfgsInfo * cfgsInfo, char* fileName) {
+	controlFlowGraphBlock* cfg = createCFGBlock(tree, BaseBlock);
+	// here I am just creating the start block
+	current = cfg;
+	currentCG = cfg->called;
+	Stack* openNodes = createStack();
+	push(openNodes, tree);
+	controlFlowGraphBlock* end = ConstructCFG(openNodes, cfg, cfgsInfo->errors);
+	controlFlowGraphBlock* cfgEnd = createCFGBlock(tree, BaseBlock);
+	insertCFGBlock(end, cfgEnd);
+
+	cfgs = addCfgs(cfg);
+	// print the result to a file
+	CreateFilePrint(fileName, cfgsInfo, cfgs[cfgsCount-1]);
+	return cfgs;
 }
 void CreateFilePrint(char* fileName, CfgsInfo* info, controlFlowGraphBlock* cfg) {
 	char* filename;
@@ -934,7 +1071,6 @@ void writeDotGraph(controlFlowGraphBlock* cfg, FILE* file, controlFlowGraphBlock
 				fprintf(file, "    n%p -> n%p\n", start, cfg);
 			return ;
 		}
-		//TODO:
 		writeDotGraphBaseStatement( cfg, file,start);
 
 		break;
@@ -1079,6 +1215,161 @@ char* remove_last_three_chars(const char* fileName) {
 	return newFileName;
 }
 
+#pragma endregion
+#pragma region class
+classDef* createClassDef(const char* name, const char* baseClassName) {
+	classDef* cls = (classDef*)malloc(sizeof(classDef));
+	
+	cls->name = name;
+
+	cls->baseType = NULL;
+	//cls->baseClassName = baseClassName;
+
+	//cls->name = mystrcat(cls->name, name);  // deep copy
+	cls->functionCount = 0;
+	cls->functions = NULL;// (FunctionInfo**)malloc(sizeof(FunctionInfo*) * (cls->functionCount + 1));
+
+	cls->argumentCount = 0;
+	cls->arguments = NULL;// (ArgumentInfo**)malloc(sizeof(ArgumentInfo*) * (cls->argumentCount + 1));
+
+	cls->externalFunctionCount = 0;
+	cls->externalFunctions = NULL; // (ExternalFunctionInfo**)malloc(sizeof(ExternalFunctionInfo*) * (cls->externalFunctionCount + 1));
+	
+	return cls;
+}
+void addFunctionToClass(classDef* cls, FunctionInfo* funcInfo) {
+	++cls->functionCount;
+	cls->functions = (FunctionInfo**)realloc(cls->functions, sizeof(FunctionInfo*) * (cls->functionCount ));
+	
+	cls->functions[cls->functionCount-1] = funcInfo;
+}
+ArgumentInfo* createArgumentInfo(AccessModifier modifier, int offset, ArgumentDef* argument) {
+	ArgumentInfo* info = (ArgumentInfo*)malloc(sizeof(ArgumentInfo));
+	info->modifier = modifier;
+	info->offset = offset;
+	info->argument = argument;
+	return info;
+}
+
+void addArgumentToClass(classDef* cls, ArgumentInfo* argInfo) {
+	++cls->argumentCount;
+	cls->arguments = (ArgumentInfo**)realloc(cls->arguments, sizeof(ArgumentInfo*) *( cls->argumentCount));
+	
+	cls->arguments[cls->argumentCount-1] = argInfo;
+}
+void freeClassDef(classDef* cls) {
+	if (!cls) return;
+
+	free(cls->name);
+
+	for (int i = 0; i < cls->functionCount; i++) {
+		free(cls->functions[i]); // Free wrapper, not Subroutine
+	}
+	free(cls->functions);
+
+	for (int i = 0; i < cls->argumentCount; i++) {
+		free(cls->arguments[i]); // Free wrapper, not ArgumentDef
+	}
+	free(cls->arguments);
+
+	free(cls);
+}
+ExternFuncDef* createExternFuncDef(ParseTree* ast) {
+	ExternFuncDef* extFunc = (ExternFuncDef*)malloc(sizeof(ExternFuncDef));
+
+	extFunc->name = ast->children[0]->children[0]->token;
+	extFunc->dllName = ast->children[1];
+	if (ast->childrenCount > 2) {
+		extFunc->dllEntryName = ast->children[2];
+		
+	}
+	extFunc->signatureDetails = createSignatureDetails(ast);
+	return extFunc;
+}
+
+SignatureDetails* createSignatureDetails(ParseTree* ast) {
+
+	SignatureDetails* signatureDetails;
+	 signatureDetails = (SignatureDetails*)malloc(sizeof(SignatureDetails));
+	if (ast->children[0]->childrenCount > 1) {
+		 signatureDetails->returnType = HandleType(ast->children[0]->children[1]);
+	}
+	//list arg defs
+	if (ast->children[0]->childrenCount != 0) {
+		ParseTree* argsTree = ast->children[0]->children[0];
+		if (argsTree) {
+			 signatureDetails->arguments = (ArgumentDef**)malloc(sizeof(ArgumentDef*) * argsTree->childrenCount);
+			 signatureDetails->cntArgs = argsTree->childrenCount;
+			for (int j = 0; j < argsTree->childrenCount; j++) {
+				 signatureDetails->arguments[j] = (ArgumentDef*)malloc(sizeof(ArgumentDef));
+				 signatureDetails->arguments[j]->name = argsTree->children[j]->children[0]->token;
+				if (argsTree->childrenCount > 0) {
+					if (argsTree->children[j]->childrenCount > 1) {
+
+						 signatureDetails->arguments[j]->type = HandleType(argsTree->children[j]->children[1]);
+					}
+					else {
+						 signatureDetails->arguments[j]->type = malloc(sizeof(Type));
+						 signatureDetails->arguments[j]->type->kind = TYPE_NONE;
+
+					}
+				}
+
+				///Questions
+				//Payload
+
+			}
+		}
+	}
+	 signatureDetails->position = 0;
+	 return signatureDetails;
+
+}
+FunctionInfo* createFunctionInfo(AccessModifier modifier, int offset, Subroutine* subroutine) {
+	FunctionInfo* info = (FunctionInfo*)malloc(sizeof(FunctionInfo));
+	if (!info) return NULL;
+
+	info->modifier = modifier;
+	info->offset = offset;
+	info->subroutine = subroutine;
+
+	return info;
+}
+
+// Creates a new external function info
+ExternalFunctionInfo* createExternalFunctionInfo(AccessModifier modifier, int offset, ExternFuncDef* externalFunction) {
+	ExternalFunctionInfo* info = (ExternalFunctionInfo*)malloc(sizeof(ExternalFunctionInfo));
+	if (!info) return NULL;
+
+	info->modifier = modifier;
+	info->offset = offset;
+	info->externalFunction = externalFunction;
+
+	return info;
+}
+
+
+// Add external function to class
+void addExternalFunctionToClass(classDef* cls, ExternalFunctionInfo* extFuncInfo) {
+	++cls->externalFunctionCount;
+	cls->externalFunctions= (ExternalFunctionInfo**)realloc(cls->externalFunctions, sizeof(ExternalFunctionInfo*) * (cls->externalFunctionCount ));
+
+	cls->externalFunctions[cls->externalFunctionCount-1] = extFuncInfo;
+	return;
+}
+classDefInfo* createClassDefInfo() {
+	classDefInfo* classdef = malloc(sizeof(classDefInfo));
+	classdef->classCount = 0;
+	classdef->classes = NULL;
+	return classdef;
+}
+classDefInfo* addClassDefInfo(classDefInfo* classes, classDef* classdef) {
+	classes->classCount++;
+	classes->classes = (classDef**)realloc(classes->classes, sizeof(classDef*) * (classes->classCount));
+	
+	classes->classes[classes->classCount-1]= classdef;
+	return classes;
+}
 #pragma endregion
 
 
