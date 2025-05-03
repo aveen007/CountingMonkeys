@@ -150,7 +150,9 @@ Subroutine** DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, Pars
 								Type* base = create_simple_type(TYPE_CUSTOM, tree->children[i]->children[x]->children[0]->token);
 								class->baseType = base;
 							}
-						}
+						
+							
+				}
 
 					}
 				}
@@ -691,6 +693,13 @@ CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree, int procedure) {
 									Type* base = create_simple_type(TYPE_CUSTOM, tree->children[i]->children[x]->children[0]->token);
 									class->baseType = base;
 								}
+								else {
+									if (strcmp(tree->children[i]->children[x]->token, "Parameter") == 0) {
+										for (int y = 0; y < tree->children[i]->children[x]->childrenCount; y++) {
+											addParameterName(class, tree->children[i]->children[x]->children[y]->token);
+										}
+									}
+								}
 						}
 					}
 
@@ -1221,7 +1230,8 @@ classDef* createClassDef(const char* name, const char* baseClassName) {
 
 	cls->externalFunctionCount = 0;
 	cls->externalFunctions = NULL; // (ExternalFunctionInfo**)malloc(sizeof(ExternalFunctionInfo*) * (cls->externalFunctionCount + 1));
-	
+	cls->parameterNames = NULL;
+	cls->parametersCount = 0;
 	return cls;
 }
 void addFunctionToClass(classDef* cls, FunctionInfo* funcInfo) {
@@ -1356,6 +1366,19 @@ classDefInfo* addClassDefInfo(classDefInfo* classes, classDef* classdef) {
 	
 	classes->classes[classes->classCount-1]= classdef;
 	return classes;
+}
+int addParameterName(classDef* cls, const char* paramName) {
+	if (!cls || !paramName) return -1;
+
+	// Reallocate memory for the new parameter
+	char** temp = realloc(cls->parameterNames, (cls->parametersCount + 1) * sizeof(char*));
+	if (!temp) return -1;
+
+	cls->parameterNames = temp;
+	cls->parameterNames[cls->parametersCount] = paramName; // Copy param name
+	cls->parametersCount++;
+
+	return 0;
 }
 #pragma endregion
 

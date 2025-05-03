@@ -399,3 +399,4 @@ void intToStr(int num, char* str);
 char* remove_last_three_chars(const char* fileName);
 Subroutine** addSubroutine(Subroutine** list, Subroutine* newSub);
 Type* create_simple_type(SimpleType simple_type, const char* custom_id);
+int addParameterName(classDef* cls, const char* paramName);
