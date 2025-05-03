@@ -1,13 +1,10 @@
-class ExampleClass extends Example
-
-    public declare function MessageBoxA (hWnd as int,  uType as int ) lib "user32dll" alias "MessageBoxA"
-        
+class ExampleClass (X<T>, Y) extends Example
 
     private message as ExampleClass
     public function ShowMessage() as int
        message = message.message;
        
-       MessageBoxA(0, 0);
+       fib(0, 0);
     end function
 
 end class

@@ -115,13 +115,7 @@ Subroutine** DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, Pars
 			//tree = tree->children[0];
 
 			for (int i = 0; i < tree->childrenCount; i++) {
-				//TODO: here the association of cfg to subprogram is broken because i does not match the correct cfg, but the tree
-				// child count
-				//TODO: classes
-				// here I need to check if it's a class and if so fill in the class, if it's external
-				// fill in external, 
-				// if it's a func, get cfg
-				// if class, check to find child functions, and get their cfgs
+		
 				Subroutine* sub = createSubroutine();
 				if (strcmp(tree->children[i]->token, "ClassDef") == 0) {
 
@@ -147,7 +141,6 @@ Subroutine** DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, Pars
 									sub->signatureDetails->position = pos;
 									subprograms = addSubroutine(subprograms, sub);
 
-									//TODO: make sure what I was using procedure numbers for, and if I changed correctly 
 								}
 
 							}
@@ -173,7 +166,6 @@ Subroutine** DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, Pars
 					sub->cfg = cfgs[countSubroutines];
 					sub->signatureDetails = createSignatureDetails(tree->children[i]->children[0]);
 					sub->signatureDetails->position = pos;
-					//TODO: make sure what I was using procedure numbers for, and if I changed correctly 
 					subprograms = addSubroutine(subprograms, sub);
 				}
 
@@ -639,11 +631,7 @@ CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree, int procedure) {
 		for (int i = 0; i < tree->childrenCount; i++) {
 			procedure++;
 			procedures = procedure;
-			//TODO: classes
-			// here I need to check if it's a class and if so fill in the class, if it's external
-			// fill in external, 
-			// if it's a func, get cfg
-			// if class, check to find child functions, and get their cfgs
+	
 			if (strcmp(tree->children[i]->token, "ClassDef") == 0) {
 				char* baseClassName = NULL; // TODO get base type name if presented, otherwise NULL
 				classDef* class = createClassDef(tree->children[i]->children[0]->token, baseClassName);
@@ -672,7 +660,6 @@ CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree, int procedure) {
 									func->cfg = cfgsInfo->cfgs[cfgsCount-1];
 									FunctionInfo* funcInfo = createFunctionInfo(modifire, class->functionCount, func);
 									addFunctionToClass(class, funcInfo);
-									//TODO: make sure what I was using procedure numbers for, and if I changed correctly 
 								}
 								else {
 									if (strcmp(memberTree->children[j]->token, "Field") == 0) {

@@ -44,12 +44,13 @@ ClassDef;
 Field;
 Member;
 Base;
+Parameter;
 }
 sourcer	:	  source* EOF  -> ^(Sourcer source*);
 source: funcDef |externFuncDef|classDef;
 
 externFuncDef: 'declare' 'function' funcSignature 'lib' dllName ('alias' dllEntryName)? -> ^(ExternFuncDef funcSignature dllName dllEntryName?);
-classDef: 'class' ID ('extends' ID)? member* 'end' 'class' -> ^(ClassDef ID ^(Base ID)? ^(Member member*)) ;
+classDef: 'class' ID ('(' custom ((','custom)*)? ')')? ('extends' ID ('(' custom   ((','custom)*)? ')')? )? member* 'end' 'class' -> ^(ClassDef ID ^(Parameter custom+)? ^(Base ID ^(Parameter custom+)?)? ^(Member member*)) ;
 	
 dllName:Sth;
 dllEntryName:Sth;
@@ -91,7 +92,8 @@ array : '(' (',' )* ')' typeRef* ->^(Array ^(typeRef)* ^(Elements  (',')*) );
 
 
 builtin: 'bool' | 'byte' | 'int' | 'uint' | 'long' | 'ulong' | 'char' | 'string';
-custom: ID;
+custom: ID ('<' typeRef (',' typeRef)* '>')? -> ^(ID typeRef*);
+
 
 expr 	: expr3|	
        (expr0) expr4 ->^(expr4 expr0)
