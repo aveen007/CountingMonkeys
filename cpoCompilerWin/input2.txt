@@ -8,6 +8,11 @@ class ExampleClass (X<T>, Y) extends Example
     end function
 
 end class
+class Example
+
+    private me
+
+end class
 function fib(n as int)
   dim r, l, k,m as int
   if n < 2 then

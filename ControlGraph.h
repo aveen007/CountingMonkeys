@@ -222,6 +222,7 @@ typedef struct cfgFile {
     char* name;
     struct ParseTree* ast;
     struct CfgsInfo* cfgs;
+    int cntCfgs;
 
 }cfgFile;
 
@@ -292,7 +293,10 @@ typedef struct ExternFuncDef {
     char* dllEntryName;
 }ExternFuncDef;
 
-
+typedef struct subroutineInfo {
+    Subroutine** subroutines;
+    int count;
+}subroutineInfo;
 ExternFuncDef* createExternFuncDef(ParseTree* ast);
 
 
@@ -362,7 +366,7 @@ void InsertInstruction(Instructions* instructions, ParseTree* ast);
 Instructions* CreateInstructions();
 cfgBlockContent* createInstructionsVarStatement(ParseTree* ast);
 cfgBlockContent* createInstructionsExpression(ParseTree* ast);
-Subroutine** DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, ParseTree* tree);
+subroutineInfo* DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, ParseTree* tree);
 
 
 

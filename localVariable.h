@@ -57,7 +57,7 @@ void freeFuncVars(FunctionVariables* head);
 
 
 
-FunctionVariables** getLocalVars(Subroutine** subroutines, int cnt, char* fileName);
+FunctionVariables** getLocalVars(Subroutine** subroutines,int count , char* fileName);
 VarNode* newVar(controlFlowGraphBlock* node, VarNode* var, char* fileName);
 VarNode* traverseCfgIfStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* start, VarNode* var , char* fileName);
 VarNode* traverseCfgWhileStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* start, VarNode* var , char* fileName);

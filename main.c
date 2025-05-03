@@ -69,29 +69,37 @@ int main(int argc, char* argv[]) {
 	    }
         free(testText);
     }
-    //&&&&&&&&&&&&&&& DELETE!!!!!!!!!!!!!!!
-    //return;
-    //&&&&&&&&&&&&&&& DELETE!!!!!!!!!!!!!!!
 
-    //VarNode* localVars=NULL;
+    subroutineInfo** sub_all_files = malloc(sizeof(Subroutine**) * numberOfFiles);
 
-
-
-    // define a list of all the funcs, for their vars
-
-    //TODO:::: Add the types as parameters to the grammar
-    Subroutine*** sub_all_files = malloc(sizeof(Subroutine**) * numberOfFiles);
     FunctionVariables*** funcVarsInFile = malloc(sizeof(FunctionVariables**)*numberOfFiles);
     for (int i = 0; i < numberOfFiles; i++) {
         numberOfProcedures += files[i]->ast->childrenCount;
-        //TODO: return the classes
         files[i]->cfgs = CFGInterfacer(files[i]->name, files[i]->ast);
-        sub_all_files[i] = DefineSubprogram(files[i]->name, files[i]->cfgs->cfgs, files[i]->ast);
+        subroutineInfo* info= DefineSubprogram(files[i]->name, files[i]->cfgs->cfgs, files[i]->ast);
+        sub_all_files[i] = info;
+
+        files[i]->cntCfgs = info->count;
         // the function count is not the childeren count 
-        funcVarsInFile [i] = getLocalVars(sub_all_files[i], files[i]->ast->childrenCount, files[i]->name);
+        funcVarsInFile [i] = getLocalVars(sub_all_files[i]->subroutines, info->count , files[i]->name);
 
     }
+    for (int i = 0; i < numberOfFiles; i++) {
+        for (int k = 0;k< files[i]->cfgs->classes->classCount; k++) {
+            if (files[i]->cfgs->classes->classes[k]->baseType) {
 
+
+            for (int j = 0; j < numberOfFiles; j++) {
+                for (int m = 0; m<files[j]->cfgs->classes->classCount; m++) {
+                    if (strcmp(files[j]->cfgs->classes->classes[m]->name, files[i]->cfgs->classes->classes[k]->baseType->data.simpleType.custom_id) == 0) {
+                        files[i]->cfgs->classes->classes[k]->baseType->def = files[j]->cfgs->classes->classes[m];
+                    }
+                }
+            }
+
+            }
+        }
+    }
     // TODO traverse all Type and set def field
 
     FILE* data = fopen(dataAsmOutFilename, "w+");
@@ -113,7 +121,7 @@ int main(int argc, char* argv[]) {
     fprintf(asmCodeOut, asm_code_header);
 
     for (int i = 1; i < numberOfFiles; i++) {
-        translate(sub_all_files[i], funcVarsInFile[i], files[i]->ast->childrenCount, files[i]->name);
+        translate(sub_all_files[i]->subroutines, funcVarsInFile[i], sub_all_files[i]->count, files[i]->name);
     }
     fprintf(asmCodeOut, "\tjump halt\n");
     fprintf(asmDataOut, asm_footer);

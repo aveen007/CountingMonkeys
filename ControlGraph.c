@@ -103,13 +103,14 @@ Subroutine* createSubroutine() {
 	
 	return subroutine;
 }
-Subroutine** DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, ParseTree* tree) {
+subroutineInfo* DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, ParseTree* tree) {
 
 
 		// get the funcDefs, attach each one to a subroutine and get for each subroutine the required details
 		  // construct the proper cfg for each subroutine
 		//tree = tree->children[0];
 		//refractor all of the code , 
+	subroutineInfo* info = malloc(sizeof(subroutineInfo));
 		Subroutine** subprograms = createSubroutines(tree);
 		if (tree) {
 			//tree = tree->children[0];
@@ -172,7 +173,9 @@ Subroutine** DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, Pars
 				}
 
 			}
-				return subprograms;
+			info->subroutines = subprograms;
+			info->count = countSubroutines;
+				return info;
 		}
 			
 	return;
@@ -478,14 +481,14 @@ cfgFile** HandleCallGraphs(cfgFile** allFiles, int fileCnt) {
 
 	//here I will try to find for a given cfg from a file if it's called procedures do exist anywhere in any other file 
 	for (int i = 0; i < fileCnt; i++) {
-		for (int j = 0; j < allFiles[i]->ast->childrenCount; j++) {
+		for (int j = 0; j < allFiles[i]->cntCfgs; j++) {
 			for (int k = 0; k < allFiles[i]->cfgs->cfgs[j]->called->cntNames; k++) {
 				int found = 0; // have we found the called proc
 				controlFlowGraphBlock* calledFunc = NULL;
 				for (int l = 0; l < fileCnt; l++) {
 
 
-					calledFunc = FindCFG(allFiles[l]->cfgs->cfgs, allFiles[l]->ast->childrenCount, allFiles[i]->cfgs->cfgs[j]->called->calledTokens[k]);
+					calledFunc = FindCFG(allFiles[l]->cfgs->cfgs, allFiles[l]->cntCfgs, allFiles[i]->cfgs->cfgs[j]->called->calledTokens[k]);
 					if (calledFunc != NULL) {
 						found = 1;
 						break;
@@ -542,7 +545,7 @@ void printCallGraph(cfgFile** allFiles, int fileCnt) {
 
 		// Write each control flow graph to the dot file
 
-		for (int i = 0; i < allFiles[k]->ast->childrenCount; i++) {
+		for (int i = 0; i < allFiles[k]->cntCfgs; i++) {
 
 			fprintf(myfile, "    n%p ", allFiles[k]->cfgs->cfgs[i]);
 
