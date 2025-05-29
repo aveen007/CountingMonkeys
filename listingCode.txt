@@ -2,12 +2,21 @@
 	init CodeEnd
 	jump main
 ShowMessage:
-	add_s 0
+	push 0
+	push 2
+	push 0
+	push 2
+	pop_sf
+	pop_sf
+	call fib
+	ret
+DoThing:
+	sub_s 1
 	wide_store
-	push 0
-	push 2
-	push 0
-	push 2
+	add_s 0
+	load
+	sub_s 1
+	load
 	pop_sf
 	pop_sf
 	call fib
@@ -45,39 +54,39 @@ fib:
 	load
 	wide_sub
 	pop
-	jlt label_4
+	jlt label_5
 	push 0
 		;false branch
-	jump label_5
-label_4:
+	jump label_6
+label_5:
 	push 1
 		;true branch
-label_5:
+label_6:
 		;if
-	jz label_6
+	jz label_7
 		;then
 	push 1
 	push 2
 	add_s 1
 	wide_store
-	jump label_6
-label_6:
+	jump label_7
+label_7:
 	push 2
 	push 2
 	sub_s 1
 	load
 	wide_sub
 	pop
-	jge label_9
+	jge label_10
 	push 0
 		;false branch
-	jump label_10
-label_9:
+	jump label_11
+label_10:
 	push 1
 		;true branch
-label_10:
+label_11:
 		;if
-	jz label_11
+	jz label_12
 		;then
 	push 1
 	push 2
@@ -98,8 +107,8 @@ label_10:
 	wide_add
 	add_s 1
 	wide_store
-	jump label_11
-label_11:
+	jump label_12
+label_12:
 	add_s 1
 	load
 		;endif
@@ -135,22 +144,22 @@ printf:
 	add_s 2
 	wide_store
 		;while
-label_18:
+label_19:
 	push 0
 	push 2
 	sub_s 1
 	load
 	wide_sub
 	pop
-	jz label_20
+	jz label_21
 	push 1
 		;false branch
-	jump label_21
-label_20:
+	jump label_22
+label_21:
 	push 0
 		;true branch
-label_21:
-	jz label_22
+label_22:
+	jz label_23
 		;while body
 	push 10
 	push 2
@@ -180,26 +189,26 @@ label_21:
 	wide_div
 	sub_s 1
 	wide_store
-	jump label_18
-label_22:
+	jump label_19
+label_23:
 		;end while
 		;while
-label_26:
+label_27:
 	push 0
 	push 2
 	add_s 2
 	load
 	wide_sub
 	pop
-	jz label_28
+	jz label_29
 	push 1
 		;false branch
-	jump label_29
-label_28:
+	jump label_30
+label_29:
 	push 0
 		;true branch
-label_29:
-	jz label_30
+label_30:
+	jz label_31
 		;while body
 	push 10
 	push 2
@@ -226,8 +235,8 @@ label_29:
 	wide_div
 	add_s 2
 	wide_store
-	jump label_26
-label_30:
+	jump label_27
+label_31:
 		;end while
 	push 10
 	push 2
@@ -246,22 +255,22 @@ main:
 	add_s 1
 	wide_store
 		;while
-label_36:
+label_37:
 	push 11
 	push 2
 	add_s 1
 	load
 	wide_sub
 	pop
-	jlt label_38
+	jlt label_39
 	push 0
 		;false branch
-	jump label_39
-label_38:
+	jump label_40
+label_39:
 	push 1
 		;true branch
-label_39:
-	jz label_40
+label_40:
+	jz label_41
 		;while body
 	add_s 1
 	load
@@ -278,8 +287,8 @@ label_39:
 	wide_add
 	add_s 1
 	wide_store
-	jump label_36
-label_40:
+	jump label_37
+label_41:
 		;end while
 	jump halt
 halt:

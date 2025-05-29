@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #include "ControlGraph.h"
 #include <stdio.h>
 #include <stdlib.h>

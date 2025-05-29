@@ -39,6 +39,9 @@
     <ClCompile Include="..\localVariable.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\generic.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\generate.bat">
@@ -73,6 +76,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\localVariable.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generic.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

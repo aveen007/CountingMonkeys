@@ -4,6 +4,7 @@
 #include "parser.h"
 #include "ControlGraph.h"
 #include "localVariable.h"
+#include "generic.h"
 #include <Windows.h>
 #include "asm.h"
 
@@ -71,34 +72,36 @@ int main(int argc, char* argv[]) {
     }
 
     subroutineInfo** sub_all_files = malloc(sizeof(Subroutine**) * numberOfFiles);
+    classDefInfo* class_all_files = malloc(sizeof(classDefInfo));
+    class_all_files->classes = NULL;
+    class_all_files->classCount = 0;
 
     FunctionVariables*** funcVarsInFile = malloc(sizeof(FunctionVariables**)*numberOfFiles);
     for (int i = 0; i < numberOfFiles; i++) {
         numberOfProcedures += files[i]->ast->childrenCount;
         files[i]->cfgs = CFGInterfacer(files[i]->name, files[i]->ast);
+        class_all_files->classes = realloc(class_all_files->classes,sizeof(classDef*)* (class_all_files->classCount+ files[i]->cfgs->classes->classCount));
+        for (int j = 0; j < files[i]->cfgs->classes->classCount; j++) {
+            
+            class_all_files->classes[class_all_files->classCount + j] = files[i]->cfgs->classes->classes[j];
+
+        }
+        class_all_files->classCount += files[i]->cfgs->classes->classCount;
         subroutineInfo* info= DefineSubprogram(files[i]->name, files[i]->cfgs->cfgs, files[i]->ast);
         sub_all_files[i] = info;
-
+ 
         files[i]->cntCfgs = info->count;
         // the function count is not the childeren count 
+        //TODO: actually: var tyoes should be set later after substitution
         funcVarsInFile [i] = getLocalVars(sub_all_files[i]->subroutines, info->count , files[i]->name);
 
+    
+   
     }
-    for (int i = 0; i < numberOfFiles; i++) {
-        for (int k = 0;k< files[i]->cfgs->classes->classCount; k++) {
-            if (files[i]->cfgs->classes->classes[k]->baseType) {
 
-
-            for (int j = 0; j < numberOfFiles; j++) {
-                for (int m = 0; m<files[j]->cfgs->classes->classCount; m++) {
-                    if (strcmp(files[j]->cfgs->classes->classes[m]->name, files[i]->cfgs->classes->classes[k]->baseType->data.simpleType.custom_id) == 0) {
-                        files[i]->cfgs->classes->classes[k]->baseType->def = files[j]->cfgs->classes->classes[m];
-                    }
-                }
-            }
-
-            }
-        }
+    for (int i = 1; i < numberOfFiles; i++) {
+       
+        sub_all_files[i]->subroutines=  setTypes(sub_all_files[i]->subroutines, sub_all_files[i]->count, files[i]->name,class_all_files);
     }
     // TODO traverse all Type and set def field
 

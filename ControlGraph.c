@@ -120,7 +120,7 @@ subroutineInfo* DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, P
 				Subroutine* sub = createSubroutine();
 				if (strcmp(tree->children[i]->token, "ClassDef") == 0) {
 
-					classDef* class = createClassDef(tree->children[i]->children[0]->token, tree->children[i]->children[1]->children[0]->token);
+					classDef* class = createClassDef(tree->children[i]->children[0]->token);
 					for (int x = 1; x < tree->children[i]->childrenCount; x++) {
 						AccessModifier modifire;
 						if (strcmp(tree->children[i]->children[x]->token, "Member") == 0) {
@@ -148,6 +148,12 @@ subroutineInfo* DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, P
 						}
 						else {
 							if (strcmp(tree->children[i]->children[x]->token, "Base") == 0) {
+								if (tree->children[i]->children[x]->childrenCount > 1) {
+									//then it's generic and has parameters (not custom)
+									Type* base = create_simple_type(TYPE_CUSTOM, tree->children[i]->children[x]->children[0]->token);
+
+								}
+								//TODO : here generic 
 								Type* base = create_simple_type(TYPE_CUSTOM, tree->children[i]->children[x]->children[0]->token);
 								class->baseType = base;
 							}
@@ -185,7 +191,44 @@ subroutineInfo* DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, P
 #pragma endregion
 
 #pragma region  Types
+char* get_type_name(Type* type) {
+	if (type->kind == TYPE_SIMPLE) {
+		if (type->data.simpleType.type == TYPE_CUSTOM) {
 
+		if (type->data.simpleType.custom_id)
+		{
+			return type->data.simpleType.custom_id;
+		}
+		}
+	
+
+		return SimpleType_STRING[type->data.simpleType.type];
+	}
+	if (type->kind == TYPE_GENERIC) {
+		return type->data.genericType.name;
+	}
+	if (type->kind == TYPE_ARRAY) {
+		return get_type_name(type->data.arrayType.elementType);
+	
+	}
+
+}
+Type* create_generic_type(char * class_name, int param_count, ParseTree* base){
+
+	Type* type = (Type*)malloc(sizeof(Type));
+	type->kind = TYPE_GENERIC;
+	type->data.genericType.name = class_name;
+	type->data.genericType.parametersCount = param_count;
+	type->data.genericType.parameters = malloc(sizeof(Type)*param_count);
+	for (int i = 0; i < param_count; i++) {
+		type->data.genericType.parameters[i] = HandleType(base->children[i]);
+		// set the parameters
+	}
+	type->def = NULL;
+	return type;
+
+
+}
 
 Type* create_simple_type(SimpleType simple_type, const char* custom_id) {
 	Type* type = (Type*)malloc(sizeof(Type));
@@ -221,7 +264,7 @@ void free_type(Type* type) {
 }
 Type* HandleType(ParseTree* typeNode) {
 
-	if (typeNode->children[0]->childrenCount != 0) {
+	if (typeNode->children[0]->childrenCount != 0 && strcmp(typeNode->children[0]->token, "Array") == 0) {
 		int size = typeNode->children[0]->children[1]->childrenCount;
 		return create_array_type(HandleType(typeNode->children[0]->children[0]), size);
 	}
@@ -255,7 +298,10 @@ Type* HandleType(ParseTree* typeNode) {
 			return create_simple_type(TYPE_STRING, "");
 		}
 		// Custom type handling can be extended as needed
-
+		if (typeNode->children[0]->childrenCount>1) {
+			// TODO: create generic type function is a bit differenty , I have to make them the same using the grammer
+			return create_generic_type(typeNode->token, typeNode->childrenCount, typeNode);
+		}
 		return create_simple_type(TYPE_CUSTOM, typeName);
 
 	}
@@ -639,7 +685,7 @@ CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree, int procedure) {
 	
 			if (strcmp(tree->children[i]->token, "ClassDef") == 0) {
 				char* baseClassName = NULL; // TODO get base type name if presented, otherwise NULL
-				classDef* class = createClassDef(tree->children[i]->children[0]->token, baseClassName);
+				classDef* class = createClassDef(tree->children[i]->children[0]->token);
 				for (int x = 1; x < tree->children[i]->childrenCount; x++) {
 					if (strcmp(tree->children[i]->children[x]->token, "Member") == 0) {
 						ParseTree* memberTree = tree->children[i]->children[x];
@@ -661,7 +707,9 @@ CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree, int procedure) {
 								if (strcmp(memberTree->children[j]->token, "FuncDef") == 0) {
 									Subroutine* func = createSubroutine();
 									func->signatureDetails = createSignatureDetails(memberTree->children[j]->children[0]);
+									//controlFlowGraphBlock ** temp= processCfg(memberTree->children[j], cfgsInfo, fileName);
 									cfgsInfo->cfgs = processCfg(memberTree->children[j], cfgsInfo, fileName);
+									//maybe I should not add cfgs of classes to the rest of the cfgs
 									func->cfg = cfgsInfo->cfgs[cfgsCount-1];
 									FunctionInfo* funcInfo = createFunctionInfo(modifire, class->functionCount, func);
 									addFunctionToClass(class, funcInfo);
@@ -693,8 +741,17 @@ CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree, int procedure) {
 					}
 						else {
 								if (strcmp(tree->children[i]->children[x]->token, "Base") == 0) {
+									if (tree->children[i]->children[x]->children[0]->childrenCount > 1) {
+
+										Type* base = create_generic_type(tree->children[i]->children[x]->children[0]->token, tree->children[i]->children[x]->children[0]->childrenCount, tree->children[i]->children[x]->children[0]);
+										class->baseType = base;
+
+									}
+									else {
+
 									Type* base = create_simple_type(TYPE_CUSTOM, tree->children[i]->children[x]->children[0]->token);
 									class->baseType = base;
+									}
 								}
 								else {
 									if (strcmp(tree->children[i]->children[x]->token, "Parameter") == 0) {
@@ -1216,7 +1273,7 @@ char* remove_last_three_chars(const char* fileName) {
 
 #pragma endregion
 #pragma region class
-classDef* createClassDef(const char* name, const char* baseClassName) {
+classDef* createClassDef(const char* name) {
 	classDef* cls = (classDef*)malloc(sizeof(classDef));
 	
 	cls->name = name;

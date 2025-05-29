@@ -20,6 +20,7 @@ typedef enum {
     TYPE_CHAR,
     TYPE_STRING,
     TYPE_CUSTOM, // For custom types (e.g., ID)
+    
 } SimpleType;
 static const char* SimpleType_STRING[] = {
 
@@ -259,7 +260,10 @@ typedef struct classDef {
 
     char* name;
     char** parameterNames;
+    //classDef** parameters;
+
     int parametersCount;
+   // bool isGenericParameter;
 
     Type* baseType;
     
@@ -306,7 +310,7 @@ ExternFuncDef* createExternFuncDef(ParseTree* ast);
 
 
 // Creates a new class definition
-classDef* createClassDef(const char* name, const char* baseClassName);
+classDef* createClassDef(const char* name);
 classDefInfo* createClassDefInfo();
 classDefInfo * addClassDefInfo(classDefInfo* classes, classDef* classdef);
 // Creates a new internal function info
@@ -404,3 +408,5 @@ char* remove_last_three_chars(const char* fileName);
 Subroutine** addSubroutine(Subroutine** list, Subroutine* newSub);
 Type* create_simple_type(SimpleType simple_type, const char* custom_id);
 int addParameterName(classDef* cls, const char* paramName);
+Type* create_generic_type(char* class_name, int param_count, ParseTree* base);
+char* get_type_name(Type* type);

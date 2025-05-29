@@ -50,7 +50,7 @@ sourcer	:	  source* EOF  -> ^(Sourcer source*);
 source: funcDef |externFuncDef|classDef;
 
 externFuncDef: 'declare' 'function' funcSignature 'lib' dllName ('alias' dllEntryName)? -> ^(ExternFuncDef funcSignature dllName dllEntryName?);
-classDef: 'class' ID ('(' custom ((','custom)*)? ')')? ('extends' ID ('(' custom   ((','custom)*)? ')')? )? member* 'end' 'class' -> ^(ClassDef ID ^(Parameter custom+)? ^(Base ID ^(Parameter custom+)?)? ^(Member member*)) ;
+classDef: 'class' ID ('(' custom ((','custom)*)? ')')? ('extends' ID ('(' typeRef ((',' typeRef)*)? ')')? )? member* 'end' 'class' -> ^(ClassDef ID ^(Parameter custom+)? ^(Base  ^(ID typeRef*)?)? ^(Member member*)) ;
 	
 dllName:Sth;
 dllEntryName:Sth;
