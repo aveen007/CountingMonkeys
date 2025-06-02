@@ -93,7 +93,6 @@ int main(int argc, char* argv[]) {
         files[i]->cntCfgs = info->count;
         // the function count is not the childeren count 
         //TODO: actually: var tyoes should be set later after substitution
-        funcVarsInFile [i] = getLocalVars(sub_all_files[i]->subroutines, info->count , files[i]->name);
 
     
    
@@ -102,7 +101,9 @@ int main(int argc, char* argv[]) {
     for (int i = 1; i < numberOfFiles; i++) {
        
         sub_all_files[i]->subroutines=  setTypes(sub_all_files[i]->subroutines, sub_all_files[i]->count, files[i]->name,class_all_files);
+        funcVarsInFile [i] = getLocalVars(sub_all_files[i]->subroutines, sub_all_files[i]->count , files[i]->name);
     }
+
     // TODO traverse all Type and set def field
 
     FILE* data = fopen(dataAsmOutFilename, "w+");
