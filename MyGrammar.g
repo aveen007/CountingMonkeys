@@ -98,8 +98,8 @@ expr 	: expr3	| memberAccess
      ; 
 expr0	:	(unary   | braces  | place  | atom);
 memberAccess
-    : expr0 '.' ID expr4-> ^(expr4 ^('.' expr0 ID ) )
-    | expr0 '.' expr3 expr4-> ^(expr4 ^('.' expr0 expr3 ) )
+    : expr0 '.' expr3 expr4-> ^(expr4 ^('.' expr0 expr3 ) )
+    | expr0 '.' ID expr4-> ^(expr4 ^('.' expr0 ID ) )
     ;
 expr1	:	 (assignmentExpr);
 expr2	:	 (binaryExpression);

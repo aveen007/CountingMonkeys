@@ -1,0 +1,125 @@
+[section ram, code]
+	init CodeEnd
+	jump main
+ShowMessage:
+	add_s 0
+	load
+	ret
+DoThing:
+	sub_s 1
+	wide_store
+	pop_sf
+	pop_sf
+	push 0
+	push 2
+	add_s 1
+	wide_store
+	add_s 0
+	load
+	ret
+fib:
+	sub_s 1
+	wide_store
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	push 0
+	add_s 1
+	wide_store
+	push 0
+	push 2
+	add_s 2
+	wide_store
+	push 0
+	push 2
+	add_s 3
+	wide_store
+	push 0
+	push 2
+	add_s 4
+	wide_store
+	push 0
+	push 2
+	add_s 5
+	wide_store
+	push 0
+	push 2
+	add_s 6
+	wide_store
+	add_s 0
+	load
+	add_s 0
+	load
+	add_s 0
+	load
+		;if
+	jz label_0
+		;then
+	add_s 0
+	load
+	jump label_0
+label_0:
+	add_s 0
+	load
+		;if
+	jz label_1
+		;then
+	add_s 0
+	load
+	jump label_1
+label_1:
+	add_s 3
+	load
+		;endif
+		;endif
+	ret
+printf:
+	sub_s 1
+	wide_store
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	push 0
+	push 2
+	add_s 1
+	wide_store
+	push 0
+	push 2
+	add_s 2
+	wide_store
+	push 0
+	push 2
+	add_s 3
+	wide_store
+	add_s 0
+	load
+	add_s 0
+	load
+	add_s 0
+	load
+	ret
+main:
+	pop_sf
+	pop_sf
+	push 0
+	push 2
+	add_s 1
+	wide_store
+	add_s 0
+	load
+	jump halt
+halt:
+	hlt
+CodeEnd:

@@ -411,6 +411,15 @@ OTNode* HandleOperationsTree(ParseTree* base) {
 		if (strcmp(base->token, "Unary")!=0) {
 
 			if (base->childrenCount > 0) {
+				if (strcmp(base->token, "=") == 0) {
+					for (int k = 0; k < base->childrenCount; k++) {
+						// handling three operator structure of the memeber accesstree
+						if (strcmp(base->children[k]->token, ".") == 0) {
+							OT = createOperatorNode(".=");
+							
+						}
+					}
+				}
 				OT = createOperatorNode(base->token);
 
 			}
