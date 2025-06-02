@@ -19,6 +19,7 @@ class Example (A, B)
 
 end class
 function fib(n as int)
+  dim ex as Example <int, int>
   dim r, l, k,m as int
   if n < 2 then
       r = 1;

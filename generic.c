@@ -4,6 +4,8 @@ Type* currentGeneric;
 int inClass = 0;
 classDefInfo* allClasses;
 controlFlowGraphBlock* currentCfg;
+controlFlowGraphBlock* ret;
+int myDrawn = 0;
 /// here I match the type key, from the parameters 
 ///summary
 /// let's take an example A<T> is later initialized as A<int>
@@ -37,16 +39,16 @@ Type* matchGenericType(Type* key, classDef* class, Type* genericType) {
 	}
 		if (key->kind == TYPE_GENERIC) {
 
-			for (int k = 0; k < class->parametersCount; k++) {
+			//for (int k = 0; k < class->parametersCount; k++) {
 
-				for (int i = 0; i < key->data.genericType.parametersCount; i++) {
+			//	/*for (int i = 0; i < key->data.genericType.parametersCount; i++) {
 
-					key->data.genericType.parameters[i] = matchGenericType(key->data.genericType.parameters[i], class, genericType);
+			//		key->data.genericType.parameters[i] = matchGenericType(key->data.genericType.parameters[i], class, genericType);
 
-				}
-			// here I basically treat something like A<T, Z>, T and Z are params, but the base of the type A must be a class
+			//	}*/
+			//// here I basically treat something like A<T, Z>, T and Z are params, but the base of the type A must be a class
+			//}
 				return findClass(allClasses, key);
-			}
 
 		}
 
@@ -95,11 +97,13 @@ classDef* initClass(classDef* found, Type* parent , classDefInfo * classes) {
 
 		details->returnType = matchGenericType(found->functions[i]->subroutine->signatureDetails->returnType, found, parent);
 		}*/
-
-		func->signatureDetails = found->functions[i]->subroutine->signatureDetails;
+		
+		func->name = found->functions[i]->subroutine->name;
+		func->signatureDetails = details;
 		current = newClass;
 		currentGeneric = parent;
 		inClass = 1;
+		ret = NULL;
 		// should create the cfg and copy and substitute types
 		func->cfg =traverseCfgType(found->functions[i]->subroutine->cfg, NULL, "fileName", classes, NULL);
 		FunctionInfo* funcInfo = createFunctionInfo(found->functions[i]->modifier, i, func);
@@ -119,7 +123,6 @@ Type* findClass(classDefInfo* classes, Type * parent) {
 			if (found->parametersCount == 0) {
 				//custom
 				parent->def = found;
-				return parent;
 			}
 			else {
 				//generic
@@ -130,8 +133,10 @@ Type* findClass(classDefInfo* classes, Type * parent) {
 			}
 		}
 	} 
+				return parent;
+	//TODO: check if I commented correctly
 		// here I am considering the case : if the function is inside a class and has a parameter with type T a for example, I need to match it to the initializing type  
-		return matchGenericType(parent,current,currentGeneric );
+	//	return matchGenericType(parent,current,currentGeneric );
 		// should the functions inside classes be also amongst the full list of cfgs, when I traverse them if I find a custom type, it could be either a class or also it could be a parameter inside a class
 		// I don't want to not traverse them to set the fathers in case it's just a class, 
 		// I also don't want to traverse twice and possibly lose information, 
@@ -201,13 +206,15 @@ controlFlowGraphBlock* traverseCfgIfStatementType(controlFlowGraphBlock* node, c
 	controlFlowGraphBlock* copyIfNode = copyNode(node);
 	
 		//node->nodes[0];
-	copyIfNode->nodes[0]  = traverseCfgType(node->nodes[0], node, fileName, classes);
 	int isElseNode = node->outNodeCount > 1 ? 1 : 0;
+	
+	copyIfNode->nodes[0]  = traverseCfgType(node->nodes[0], node, fileName, classes);
 	
 	if (isElseNode == 1) {
 		// ElseNode = node->nodes[1];
 		copyIfNode->nodes[1] = traverseCfgType(node->nodes[1], node, fileName, classes);
 	}
+	node->drawn = 0;
 	copyIfNode->drawn = 0;
 	
 	return copyIfNode;
@@ -218,7 +225,7 @@ controlFlowGraphBlock* traverseCfgWhileStatementType(controlFlowGraphBlock* node
 	WhileNode->nodes[0] = traverseCfgType(node->nodes[0], node, fileName, classes);
 	WhileNode->nodes[1] = traverseCfgType(node->nodes[1], node, fileName, classes);
 	node->drawn = 0;
-	return node;
+	return WhileNode->nodes[1];
 }
 Instructions* copyInstructions(controlFlowGraphBlock* node) {
 	Instructions* copyInstructions = malloc(sizeof(Instructions));
@@ -310,7 +317,7 @@ OTNode* copyOperationsTree(OTNode* oldOT) {
 }
 
 controlFlowGraphBlock* traverseCfgType(controlFlowGraphBlock* cfg, controlFlowGraphBlock* start,  char* fileName, classDefInfo* classes) {
-	controlFlowGraphBlock* ret=NULL;
+	
 	switch (cfg->blocktype)
 	{
 	case IfBlock:
@@ -323,22 +330,22 @@ controlFlowGraphBlock* traverseCfgType(controlFlowGraphBlock* cfg, controlFlowGr
 		}
 		else if (cfg->drawn == 1) {
 			cfg->drawn = 2;
-			return cfg;
+			return copyNode(cfg);
 		}
 		else {
-			return cfg;
+			return copyNode(cfg);
 		}
 		break;
 	case BreakBlock:
 
 
-		return cfg;
+		return copyNode(cfg);
 		break;
 	case BaseBlock:
 		if (cfg->outNodeCount <= 0) {
 
 
-			return cfg;
+			return copyNode(cfg);
 		}
 		ret= traverseCfgBaseStatementType(cfg, start, fileName, classes);
 		break;
@@ -348,13 +355,15 @@ controlFlowGraphBlock* traverseCfgType(controlFlowGraphBlock* cfg, controlFlowGr
 		}
 		if (cfg->blocktype == IfExitBlock && cfg->drawn > 1) {
 			cfg->drawn = 0;
+			
+			//ret = cfg;//TODO: hot fix, check what to do with if exit drawn maybe I need to set it to zero somewhere 
 			break;
 		}
 
 		if (cfg->outNodeCount <= 0) {
 
 
-			return cfg;
+			return copyNode(cfg);
 		}
 		ret= traverseCfgBaseStatementType(cfg, start, fileName, classes);
 		break;

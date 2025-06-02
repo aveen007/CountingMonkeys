@@ -182,6 +182,7 @@
     <Image Include="input.txt.d.dot.png" />
     <Image Include="input.txt.processAnotherArray.dot.png" />
     <Image Include="input2.txt.calculator.dot.png" />
+    <Image Include="input2.txt.fib.dot.png" />
     <Image Include="input2.txt.processArray.dot.png" />
     <Image Include="output.png" />
   </ItemGroup>

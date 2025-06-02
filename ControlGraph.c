@@ -11,7 +11,7 @@ int procedures;
 ErrorInfoCFG* errors;
 controlFlowGraphBlock** cfgs;
 int cfgsCount;
-
+int isElse = 0;
 #pragma endregion
 
 #pragma region cfg errors and file info
@@ -182,6 +182,7 @@ subroutineInfo* DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, P
 			info->subroutines = subprograms;
 			info->count = countSubroutines;
 				return info;
+				
 		}
 			
 	return;
@@ -300,7 +301,7 @@ Type* HandleType(ParseTree* typeNode) {
 		// Custom type handling can be extended as needed
 		if (typeNode->children[0]->childrenCount>1) {
 			// TODO: create generic type function is a bit differenty , I have to make them the same using the grammer
-			return create_generic_type(typeNode->token, typeNode->childrenCount, typeNode);
+			return create_generic_type(typeNode->children[0]->token, typeNode->children[0]->childrenCount, typeNode->children[0]);
 		}
 		return create_simple_type(TYPE_CUSTOM, typeName);
 
@@ -711,6 +712,7 @@ CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree, int procedure) {
 									cfgsInfo->cfgs = processCfg(memberTree->children[j], cfgsInfo, fileName);
 									//maybe I should not add cfgs of classes to the rest of the cfgs
 									func->cfg = cfgsInfo->cfgs[cfgsCount-1];
+									func->name= memberTree->children[j]->children[0]->children[0]->token;
 									FunctionInfo* funcInfo = createFunctionInfo(modifire, class->functionCount, func);
 									addFunctionToClass(class, funcInfo);
 								}
@@ -1015,12 +1017,13 @@ char* writeDotGraphOperationsTree(controlFlowGraphBlock* cfg, FILE* file) {
 }
 
 void writeDotGraphIfStatement(controlFlowGraphBlock* node, FILE* file,controlFlowGraphBlock* start) {
+	int isElseNode = node->outNodeCount > 1 ? 1 : 0;
+	isElse = isElseNode;
 	fprintf(file, "    n%p ", node);
 	printBlockToFile(BlockType_STRING[node->blocktype], file, node);
 	fprintf(file, "    n%p -> n%p\n", start, node);
 
 	// Determine if there are more than one out nodes
-	int isElseNode = node->outNodeCount > 1 ? 1 : 0;
 
 
 	controlFlowGraphBlock* ThenNode = node->nodes[0];
@@ -1034,6 +1037,7 @@ void writeDotGraphIfStatement(controlFlowGraphBlock* node, FILE* file,controlFlo
 
 
 	}
+	isElse = 0;
 	node->drawn = 0;
 
 
@@ -1072,6 +1076,9 @@ void writeDotGraphBaseStatement(controlFlowGraphBlock* node, FILE* file, control
 	
 
 		 writeDotGraph(node->nodes[0], file, node);
+		 if (node->blocktype == IfExitBlock && isElse==0) {
+			 node->drawn = 0;
+		 }
 		 return ;
 
 }

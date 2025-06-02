@@ -116,5 +116,8 @@
     <Image Include="input2.txt.calculator.dot.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="input2.txt.fib.dot.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
