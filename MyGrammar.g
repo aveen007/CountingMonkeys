@@ -47,15 +47,12 @@ Base;
 Parameter;
 }
 sourcer	:	  source* EOF  -> ^(Sourcer source*);
-source: funcDef |externFuncDef|classDef;
+source: funcDef |classDef;
 
-externFuncDef: 'declare' 'function' funcSignature 'lib' dllName ('alias' dllEntryName)? -> ^(ExternFuncDef funcSignature dllName dllEntryName?);
 classDef: 'class' ID ('(' custom ((','custom)*)? ')')? ('extends' ID ('(' typeRef ((',' typeRef)*)? ')')? )? member* 'end' 'class' -> ^(ClassDef ID ^(Parameter custom+)? ^(Base  ^(ID typeRef*)?)? ^(Member member*)) ;
 	
-dllName:Sth;
-dllEntryName:Sth;
-Sth: Str;
-member: modifier? (funcDef|field|externFuncDef);
+
+member: modifier? (funcDef|field);
 field: listIdentifier ('as' typeRef)? -> ^(Field listIdentifier typeRef?);
 modifier: 'public'|'private';
 funcDef: 'function' funcSignature statement* 'end' 'function' -> ^(FuncDef funcSignature statement* 'end');
@@ -95,10 +92,15 @@ builtin: 'bool' | 'byte' | 'int' | 'uint' | 'long' | 'ulong' | 'char' | 'string'
 custom: ID ('<' typeRef (',' typeRef)* '>')? -> ^(ID typeRef*);
 
 
-expr 	: expr3|	
-       (expr0) expr4 ->^(expr4 expr0)
+expr 	: expr3	| memberAccess
+       |(expr0) expr4 ->^(expr4 expr0)
+       
      ; 
 expr0	:	(unary   | braces  | place  | atom);
+memberAccess
+    : expr0 '.' ID expr4-> ^(expr4 ^('.' expr0 ID ) )
+    | expr0 '.' expr3 expr4-> ^(expr4 ^('.' expr0 expr3 ) )
+    ;
 expr1	:	 (assignmentExpr);
 expr2	:	 (binaryExpression);
 expr3	:	 expr0 '(' listExpr ')' expr->^(expr ^(CallOrIndexer listExpr expr0));
@@ -147,8 +149,7 @@ binOp:
     | GT       
     | LEQ      
     | GEQ
-    | '%'
-    | '.';
+    | '%';
     atom  :  (ID|Literal|)
   ;
 // Lexical tokens

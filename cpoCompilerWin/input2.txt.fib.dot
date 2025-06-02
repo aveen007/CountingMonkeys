@@ -4,24 +4,26 @@ ranksep=.4;
 bgcolor="lightgrey";  node [shape=box, fixedsize=false, fontsize=12, fontname="Helvetica-bold", fontcolor="blue"
 width=.25, height=.25, color="black", fillcolor="white", style="filled, solid, bold"];
 
-edge [arrowsize=.5, color="black", style="bold"]    n00001210C42A3200 [label="BaseBlock\n "]
-    n00001210C42A33E0 [label="IfBlock\n OT: [ <(2 , n)]
+edge [arrowsize=.5, color="black", style="bold"]    n00001304F79234A0 [label="BaseBlock\n OT: [ .(ex , x ,  =(1))]
+OT: [ =( .(ex , DoThing ,  Braces(1)) , x)]
 "]
-    n00001210C42A3200 -> n00001210C42A33E0
-    n00001210C42A33E0 -> n00001210C42A3440 [label="True" color="green"]
-    n00001210C42A3440 [label="ThenBlock\n OT: [ =(1 , r)]
+    n00001304F79236E0 [label="IfBlock\n OT: [ <(2 , n)]
 "]
-    n00001210C42A34A0 [label="IfExitBlock\n "]
-    n00001210C42A3440 -> n00001210C42A34A0
-    n00001210C42A3500 [label="IfBlock\n OT: [ >=(2 , n)]
+    n00001304F79234A0 -> n00001304F79236E0
+    n00001304F79236E0 -> n00001304F7923740 [label="True" color="green"]
+    n00001304F7923740 [label="ThenBlock\n OT: [ =(1 , r)]
 "]
-    n00001210C42A34A0 -> n00001210C42A3500
-    n00001210C42A3500 -> n00001210C42A3560 [label="True" color="green"]
-    n00001210C42A3560 [label="ThenBlock\n OT: [ =( +( fib( -(1 , n)) ,  fib( -(2 , n))) , r)]
+    n00001304F79237A0 [label="IfExitBlock\n "]
+    n00001304F7923740 -> n00001304F79237A0
+    n00001304F7923800 [label="IfBlock\n OT: [ >=(2 , n)]
 "]
-    n00001210C42A35C0 [label="IfExitBlock\n OT: [r]
+    n00001304F79237A0 -> n00001304F7923800
+    n00001304F7923800 -> n00001304F7923860 [label="True" color="green"]
+    n00001304F7923860 [label="ThenBlock\n OT: [ =( +( fib( -(1 , n)) ,  fib( -(2 , n))) , r)]
 "]
-    n00001210C42A3560 -> n00001210C42A35C0
-    n00001210C42A3620 [label="BaseBlock\n "]
-    n00001210C42A35C0 -> n00001210C42A3620
+    n00001304F79238C0 [label="IfExitBlock\n OT: [r]
+"]
+    n00001304F7923860 -> n00001304F79238C0
+    n00001304F7923920 [label="BaseBlock\n "]
+    n00001304F79238C0 -> n00001304F7923920
 }
