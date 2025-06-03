@@ -5,7 +5,7 @@ int inClass = 0;
 classDefInfo* allClasses;
 controlFlowGraphBlock* currentCfg;
 controlFlowGraphBlock* ret;
-int myDrawn = 0;
+int isElsing = 0;
 /// here I match the type key, from the parameters 
 ///summary
 /// let's take an example A<T> is later initialized as A<int>
@@ -203,10 +203,11 @@ controlFlowGraphBlock* copyNode(controlFlowGraphBlock* node) {
 
 controlFlowGraphBlock* traverseCfgIfStatementType(controlFlowGraphBlock* node, controlFlowGraphBlock* start,  char* fileName, classDefInfo* classes) {
 
+	int isElseNode = node->outNodeCount > 1 ? 1 : 0;
+	isElsing = isElseNode;
 	controlFlowGraphBlock* copyIfNode = copyNode(node);
 	
 		//node->nodes[0];
-	int isElseNode = node->outNodeCount > 1 ? 1 : 0;
 	
 	copyIfNode->nodes[0]  = traverseCfgType(node->nodes[0], node, fileName, classes);
 	
@@ -216,6 +217,7 @@ controlFlowGraphBlock* traverseCfgIfStatementType(controlFlowGraphBlock* node, c
 	}
 	node->drawn = 0;
 	copyIfNode->drawn = 0;
+	isElsing = 0;
 	
 	return copyIfNode;
 }
@@ -224,8 +226,10 @@ controlFlowGraphBlock* traverseCfgWhileStatementType(controlFlowGraphBlock* node
 	// whilebody = node->nodes[0];
 	WhileNode->nodes[0] = traverseCfgType(node->nodes[0], node, fileName, classes);
 	WhileNode->nodes[1] = traverseCfgType(node->nodes[1], node, fileName, classes);
+	WhileNode->drawn = 0;
 	node->drawn = 0;
-	return WhileNode->nodes[1];
+
+	return WhileNode;
 }
 Instructions* copyInstructions(controlFlowGraphBlock* node) {
 	Instructions* copyInstructions = malloc(sizeof(Instructions));
@@ -256,6 +260,9 @@ controlFlowGraphBlock* traverseCfgBaseStatementType(controlFlowGraphBlock* node,
 	controlFlowGraphBlock* copyCfg = copyNode(node);
 
 	copyCfg->nodes[0]= traverseCfgType(node->nodes[0], node, fileName, classes);
+	if (node->blocktype == IfExitBlock && isElsing == 0) {
+		node->drawn = 0;
+	}
 	return copyCfg;
 
 }

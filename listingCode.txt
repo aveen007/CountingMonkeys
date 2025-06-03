@@ -107,6 +107,40 @@ printf:
 	load
 	add_s 0
 	load
+		;while
+label_2:
+	add_s 0
+	load
+	jz label_3
+		;while body
+	add_s 0
+	load
+	add_s 0
+	load
+	add_s 0
+	load
+	add_s 0
+	load
+	jump label_2
+label_3:
+		;end while
+		;while
+label_4:
+	add_s 0
+	load
+	jz label_5
+		;while body
+	add_s 0
+	load
+	add_s 0
+	load
+	add_s 0
+	load
+	add_s 0
+	load
+	jump label_4
+label_5:
+		;end while
 	add_s 0
 	load
 	ret
@@ -119,6 +153,19 @@ main:
 	wide_store
 	add_s 0
 	load
+		;while
+label_6:
+	add_s 0
+	load
+	jz label_7
+		;while body
+	add_s 0
+	load
+	add_s 0
+	load
+	jump label_6
+label_7:
+		;end while
 	jump halt
 halt:
 	hlt

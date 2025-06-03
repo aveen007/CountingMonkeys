@@ -1,6 +1,6 @@
 #include "localVariable.h"
 
-int isElsing = 0;
+//int isElsing = 0;
 int varCounter = 0;
 
 // Function to create a new node
@@ -103,7 +103,7 @@ VarNode* newVar(controlFlowGraphBlock* node, VarNode * var ,char* fileName) {
 VarNode* traverseCfgIfStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* start, VarNode * var , char* fileName) {
 
 	int isElseNode = node->outNodeCount > 1 ? 1 : 0;
-	isElsing = isElseNode;
+	//isElsing = isElseNode;
 	var=newVar(node, var  , fileName);
 	controlFlowGraphBlock* ThenNode = node->nodes[0];
 	var=traverseCfg(ThenNode, node, var , fileName);
@@ -113,7 +113,7 @@ VarNode* traverseCfgIfStatement(controlFlowGraphBlock* node, controlFlowGraphBlo
 		var=traverseCfg(ElseNode, node, var  , fileName);
 	}
 	node->drawn = 0;
-	isElsing = 0;
+	//isElsing = 0;
 	return var;
 }
 VarNode* traverseCfgWhileStatement(controlFlowGraphBlock* node,controlFlowGraphBlock* start, VarNode * var , char* fileName) {
@@ -130,9 +130,9 @@ VarNode* traverseCfgBaseStatement(controlFlowGraphBlock* node, controlFlowGraphB
 	var=newVar(node, var , fileName);
 
 	var=traverseCfg(node->nodes[0], node, var  , fileName);
-	if (node->blocktype == IfExitBlock && isElsing == 0) {
+	/*if (node->blocktype == IfExitBlock && isElsing == 0) {
 		node->drawn = 0;
-	}
+	}*/
 	return var;
 
 }
