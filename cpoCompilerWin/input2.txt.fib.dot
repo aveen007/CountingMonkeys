@@ -4,24 +4,26 @@ ranksep=.4;
 bgcolor="lightgrey";  node [shape=box, fixedsize=false, fontsize=12, fontname="Helvetica-bold", fontcolor="blue"
 width=.25, height=.25, color="black", fillcolor="white", style="filled, solid, bold"];
 
-edge [arrowsize=.5, color="black", style="bold"]    n0000112828523320 [label="BaseBlock\n "]
-    n00001128285233E0 [label="IfBlock\n OT: [ <(2 , n)]
+edge [arrowsize=.5, color="black", style="bold"]    n000011B06D6237A0 [label="BaseBlock\n OT: [ .=(ex , x , 1)]
+OT: [ =.(x , ex ,  DoThing(1))]
 "]
-    n0000112828523320 -> n00001128285233E0
-    n00001128285233E0 -> n0000112828523440 [label="True" color="green"]
-    n0000112828523440 [label="ThenBlock\n OT: [ =(1 , r)]
+    n000011B06D6239E0 [label="IfBlock\n OT: [ <(2 , n)]
 "]
-    n00001128285234A0 [label="IfExitBlock\n "]
-    n0000112828523440 -> n00001128285234A0
-    n0000112828523500 [label="IfBlock\n OT: [ >=(2 , n)]
+    n000011B06D6237A0 -> n000011B06D6239E0
+    n000011B06D6239E0 -> n000011B06D623A40 [label="True" color="green"]
+    n000011B06D623A40 [label="ThenBlock\n OT: [ =(1 , r)]
 "]
-    n00001128285234A0 -> n0000112828523500
-    n0000112828523500 -> n0000112828523560 [label="True" color="green"]
-    n0000112828523560 [label="ThenBlock\n OT: [ =( +( fib( -(1 , n)) ,  fib( -(2 , n))) , r)]
+    n000011B06D623AA0 [label="IfExitBlock\n "]
+    n000011B06D623A40 -> n000011B06D623AA0
+    n000011B06D623B00 [label="IfBlock\n OT: [ >=(2 , n)]
 "]
-    n00001128285235C0 [label="IfExitBlock\n OT: [r]
+    n000011B06D623AA0 -> n000011B06D623B00
+    n000011B06D623B00 -> n000011B06D623B60 [label="True" color="green"]
+    n000011B06D623B60 [label="ThenBlock\n OT: [ =( +( fib( -(1 , n)) ,  fib( -(2 , n))) , r)]
 "]
-    n0000112828523560 -> n00001128285235C0
-    n0000112828523620 [label="BaseBlock\n "]
-    n00001128285235C0 -> n0000112828523620
+    n000011B06D623BC0 [label="IfExitBlock\n OT: [r]
+"]
+    n000011B06D623B60 -> n000011B06D623BC0
+    n000011B06D623C20 [label="BaseBlock\n "]
+    n000011B06D623BC0 -> n000011B06D623C20
 }

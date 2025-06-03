@@ -6,19 +6,27 @@ class ExampleClass (X<T>, Y) extends Example (int , int)
        
        fib(0, 0);
     end function
-
+    public function DoThing(b as B) as int       
+        dim r as B
+        fib(x, b);
+    end function
 end class
 class Example (A, B)
 
     public x as A
+    public y as B
     public function DoThing(b as B) as int       
        dim r as B
        fib(x, b);
     end function
-
+    
 
 end class
 function fib(n as int)
+  dim ex as Example <int, int>
+  ex.x = 1;
+  dim x as int
+  x = ex.DoThing(1); 
   dim r, l, k,m as int
   if n < 2 then
       r = 1;

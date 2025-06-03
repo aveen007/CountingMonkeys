@@ -607,6 +607,15 @@ int translateInstructions(controlFlowGraphBlock * node, char* fileName) {
 
 
 int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, char* fileName) {
+
+	//TODO: here I am translating classes
+	//
+	//
+	
+
+
+
+	//here I am translating functions
 	for (int i = 0; i < cnt; i++) {
 		curFuncVars = funcVars[i];
 		fileFuncs = funcVars;

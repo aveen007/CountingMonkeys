@@ -145,6 +145,48 @@ Type* findClass(classDefInfo* classes, Type * parent) {
 
 
 }
+classDef* fixOffsetLikeFather(classDef* class) {
+
+	classDef* parent = class->baseType->def;
+
+	// First pass: assign parent offsets to overridden functions
+	for (int i = 0; i < parent->functionCount; i++) {
+		FunctionInfo* parentFunc = parent->functions[i];
+
+		for (int j = 0; j < class->functionCount; j++) {
+			FunctionInfo* childFunc = class->functions[j];
+
+			if (strcmp(parentFunc->subroutine->name, childFunc->subroutine->name) == 0) {
+				// Found an override - assign parent's offset
+				childFunc->offset = parentFunc->offset;
+				break;
+			}
+		}
+	}
+
+	// Second pass: assign new offsets to non-overridden functions
+	int nextOffset = (parent->functionCount > 0) ? parent->functions[parent->functionCount - 1]->offset + 1 : 0;
+
+	for (int i = 0; i < class->functionCount; i++) {
+		FunctionInfo* childFunc = class->functions[i];
+
+		// Check if this function wasn't assigned an offset yet (not an override)
+		int isOverride = 0;
+		for (int j = 0; j < parent->functionCount; j++) {
+			if (strcmp(parent->functions[j]->subroutine->name, childFunc->subroutine->name) == 0) {
+				isOverride = 1;
+				break;
+			}
+		}
+
+		if (!isOverride) {
+			childFunc->offset = nextOffset++;
+		}
+	}
+
+	return class;
+}
+
 //TODO: in handleType in controlGraph.c, do generic handeling
 Subroutine** setTypes(Subroutine** subroutines, int cnt, char* fileName, classDefInfo* classes) {
 
@@ -158,6 +200,9 @@ Subroutine** setTypes(Subroutine** subroutines, int cnt, char* fileName, classDe
 		if (classes->classes[i]->baseType)
 		{
 			classes->classes[i]->baseType = findClass(classes, classes->classes[i]->baseType);
+			//TODO: here I want to fix the order of the childs funcs so they match those of the fathers, also the args
+			classes->classes[i] = fixOffsetLikeFather(classes->classes[i]);
+		
 		}
 	}
 

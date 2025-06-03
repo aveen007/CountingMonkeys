@@ -13,6 +13,8 @@ registers:
   storage esp [16];
   storage inp [16];     // Input register (for input operations)
   storage outp [16];    // Output register (for output operations)
+  storage heap_base[16];
+  storage heap_current[16];
 
 memory:
 
