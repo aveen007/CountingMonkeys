@@ -403,6 +403,7 @@ OTNode* HandleOperationsTree(ParseTree* base) {
 
 		OT = createOperatorNode(base->children[1]->token);
 
+
 		insertCGToken(base->children[1]->token);
 
 		base = base->children[0];
@@ -421,15 +422,18 @@ OTNode* HandleOperationsTree(ParseTree* base) {
 							OT->operands = malloc(sizeof(OTNode) * 3);
 							OT->operands[0] = HandleOperationsTree(base->children[1]->children[0]);
 							OT->operands[1] = HandleOperationsTree(base->children[1]->children[1]);
-							OT->operands[2] = HandleOperationsTree(base->children[1]);
+							OT->operands[2] = HandleOperationsTree(base->children[0]);
+							return OT;
 					}
 						if (strcmp(base->children[0]->token, ".") == 0) {
 							OT = createOperatorNode("=."); // read from field
 							OT->cntOperands = 3;
 							OT->operands = malloc(sizeof(OTNode) * 3);
 							OT->operands[0] = HandleOperationsTree(base->children[1]);
-							OT->operands[1] = HandleOperationsTree(base->children[1]->children[0]);
-							OT->operands[2] = HandleOperationsTree(base->children[1]->children[1]);
+							OT->operands[1] = HandleOperationsTree(base->children[0]->children[0]);
+							OT->operands[2] = HandleOperationsTree(base->children[0]->children[1]);
+							return OT;
+
 						}
 						
 				}
