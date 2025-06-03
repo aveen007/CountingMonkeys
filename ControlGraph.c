@@ -419,7 +419,7 @@ OTNode* HandleOperationsTree(ParseTree* base) {
 						if (strcmp(base->children[1]->token, ".") == 0) {
 							OT = createOperatorNode(".="); //Write in field
 							OT->cntOperands = 3;
-							OT->operands = malloc(sizeof(OTNode) * 3);
+							OT->operands = malloc(sizeof(OTNode*) * 3);
 							OT->operands[0] = HandleOperationsTree(base->children[1]->children[0]);
 							OT->operands[1] = HandleOperationsTree(base->children[1]->children[1]);
 							OT->operands[2] = HandleOperationsTree(base->children[0]);
@@ -428,7 +428,7 @@ OTNode* HandleOperationsTree(ParseTree* base) {
 						if (strcmp(base->children[0]->token, ".") == 0) {
 							OT = createOperatorNode("=."); // read from field
 							OT->cntOperands = 3;
-							OT->operands = malloc(sizeof(OTNode) * 3);
+							OT->operands = malloc(sizeof(OTNode*) * 3);
 							OT->operands[0] = HandleOperationsTree(base->children[1]);
 							OT->operands[1] = HandleOperationsTree(base->children[0]->children[0]);
 							OT->operands[2] = HandleOperationsTree(base->children[0]->children[1]);

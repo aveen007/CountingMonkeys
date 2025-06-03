@@ -545,8 +545,11 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 				}
 				read();
 			}
-			else if (strcmp(tree->value.operator,".") == 0) {
-			//TODO: here I will process the dot for class
+			else if (strcmp(tree->value.operator,"=.") == 0) {
+			//TODO: here I will read from field
+			}
+			else if (strcmp(tree->value.operator,".=") == 0) {
+				//TODO: here I will write in field
 			}
 			else {
 				for (int i = 0; i < tree->cntOperands; i++) {

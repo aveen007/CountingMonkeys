@@ -2,8 +2,13 @@
 	init CodeEnd
 	jump main
 ShowMessage:
-	add_s 0
-	load
+	push 0
+	push 2
+	push 0
+	push 2
+	pop_sf
+	pop_sf
+	call fib
 	ret
 DoThing:
 	sub_s 1
@@ -16,6 +21,11 @@ DoThing:
 	wide_store
 	add_s 0
 	load
+	sub_s 1
+	load
+	pop_sf
+	pop_sf
+	call fib
 	ret
 fib:
 	sub_s 1
@@ -28,11 +38,8 @@ fib:
 	pop_sf
 	pop_sf
 	pop_sf
-	pop_sf
-	pop_sf
-	pop_sf
-	pop_sf
 	push 0
+	push 2
 	add_s 1
 	wide_store
 	push 0
@@ -47,37 +54,68 @@ fib:
 	push 2
 	add_s 4
 	wide_store
-	push 0
 	push 2
-	add_s 5
-	wide_store
-	push 0
 	push 2
-	add_s 6
+	sub_s 1
+	load
+	wide_sub
+	pop
+	jlt label_5
+	push 0
+		;false branch
+	jump label_6
+label_5:
+	push 1
+		;true branch
+label_6:
+		;if
+	jz label_7
+		;then
+	push 1
+	push 2
+	add_s 1
 	wide_store
-	add_s 0
+	jump label_7
+label_7:
+	push 2
+	push 2
+	sub_s 1
 	load
-	add_s 0
-	load
-	add_s 0
-	load
+	wide_sub
+	pop
+	jge label_10
+	push 0
+		;false branch
+	jump label_11
+label_10:
+	push 1
+		;true branch
+label_11:
 		;if
-	jz label_0
+	jz label_12
 		;then
-	add_s 0
+	push 1
+	push 2
+	sub_s 1
 	load
-	jump label_0
-label_0:
-	add_s 0
+	wide_sub
+	pop_sf
+	pop_sf
+	call fib
+	push 2
+	push 2
+	sub_s 1
 	load
-		;if
-	jz label_1
-		;then
-	add_s 0
-	load
-	jump label_1
-label_1:
-	add_s 3
+	wide_sub
+	pop_sf
+	pop_sf
+	call fib
+	wide_add
+	add_s 1
+	wide_store
+	jump label_12
+label_12:
+	add_s 1
 	load
 		;endif
 		;endif
@@ -103,46 +141,113 @@ printf:
 	push 2
 	add_s 3
 	wide_store
-	add_s 0
-	load
-	add_s 0
-	load
+	push 10
+	push 2
+	add_s 1
+	wide_store
+	push 0
+	push 2
+	add_s 2
+	wide_store
 		;while
-label_2:
-	add_s 0
+label_19:
+	push 0
+	push 2
+	sub_s 1
 	load
-	jz label_3
+	wide_sub
+	pop
+	jz label_21
+	push 1
+		;false branch
+	jump label_22
+label_21:
+	push 0
+		;true branch
+label_22:
+	jz label_23
 		;while body
-	add_s 0
+	push 10
+	push 2
+	add_s 2
 	load
-	add_s 0
+	wide_mult
+	add_s 2
+	wide_store
+	push 10
+	push 2
+	sub_s 1
 	load
-	add_s 0
+	wide_mod
+	add_s 3
+	wide_store
+	add_s 3
 	load
-	add_s 0
+	add_s 2
 	load
-	jump label_2
-label_3:
+	wide_add
+	add_s 2
+	wide_store
+	push 10
+	push 2
+	sub_s 1
+	load
+	wide_div
+	sub_s 1
+	wide_store
+	jump label_19
+label_23:
 		;end while
 		;while
-label_4:
-	add_s 0
+label_27:
+	push 0
+	push 2
+	add_s 2
 	load
-	jz label_5
+	wide_sub
+	pop
+	jz label_29
+	push 1
+		;false branch
+	jump label_30
+label_29:
+	push 0
+		;true branch
+label_30:
+	jz label_31
 		;while body
-	add_s 0
+	push 10
+	push 2
+	add_s 2
 	load
-	add_s 0
+	wide_mod
+	add_s 3
+	wide_store
+	push 48
+	push 2
+	add_s 3
 	load
-	add_s 0
+	wide_add
+	add_s 3
+	wide_store
+	add_s 3
 	load
-	add_s 0
+	pop
+	write
+	push 10
+	push 2
+	add_s 2
 	load
-	jump label_4
-label_5:
+	wide_div
+	add_s 2
+	wide_store
+	jump label_27
+label_31:
 		;end while
-	add_s 0
-	load
+	push 10
+	push 2
+	pop
+	write
 	ret
 main:
 	pop_sf
@@ -151,20 +256,45 @@ main:
 	push 2
 	add_s 1
 	wide_store
-	add_s 0
-	load
+	push 0
+	push 2
+	add_s 1
+	wide_store
 		;while
-label_6:
-	add_s 0
+label_37:
+	push 11
+	push 2
+	add_s 1
 	load
-	jz label_7
+	wide_sub
+	pop
+	jlt label_39
+	push 0
+		;false branch
+	jump label_40
+label_39:
+	push 1
+		;true branch
+label_40:
+	jz label_41
 		;while body
-	add_s 0
+	add_s 1
 	load
-	add_s 0
+	pop_sf
+	pop_sf
+	call fib
+	pop_sf
+	pop_sf
+	call printf
+	push 1
+	push 2
+	add_s 1
 	load
-	jump label_6
-label_7:
+	wide_add
+	add_s 1
+	wide_store
+	jump label_37
+label_41:
 		;end while
 	jump halt
 halt:

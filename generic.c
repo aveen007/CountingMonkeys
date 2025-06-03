@@ -295,31 +295,32 @@ cfgBlockContent* copyInstructionsExpression(cfgBlockContent*  old) {
 OTNode* copyOperationsTree(OTNode* oldOT) {
 	OTNode* OT= malloc(sizeof(OTNode));
 	
-	if (OT->type== NODE_TYPE_OPERATOR) {
+	if (oldOT->type== NODE_TYPE_OPERATOR) {
 
-		OT = createOperatorNode(OT->value.operator);
+		OT = createOperatorNode(oldOT->value.operator);
 
 		//insertCGToken(base->children[1]->token);
+		OT->cntOperands = oldOT->cntOperands;
+		OT->operands = malloc(sizeof(OTNode*)* OT->cntOperands);
+
+		for (int i = 0; i < OT->cntOperands; i++) {
+
+			OT->operands[i] = copyOperationsTree(oldOT->operands[i]);
+		}
+		return OT;
 
 		//base = base->children[0];
 	}
 	
 		else {
 			OT = createOperandNode(oldOT->value.operand);
-			OT->cntOperands = oldOT->cntOperands;
-			OT->operands = malloc(sizeof(OTNode*)* OT->cntOperands);
-
-			for (int i = 0; i < OT->cntOperands; i++) {
-
-				OT->operands[i] = copyOperationsTree(oldOT->operands[i]);
-			}
+			return OT;
 		
 		}
 	
 	//OT->cntOperands = base->childrenCount;
 	//OT->operands = malloc(sizeof(OTNode*) * base->childrenCount);
 
-	return OT;
 
 }
 
