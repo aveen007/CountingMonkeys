@@ -4,8 +4,18 @@
 vtable_ExampleClass:
     dd ExampleClass_DoThing
     dd ExampleClass_ShowMessage
+ExampleClass:
+	vtable_ExampleClass
+	x
+	y
+	message
+	z
 vtable_Example:
     dd Example_DoThing
+Example:
+	vtable_Example
+	x
+	y
 DoThing:
 	sub_s 1
 	wide_store

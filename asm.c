@@ -94,6 +94,8 @@ char* labelNameIdent(char* ident) {
 }
 
 #define put_label_vtable(name) fprintf(asmCodeOut, "vtable_%s:\n", name);
+#define put_label_class_inside(name) fprintf(asmCodeOut, "\tvtable_%s\n", name);
+#define put_label_arg_class(name) fprintf(asmCodeOut, "\t%s\n", name);
 #define put_label(name) fprintf(asmCodeOut, "%s:\n", name);
 #define put_comment(comment) fprintf(asmCodeOut, "\t\t;%s\n", comment);
 #define put_comment_var(comment) fprintf(asmCodeOut, "\t\t;%s\n", comment);
@@ -642,6 +644,36 @@ int translate_vtable(classDef* class){
 
 	
 }
+int translate_class(classDef* class) {
+
+	// recursively get fathers and mark certain funcs as treated
+	if (class->baseType)
+	{
+		translate_class(class->baseType->def);
+		//	classes->classes[i]->baseType = findClass(classes, classes->classes[i]->baseType);
+			//TODO: here I want to fix the order of the childs funcs so they match those of the fathers, also the args
+			//classes->classes[i] = fixOffsetLikeFather(classes->classes[i]);
+	}
+	for (int i = 0; i<class->argumentCount; i++) {
+	/*	int isOverride = 0;
+		if ((strcmp(class->name, curr->name) != 0)) {
+
+
+			for (int j = 0; j < curr->functionCount; j++) {
+				if (strcmp(curr->functions[j]->subroutine->name, class->functions[i]->subroutine->name) == 0) {
+					isOverride = 1;
+				}
+			}
+		}
+		if (!isOverride) {*/
+
+		put_label_arg_class(class->arguments[i]->argument->name);
+		//}
+		//isOverride = 0;
+	}
+
+
+}
 int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, char* fileName, classDefInfo* classes) {
 
 	//TODO: here I am translating classes
@@ -652,7 +684,10 @@ int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, c
 		curr = classes->classes[i];
 		put_label_vtable(classes->classes[i]->name);
 		translate_vtable(classes->classes[i]);
-	
+		put_label(classes->classes[i]->name)
+		put_label_class_inside(classes->classes[i]->name)
+		translate_class(classes->classes[i]);
+
 		// for extends
 		
 	}
