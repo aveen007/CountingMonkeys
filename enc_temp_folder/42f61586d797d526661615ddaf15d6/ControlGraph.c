@@ -412,25 +412,16 @@ OTNode* HandleOperationsTree(ParseTree* base) {
 
 			if (base->childrenCount > 0) {
 				if (strcmp(base->token, "=") == 0) {
-					//TODO: handle more complex statements in the grammar like x.x.x.x , actually here I am just checking
-					// left and right of an assignment, but dots can appear between dots and should ideally be handled seperately
+					
 						// handling three operator structure of the memeber accesstree
 						if (strcmp(base->children[1]->token, ".") == 0) {
-							OT = createOperatorNode(".="); //Write in field
+							OT = createOperatorNode(".=");
 							OT->cntOperands = 3;
 							OT->operands = malloc(sizeof(OTNode) * 3);
 							OT->operands[0] = HandleOperationsTree(base->children[1]->children[0]);
 							OT->operands[1] = HandleOperationsTree(base->children[1]->children[1]);
 							OT->operands[2] = HandleOperationsTree(base->children[1]);
 					}
-						if (strcmp(base->children[0]->token, ".") == 0) {
-							OT = createOperatorNode("=."); // read from field
-							OT->cntOperands = 3;
-							OT->operands = malloc(sizeof(OTNode) * 3);
-							OT->operands[0] = HandleOperationsTree(base->children[1]);
-							OT->operands[1] = HandleOperationsTree(base->children[1]->children[0]);
-							OT->operands[2] = HandleOperationsTree(base->children[1]->children[1]);
-						}
 						
 				}
 				OT = createOperatorNode(base->token);
