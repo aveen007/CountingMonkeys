@@ -684,9 +684,10 @@ int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, c
 		curr = classes->classes[i];
 		put_label_vtable(classes->classes[i]->name);
 		translate_vtable(classes->classes[i]);
-		put_label(classes->classes[i]->name)
+		//TODO: translating classes should be done dynamically
+	/*	put_label(classes->classes[i]->name)
 		put_label_class_inside(classes->classes[i]->name)
-		translate_class(classes->classes[i]);
+		translate_class(classes->classes[i]);*/
 
 		// for extends
 		
@@ -700,7 +701,14 @@ int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, c
 		fileFuncs = funcVars;
 		cntFuncs = cnt;
 		char* suffix = mystrcat("_", remove_last_three_chars(fileName));
+		if (subroutines[i]->InClass) {
+			put_label(mystrcat(mystrcat(subroutines[i]->InClass,"_"), subroutines[i]->name));
+
+		}
+		else {
 		put_label(subroutines[i]->name);
+
+		}
 		
 			int size_args = funcVars[i]->cntArgs;// added one for old_ret
 			if (funcVars[i]->parameters) {

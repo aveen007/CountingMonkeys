@@ -99,7 +99,7 @@ Subroutine** addSubroutine(Subroutine** list, Subroutine* newSub) {
 }
 Subroutine* createSubroutine() {
 	Subroutine* subroutine = malloc(sizeof(Subroutine));
-
+	subroutine->InClass = NULL;
 	
 	return subroutine;
 }
@@ -117,7 +117,6 @@ subroutineInfo* DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, P
 
 			for (int i = 0; i < tree->childrenCount; i++) {
 		
-				Subroutine* sub = createSubroutine();
 				if (strcmp(tree->children[i]->token, "ClassDef") == 0) {
 
 					classDef* class = createClassDef(tree->children[i]->children[0]->token);
@@ -130,12 +129,14 @@ subroutineInfo* DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, P
 
 
 								if (strcmp(memberTree->children[j]->token, "FuncDef") == 0) {
+									Subroutine* sub = createSubroutine();
 									char* name = memberTree->children[j]->children[0]->children[0]->token;
 									Position* pos = (Position*)malloc(sizeof(Position));
 									pos->line = memberTree->children[j]->children[0]->line;
 									pos->width = memberTree->children[j]->children[0]->position;
 
 									sub->name = name;
+									sub->InClass = class->name;
 									sub->cfg = cfgs[countSubroutines];
 
 									sub->signatureDetails = createSignatureDetails(memberTree->children[j]->children[0]);
@@ -166,6 +167,8 @@ subroutineInfo* DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, P
 
 
 				if (strcmp(tree->children[i]->token, "FuncDef") == 0) {
+					Subroutine* sub = createSubroutine();
+
 					char* name = tree->children[i]->children[0]->children[0]->token;
 					Position* pos = (Position*)malloc(sizeof(Position));
 					pos->line = tree->children[i]->children[0]->line;

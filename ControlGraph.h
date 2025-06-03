@@ -174,12 +174,14 @@ typedef struct controlFlowGraphBlock {
     Instructions* instructions;             // CFG Block Content
     struct callGraph* called;
     int drawn;
+    char* Class;
 } controlFlowGraphBlock, * pControlFlowGraphBlock;
 
 typedef struct Subroutine {
     char* name;                            ///< The name of the subroutine.
     struct controlFlowGraphBlock* cfg;    ///< Pointer to the control flow graph associated with the subroutine.
     struct SignatureDetails* signatureDetails; ///< Pointer to the signature details of the subroutine.
+    char* InClass;
 }Subroutine;
 
 typedef struct ErrorInfoCFG {
