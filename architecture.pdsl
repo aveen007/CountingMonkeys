@@ -14,7 +14,6 @@ registers:
   storage inp [16];     // Input register (for input operations)
   storage outp [16];    // Output register (for output operations)
   storage heap_base[16];
-  storage heap_current[16];
 
 memory:
 
@@ -440,11 +439,26 @@ instruction sub_reg_imm = { 0001 1110, imm16 as value } {
 instruction init ={ 0001 1111,imm16 as target }{
 	ebp=target;
 	esp=ebp;
-	
+	heap_base=0x7A00;
 	ip=ip + 3;
 };
+  instruction pop_hf ={0010 0000} {
+	heap_base = heap_base + 4;        // Increment stack pointer
+	   
+    ip = ip + 1;        // Increment instruction pointer
+};
+  instruction pop_vtable ={0010 0001, imm16 as target} {
+    ram:2[heap_base]=target;
+	heap_base = heap_base + 4;        // Increment stack pointer
+	   
+    ip = ip + 1;        // Increment instruction pointer
+};
 
-
+ instruction push_hf = { 0010 0010} {
+    m_stack:2[sp] = heap_base;
+    sp = sp - 2;   // Decrement stack pointer
+    ip = ip + 3;   // Increment instruction pointer
+  };
 
 mnemonics:
   mnemonic init for init(target) "{1}";
@@ -473,7 +487,10 @@ mnemonics:
   mnemonic jmp_emp(ptr) "{1}";
   
   mnemonic push_sf (value) "{1}" ;
+  mnemonic pop_vtable (value) "{1}" ;
   mnemonic pop_sf () ;
+  mnemonic push_hf () ;
+  mnemonic pop_hf () ;
   mnemonic call ( ptr) "{1}" ;
   mnemonic ret() ;
   mnemonic load() ;

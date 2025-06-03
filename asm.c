@@ -24,7 +24,11 @@
 //instruction ret();
 
 #define push_sf() mnemonic_0("push_sf")
+#define push_hf() mnemonic_0("push_hf")
+
 #define pop_sf() mnemonic_0("pop_sf")
+#define pop_hf() mnemonic_0("pop_hf")
+#define push_vtable(value) mnemonic_1("push_vtable", value)
 
 #define call(value) mnemonic_1("call", value)
 #define ret() mnemonic_0("ret")
@@ -709,7 +713,7 @@ int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, c
 		put_label(subroutines[i]->name);
 
 		}
-		
+			
 			int size_args = funcVars[i]->cntArgs;// added one for old_ret
 			if (funcVars[i]->parameters) {
 
@@ -727,6 +731,7 @@ int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, c
 				pop_sf()
 				pop_sf()
 			}
+				
 			VarNode* locals = funcVars[i]->localVariables;
 			for (int j = 0; j < funcVars[i]->cntVars;j++) {
 
@@ -739,11 +744,41 @@ int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, c
 				/*translate_variable(lab, locals->type);*/
 				//push(lab);
 				//Everywhere else I push value and then push type
+
+				if (locals->type->def) {
+					printf("hi");
+					// I will pick this random value 0x7A00, to set my heap pointer init to
+					// 
+					//TODO: here I created an object, and here I should add it to the heap
+					// get the value of the heap base pointer
+					// 
+					// push the vtable label
+					// allocate enough space for args by moving current heap ptr
+					// return something?
+					// heap base pointer = current heap ptr? or not
+					// I also need to save the label for the v_table in the beggining of the heap object
+					for (int k = 0; k < locals->type->def->argumentCount; k++) {
+						pop_hf();
+					}
+					push_vtable(mystrcat("vtable_", locals->type->def->name))
+					
+						
+
+					// instead of push_i(0), I need to somehow push the value of the heap pointer, so each object points to its object
+					push_hf()
+					translate_type(locals->type);
+					add_s(locals->offset)
+					wide_store()
+					locals = locals->next;
+				}
+				else {
 				push_i(0)//some randome init value 
 				translate_type(locals->type);
 				add_s(locals->offset)
-					wide_store()
-					locals = locals->next;
+				wide_store()
+				locals = locals->next;
+
+				}
 
 			}
 

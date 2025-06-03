@@ -64,7 +64,10 @@ fib:
 	pop_sf
 	pop_sf
 	pop_sf
-	push 0
+	pop_hf
+	pop_hf
+	push_vtable vtable_Example
+	push_hf
 	add_s 1
 	wide_store
 	push 0
