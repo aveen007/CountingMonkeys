@@ -183,6 +183,17 @@ classDef* fixOffsetLikeFather(classDef* class) {
 			childFunc->offset = nextOffset++;
 		}
 	}
+	// Sort the functions array by offset
+	for (int i = 0; i < class->functionCount - 1; i++) {
+		for (int j = 0; j < class->functionCount - i - 1; j++) {
+			if (class->functions[j]->offset > class->functions[j + 1]->offset) {
+				// Swap the pointers
+				FunctionInfo* temp = class->functions[j];
+				class->functions[j] = class->functions[j + 1];
+				class->functions[j + 1] = temp;
+			}
+		}
+	}
 
 	return class;
 }

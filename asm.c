@@ -9,6 +9,8 @@
 #define asm_data_header "data:\n"
 #define asm_footer "halt:\n\thlt\n"
 
+
+
 #define mnemonic_1(mnemonic, arg1) fprintf(asmCodeOut, "\t%s %s\n", mnemonic, arg1);
 #define mnemonic_1_i(mnemonic, arg1) fprintf(asmCodeOut, "\t%s %d\n", mnemonic, arg1);
 #define mnemonic_2(mnemonic, arg1, arg2) fprintf(asmCodeOut, "\t%s %s, %s\n", mnemonic, arg1, arg2);
@@ -91,9 +93,12 @@ char* labelNameIdent(char* ident) {
     return c;
 }
 
+#define put_label_vtable(name) fprintf(asmCodeOut, "vtable_%s:\n", name);
 #define put_label(name) fprintf(asmCodeOut, "%s:\n", name);
 #define put_comment(comment) fprintf(asmCodeOut, "\t\t;%s\n", comment);
 #define put_comment_var(comment) fprintf(asmCodeOut, "\t\t;%s\n", comment);
+#define put_label_func_vtable(className, funcName) \
+    fprintf(asmCodeOut, "    dd %s_%s\n", className, funcName); 
 #define put_label_var(name, type, value) \
     fprintf(asmDataOut, "%s: \n", name); \
     fprintf(asmDataOut, "    .type: dd 0x%x ; Offset for `type`\n", type); \
@@ -605,14 +610,53 @@ int translateInstructions(controlFlowGraphBlock * node, char* fileName) {
 }
 
 
+classDef* curr;
+//TODO: this would only kind of work for one level of recurrsion, I guess
+int translate_vtable(classDef* class){
+	
+	// recursively get fathers and mark certain funcs as treated
+	if (class->baseType)
+	{
+		translate_vtable(class->baseType->def);
+		//	classes->classes[i]->baseType = findClass(classes, classes->classes[i]->baseType);
+			//TODO: here I want to fix the order of the childs funcs so they match those of the fathers, also the args
+			//classes->classes[i] = fixOffsetLikeFather(classes->classes[i]);
+	}
+	for (int i = 0; i<class->functionCount; i++) {
+		int isOverride = 0;
+		if ((strcmp(class->name, curr->name) != 0)) {
 
+
+		for (int j = 0; j < curr->functionCount; j++) {
+			if (strcmp(curr->functions[j]->subroutine->name, class->functions[i]->subroutine->name) == 0) {
+				isOverride = 1;
+			}
+		}
+		}
+		if (!isOverride) {
+
+		put_label_func_vtable(class->name, class->functions[i]->subroutine->name);
+		}
+		isOverride = 0;
+	}
+
+	
+}
 int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, char* fileName, classDefInfo* classes) {
 
 	//TODO: here I am translating classes
 	//
 	//
+	for (int i = 0; i < classes->classCount; i++)
+	{
+		curr = classes->classes[i];
+		put_label_vtable(classes->classes[i]->name);
+		translate_vtable(classes->classes[i]);
 	
-
+		// for extends
+		
+	}
+	
 
 
 	//here I am translating functions

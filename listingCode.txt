@@ -1,0 +1,343 @@
+[section ram, code]
+	init CodeEnd
+	jump main
+vtable_ExampleClass:
+    dd ExampleClass_DoThing
+    dd ExampleClass_ShowMessage
+vtable_Example:
+    dd Example_DoThing
+DoThing:
+	sub_s 1
+	wide_store
+	pop_sf
+	pop_sf
+	push 0
+	push 2
+	add_s 1
+	wide_store
+	add_s 0
+	load
+	sub_s 1
+	load
+	pop_sf
+	pop_sf
+	call fib
+	ret
+DoThing:
+	sub_s 1
+	wide_store
+	pop_sf
+	pop_sf
+	push 0
+	push 2
+	add_s 1
+	wide_store
+	add_s 0
+	load
+	sub_s 1
+	load
+	pop_sf
+	pop_sf
+	call fib
+	ret
+DoThing:
+	sub_s 1
+	wide_store
+	pop_sf
+	pop_sf
+	push 0
+	push 2
+	add_s 1
+	wide_store
+	add_s 0
+	load
+	sub_s 1
+	load
+	pop_sf
+	pop_sf
+	call fib
+	ret
+fib:
+	sub_s 1
+	wide_store
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	push 0
+	add_s 1
+	wide_store
+	push 0
+	push 2
+	add_s 2
+	wide_store
+	push 0
+	push 2
+	add_s 3
+	wide_store
+	push 0
+	push 2
+	add_s 4
+	wide_store
+	push 0
+	push 2
+	add_s 5
+	wide_store
+	push 0
+	push 2
+	add_s 6
+	wide_store
+	push 2
+	push 2
+	sub_s 1
+	load
+	wide_sub
+	pop
+	jlt label_4
+	push 0
+		;false branch
+	jump label_5
+label_4:
+	push 1
+		;true branch
+label_5:
+		;if
+	jz label_6
+		;then
+	push 1
+	push 2
+	add_s 3
+	wide_store
+	jump label_6
+label_6:
+	push 2
+	push 2
+	sub_s 1
+	load
+	wide_sub
+	pop
+	jge label_9
+	push 0
+		;false branch
+	jump label_10
+label_9:
+	push 1
+		;true branch
+label_10:
+		;if
+	jz label_11
+		;then
+	push 1
+	push 2
+	sub_s 1
+	load
+	wide_sub
+	pop_sf
+	pop_sf
+	call fib
+	push 2
+	push 2
+	sub_s 1
+	load
+	wide_sub
+	pop_sf
+	pop_sf
+	call fib
+	wide_add
+	add_s 3
+	wide_store
+	jump label_11
+label_11:
+	add_s 3
+	load
+		;endif
+		;endif
+	ret
+printf:
+	sub_s 1
+	wide_store
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	push 0
+	push 2
+	add_s 1
+	wide_store
+	push 0
+	push 2
+	add_s 2
+	wide_store
+	push 0
+	push 2
+	add_s 3
+	wide_store
+	push 10
+	push 2
+	add_s 1
+	wide_store
+	push 0
+	push 2
+	add_s 2
+	wide_store
+		;while
+label_18:
+	push 0
+	push 2
+	sub_s 1
+	load
+	wide_sub
+	pop
+	jz label_20
+	push 1
+		;false branch
+	jump label_21
+label_20:
+	push 0
+		;true branch
+label_21:
+	jz label_22
+		;while body
+	push 10
+	push 2
+	add_s 2
+	load
+	wide_mult
+	add_s 2
+	wide_store
+	push 10
+	push 2
+	sub_s 1
+	load
+	wide_mod
+	add_s 3
+	wide_store
+	add_s 3
+	load
+	add_s 2
+	load
+	wide_add
+	add_s 2
+	wide_store
+	push 10
+	push 2
+	sub_s 1
+	load
+	wide_div
+	sub_s 1
+	wide_store
+	jump label_18
+label_22:
+		;end while
+		;while
+label_26:
+	push 0
+	push 2
+	add_s 2
+	load
+	wide_sub
+	pop
+	jz label_28
+	push 1
+		;false branch
+	jump label_29
+label_28:
+	push 0
+		;true branch
+label_29:
+	jz label_30
+		;while body
+	push 10
+	push 2
+	add_s 2
+	load
+	wide_mod
+	add_s 3
+	wide_store
+	push 48
+	push 2
+	add_s 3
+	load
+	wide_add
+	add_s 3
+	wide_store
+	add_s 3
+	load
+	pop
+	write
+	push 10
+	push 2
+	add_s 2
+	load
+	wide_div
+	add_s 2
+	wide_store
+	jump label_26
+label_30:
+		;end while
+	push 10
+	push 2
+	pop
+	write
+	ret
+main:
+	pop_sf
+	pop_sf
+	push 0
+	push 2
+	add_s 1
+	wide_store
+	push 0
+	push 2
+	add_s 1
+	wide_store
+		;while
+label_36:
+	push 11
+	push 2
+	add_s 1
+	load
+	wide_sub
+	pop
+	jlt label_38
+	push 0
+		;false branch
+	jump label_39
+label_38:
+	push 1
+		;true branch
+label_39:
+	jz label_40
+		;while body
+	add_s 1
+	load
+	pop_sf
+	pop_sf
+	call fib
+	pop_sf
+	pop_sf
+	call printf
+	push 1
+	push 2
+	add_s 1
+	load
+	wide_add
+	add_s 1
+	wide_store
+	jump label_36
+label_40:
+		;end while
+	jump halt
+halt:
+	hlt
+CodeEnd:
