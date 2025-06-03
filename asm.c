@@ -606,7 +606,7 @@ int translateInstructions(controlFlowGraphBlock * node, char* fileName) {
 
 
 
-int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, char* fileName) {
+int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, char* fileName, classDefInfo* classes) {
 
 	//TODO: here I am translating classes
 	//

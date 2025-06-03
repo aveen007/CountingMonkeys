@@ -4,8 +4,8 @@ ranksep=.4;
 bgcolor="lightgrey";  node [shape=box, fixedsize=false, fontsize=12, fontname="Helvetica-bold", fontcolor="blue"
 width=.25, height=.25, color="black", fillcolor="white", style="filled, solid, bold"];
 
-edge [arrowsize=.5, color="black", style="bold"]    n000011B06D6234A0 [label="BaseBlock\n OT: [ fib(x , b)]
+edge [arrowsize=.5, color="black", style="bold"]    n00001155014235C0 [label="BaseBlock\n OT: [ fib(x , b)]
 "]
-    n000011B06D623560 [label="BaseBlock\n "]
-    n000011B06D6234A0 -> n000011B06D623560
+    n0000115501423680 [label="BaseBlock\n "]
+    n00001155014235C0 -> n0000115501423680
 }

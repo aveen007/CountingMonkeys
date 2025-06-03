@@ -15,4 +15,4 @@ typedef struct Var {
 }Var;
 
 
-int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, char* fileName);
+int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, char* fileName, classDefInfo* classes);

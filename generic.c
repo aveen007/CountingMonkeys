@@ -188,7 +188,7 @@ classDef* fixOffsetLikeFather(classDef* class) {
 }
 
 //TODO: in handleType in controlGraph.c, do generic handeling
-Subroutine** setTypes(Subroutine** subroutines, int cnt, char* fileName, classDefInfo* classes) {
+classSubrountineInfo* setTypes(Subroutine** subroutines, int cnt, char* fileName, classDefInfo* classes) {
 
 	// TODO: traverse all classes and create a new class for instantiated
 	// TODO: set classDef as this created class for custom types 
@@ -211,7 +211,12 @@ Subroutine** setTypes(Subroutine** subroutines, int cnt, char* fileName, classDe
 		subroutines[i]->cfg= traverseCfgType(subroutines[i]->cfg, NULL, fileName, classes);
 
 	}
-	return subroutines;
+	classSubrountineInfo* info = malloc(sizeof(classSubrountineInfo));
+	info->cls = malloc(sizeof(classDefInfo));
+	info->cls = classes;
+	info->subs = malloc(sizeof(subroutineInfo*) * cnt);
+	info->subs = subroutines;
+	return info;
 }
 
 

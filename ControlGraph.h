@@ -285,6 +285,14 @@ typedef struct classDefInfo {
     struct  classDef** classes;
     int classCount;
 }classDefInfo;
+
+typedef struct classSubrountineInfo {
+
+    struct classDefInfo* cls;
+    struct subroutineInfo** subs;
+
+
+}classSubrountineInfo;
 // externFuncDef: 'declare' 'function' funcSignature 'lib' dllName('alias'
 //    dllEntryName) ? {
 //};

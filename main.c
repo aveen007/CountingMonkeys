@@ -100,8 +100,11 @@ int main(int argc, char* argv[]) {
 
     for (int i = 1; i < numberOfFiles; i++) {
        
-        sub_all_files[i]->subroutines=  setTypes(sub_all_files[i]->subroutines, sub_all_files[i]->count, files[i]->name,class_all_files);
-        funcVarsInFile [i] = getLocalVars(sub_all_files[i]->subroutines, sub_all_files[i]->count , files[i]->name);
+        
+       classSubrountineInfo* info =  setTypes(sub_all_files[i]->subroutines, sub_all_files[i]->count, files[i]->name,class_all_files);
+       sub_all_files[i]->subroutines = info->subs;
+       class_all_files = info->cls;
+       funcVarsInFile [i] = getLocalVars(sub_all_files[i]->subroutines, sub_all_files[i]->count , files[i]->name);
     }
 
     // TODO traverse all Type and set def field
@@ -125,7 +128,7 @@ int main(int argc, char* argv[]) {
     fprintf(asmCodeOut, asm_code_header);
 
     for (int i = 1; i < numberOfFiles; i++) {
-        translate(sub_all_files[i]->subroutines, funcVarsInFile[i], sub_all_files[i]->count, files[i]->name);
+        translate(sub_all_files[i]->subroutines, funcVarsInFile[i], sub_all_files[i]->count, files[i]->name, class_all_files);
     }
     fprintf(asmCodeOut, "\tjump halt\n");
     fprintf(asmDataOut, asm_footer);

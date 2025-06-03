@@ -1,7 +1,8 @@
 class ExampleClass (X<T>, Y) extends Example (int , int)
 
     private message as ExampleClass
-    
+    public z as int
+
     public function ShowMessage() as int
        
        fib(0, 0);

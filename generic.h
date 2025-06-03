@@ -9,7 +9,7 @@ classDef* initClass(classDef* found, Type* parent, classDefInfo* classes);
 
 Type* findClass(classDefInfo* classes, Type* parent);
 
-Subroutine** setTypes(Subroutine** subroutines, int cnt, char* fileName, classDefInfo* classes);
+classSubrountineInfo* setTypes(Subroutine** subroutines, int cnt, char* fileName, classDefInfo* classes);
 
 controlFlowGraphBlock* traverseCfgIfStatementType(controlFlowGraphBlock* node, controlFlowGraphBlock* start, char* fileName, classDefInfo* classes);
 
