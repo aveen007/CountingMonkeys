@@ -589,6 +589,16 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 			}
 			else if (strcmp(tree->value.operator,"=.") == 0) {
 			//TODO: here I will read from field
+
+				translateOT(tree->operands[1], fileName, 0); // this puts the value and type of the object on the stack
+				Type* type = findVarType(tree->operands[1]->value.operand);
+				int arg_offset = translate_class(type->def, tree->operands[2]->value.operand);
+				add_mem_imm(arg_offset)
+				load()
+				translateOT(tree->operands[0], fileName, 1); // this puts the value and type of the object on the stack
+				wide_store()
+
+
 			}
 			else if (strcmp(tree->value.operator,".=") == 0) {
 			    translateOT(tree->operands[2], fileName, 1); // this puts the value and type of the object on the stack

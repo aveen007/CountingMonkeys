@@ -26,17 +26,10 @@ end class
 function fib(n as int)
   dim ex as Example <int, int>
   dim ex_cl as ExampleClass <int, int>
-  ex.x = 1;
+  ex.x = 5;
   dim x as int
   x = ex.x; 
-  dim r, l, k,m as int
-  if n < 2 then
-      r = 1;
-  end if
-  if n >= 2 then     
-      r =   fib(n-2) + fib(n-1) ;
-  end if
-  r;
+  x;
 end function
  
 function printf(res as int)
