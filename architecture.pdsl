@@ -435,6 +435,18 @@ instruction sub_reg_imm = { 0001 1110, imm16 as value } {
 
 		ip=ip+3; 
 };
+instruction add_mem_imm = { 0010 0011, imm16 as value } {
+		sp =sp + 2;
+		let x= m_stack:2[sp]; // our pointer
+		sp =sp + 2;
+		let z= m_stack:2[sp];// filler value
+		let y = x + value + 8 ;
+		
+		m_stack[sp]= y;
+		sp = sp - 2;
+		ip = ip + 3;
+		
+};
 
 instruction init ={ 0001 1111,imm16 as target }{
 	ebp=target;
@@ -475,7 +487,7 @@ mnemonics:
   mnemonic jge(target) "{1}";
   mnemonic jlt(target) "{1}";
   mnemonic jle(target) "{1}";
-
+  mnemonic add_mem_imm(value) "{1}";
   mnemonic store for st(ptr) "{1}";
   mnemonic astore for a_st(ptr) "{1}";
   mnemonic wide_add();

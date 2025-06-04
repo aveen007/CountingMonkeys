@@ -28,7 +28,7 @@ function fib(n as int)
   dim ex_cl as ExampleClass <int, int>
   ex.x = 1;
   dim x as int
-  x = ex.DoThing(1); 
+  x = ex.x; 
   dim r, l, k,m as int
   if n < 2 then
       r = 1;

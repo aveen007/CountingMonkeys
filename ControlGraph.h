@@ -147,6 +147,7 @@ typedef struct OTNode {
         char* operand;   // int to represent numeric values
     } value;          // Union to hold either an operator or an operand
     struct OTNode** operands;  // Pointer to the left child
+
     int cntOperands;
     //struct OTNode* right; // Pointer to the right child
 } OTNode;

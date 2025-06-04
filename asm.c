@@ -68,6 +68,7 @@
 
 
 #define add_s(offset) mnemonic_1_i("add_s", offset)
+#define add_mem_imm(offset) mnemonic_1_i("add_mem_imm", offset)
 #define sub_s(offset) mnemonic_1_i("sub_s", offset)
 
 char* labelName() {
@@ -271,6 +272,7 @@ int findVar(char * operand) {
 
 		}
 		curr = curr->next;
+		
 
 	}
 	curr = curFuncVars->parameters;
@@ -279,6 +281,35 @@ int findVar(char * operand) {
 		{
 
 			return -1*curr->offset;
+
+		}
+		curr = curr->next;
+
+	}
+	return 0;
+}
+Type* findVarType(char* operand) {
+	//int offset;
+	VarNode* curr;
+
+	curr = curFuncVars->localVariables;
+	for (int i = 0; i < curFuncVars->cntVars; i++) {
+		if (strcmp(curr->id, operand) == 0)
+		{
+
+			return curr->type;
+
+		}
+		curr = curr->next;
+
+
+	}
+	curr = curFuncVars->parameters;
+	for (int i = 0; i < curFuncVars->cntArgs; i++) {
+		if (strcmp(curr->id, operand) == 0)
+		{
+
+			return curr->type;
 
 		}
 		curr = curr->next;
@@ -560,7 +591,20 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 			//TODO: here I will read from field
 			}
 			else if (strcmp(tree->value.operator,".=") == 0) {
+			    translateOT(tree->operands[2], fileName, 1); // this puts the value and type of the object on the stack
+				
+				translateOT(tree->operands[0], fileName, 0); // this puts the value and type of the object on the stack
+				Type* type = findVarType(tree->operands[0]->value.operand);
+				int arg_offset = translate_class(type->def, tree->operands[1]->value.operand);
+				add_mem_imm(arg_offset)
+				wide_store()
 				//TODO: here I will write in field
+				// from the var itself ( the first operand)
+				// get the vtable
+				// from it's class, get the offset of the arg
+				// find out the address of the arg
+				// store value there 
+
 			}
 			else {
 				for (int i = 0; i < tree->cntOperands; i++) {
@@ -648,12 +692,12 @@ int translate_vtable(classDef* class){
 
 	
 }
-int translate_class(classDef* class) {
-
+int translate_class(classDef* class, char * arg) {
+	int var_offset = 0;
 	// recursively get fathers and mark certain funcs as treated
 	if (class->baseType)
 	{
-		translate_class(class->baseType->def);
+		translate_class(class->baseType->def, arg);
 		//	classes->classes[i]->baseType = findClass(classes, classes->classes[i]->baseType);
 			//TODO: here I want to fix the order of the childs funcs so they match those of the fathers, also the args
 			//classes->classes[i] = fixOffsetLikeFather(classes->classes[i]);
@@ -661,7 +705,7 @@ int translate_class(classDef* class) {
 	for (int i = 0; i<class->argumentCount; i++) {
 	/*	int isOverride = 0;
 		if ((strcmp(class->name, curr->name) != 0)) {
-
+		
 
 			for (int j = 0; j < curr->functionCount; j++) {
 				if (strcmp(curr->functions[j]->subroutine->name, class->functions[i]->subroutine->name) == 0) {
@@ -670,11 +714,16 @@ int translate_class(classDef* class) {
 			}
 		}
 		if (!isOverride) {*/
+		if ((strcmp(class->arguments[i]->argument->name, arg) == 0)) {
+			break;
 
-		put_label_arg_class(class->arguments[i]->argument->name);
+		}
+		var_offset++;
+		//put_label_arg_class(class->arguments[i]->argument->name);
 		//}
 		//isOverride = 0;
 	}
+	return var_offset;
 
 
 }
@@ -772,8 +821,7 @@ int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, c
 					add_s(locals->offset)
 					wide_store()
 					locals = locals->next;
-					//TODO: test if we are saving the memory correctly
-					// start testing the dot operator to get a function and argument from vtables and heaps
+					//TODO:  start testing the dot operator to get a function and argument from vtables and heaps
 				}
 				else {
 				push_i(0)//some randome init value 
