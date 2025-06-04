@@ -447,17 +447,19 @@ instruction init ={ 0001 1111,imm16 as target }{
 	   
     ip = ip + 1;        // Increment instruction pointer
 };
-  instruction pop_vtable ={0010 0001, imm16 as target} {
-    ram:2[heap_base]=target;
+  instruction pop_vtable ={0010 0001, imm16 as value} {
+	
+    ram:2[heap_base]=value;
 	heap_base = heap_base + 4;        // Increment stack pointer
 	   
-    ip = ip + 1;        // Increment instruction pointer
+    ip = ip + 3;        // Increment instruction pointer
 };
 
  instruction push_hf = { 0010 0010} {
+	heap_base = heap_base + 4; 
     m_stack:2[sp] = heap_base;
     sp = sp - 2;   // Decrement stack pointer
-    ip = ip + 3;   // Increment instruction pointer
+    ip = ip + 1;   // Increment instruction pointer
   };
 
 mnemonics:

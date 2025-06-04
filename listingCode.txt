@@ -64,14 +64,20 @@ fib:
 	pop_sf
 	pop_sf
 	pop_sf
-	pop_hf
-	pop_hf
-	push_vtable vtable_Example
+	pop_sf
+	pop_sf
 	push_hf
+	pop_vtable vtable_Example
+	pop_hf
+	pop_hf
+	pop_hf
+	pop_hf
 	add_s 1
 	wide_store
-	push 0
-	push 2
+	push_hf
+	pop_vtable vtable_ExampleClass
+	pop_hf
+	pop_hf
 	add_s 2
 	wide_store
 	push 0
@@ -89,6 +95,10 @@ fib:
 	push 0
 	push 2
 	add_s 6
+	wide_store
+	push 0
+	push 2
+	add_s 7
 	wide_store
 	push 2
 	push 2
@@ -109,7 +119,7 @@ label_7:
 		;then
 	push 1
 	push 2
-	add_s 3
+	add_s 4
 	wide_store
 	jump label_8
 label_8:
@@ -147,11 +157,11 @@ label_12:
 	pop_sf
 	call fib
 	wide_add
-	add_s 3
+	add_s 4
 	wide_store
 	jump label_13
 label_13:
-	add_s 3
+	add_s 4
 	load
 		;endif
 		;endif

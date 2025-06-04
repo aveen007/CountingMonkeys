@@ -28,7 +28,7 @@
 
 #define pop_sf() mnemonic_0("pop_sf")
 #define pop_hf() mnemonic_0("pop_hf")
-#define push_vtable(value) mnemonic_1("push_vtable", value)
+#define pop_vtable(value) mnemonic_1("pop_vtable", value)
 
 #define call(value) mnemonic_1("call", value)
 #define ret() mnemonic_0("ret")
@@ -757,19 +757,23 @@ int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, c
 					// return something?
 					// heap base pointer = current heap ptr? or not
 					// I also need to save the label for the v_table in the beggining of the heap object
+					push_hf()
+					pop_vtable(mystrcat("vtable_", locals->type->def->name))
 					for (int k = 0; k < locals->type->def->argumentCount; k++) {
+						//here I may need to pop more or less space depending on the type of the variable
+						pop_hf();
 						pop_hf();
 					}
-					push_vtable(mystrcat("vtable_", locals->type->def->name))
 					
 						
 
 					// instead of push_i(0), I need to somehow push the value of the heap pointer, so each object points to its object
-					push_hf()
 					translate_type(locals->type);
 					add_s(locals->offset)
 					wide_store()
 					locals = locals->next;
+					//TODO: test if we are saving the memory correctly
+					// start testing the dot operator to get a function and argument from vtables and heaps
 				}
 				else {
 				push_i(0)//some randome init value 
