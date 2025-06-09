@@ -39,6 +39,7 @@
 #define push(value) mnemonic_1("push", value)
 #define push_i(value) mnemonic_1_i("push", value)
 #define write() mnemonic_0("write")
+#define call_from_stack() mnemonic_0("call_from_stack")
 #define read() mnemonic_0("read")
 #define pop() mnemonic_0("pop")
 #define iadd() mnemonic_0("iadd")
@@ -105,7 +106,7 @@ char* labelNameIdent(char* ident) {
 #define put_comment(comment) fprintf(asmCodeOut, "\t\t;%s\n", comment);
 #define put_comment_var(comment) fprintf(asmCodeOut, "\t\t;%s\n", comment);
 #define put_label_func_vtable(className, funcName) \
-    fprintf(asmCodeOut, "    dd %s_%s\n", className, funcName); 
+    fprintf(asmCodeOut, "    dq %s_%s\n", className, funcName); 
 #define put_label_var(name, type, value) \
     fprintf(asmDataOut, "%s: \n", name); \
     fprintf(asmDataOut, "    .type: dd 0x%x ; Offset for `type`\n", type); \
@@ -595,10 +596,18 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 				if (tree->operands[2]->type == NODE_TYPE_OPERATOR) {
 					int funcOffset = get_func_offset(type->def, tree->operands[2]->value.operator);
 					printf("hi");
-					add_mem_imm(0) //puts the address of heap 0 on stack
+					for (int i = 0; i < tree->operands[2]->cntOperands; i++) {
+							translateOT(tree->operands[2]->operands[i], fileName, 0);
+					}
+					//add_mem_imm(0) //puts the address of heap 0 on stack
 					load() // load from heap 0, as in get vtable ptr
 					add_mem_imm(funcOffset) // get the func in vtable
 					load()// get the func
+					pop()// pop filler type value
+					call_from_stack()
+					wide_store()
+				//	pop()
+				
 				// TODO: here I need to check if it's an operator, if it is-> it's a function call
 				// 1- get the function offset insied its class
 				// 2- when I need a function in asm to add the offset to 
@@ -628,11 +637,13 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 				}
 				else{
 
-				int arg_offset = translate_class(type->def, tree->operands[2]->value.operand);
+				int arg_offset = translate_class(type->def, tree->operands[2]->value.operand)+1;
 				add_mem_imm(arg_offset)
 				load()
 				translateOT(tree->operands[0], fileName, 1); // this puts the value and type of the object's vtable (we stored a pointer to it in the var) on the stack
 				wide_store()
+			//	pop()
+		
 				}
 
 			}
@@ -641,9 +652,11 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 				
 				translateOT(tree->operands[0], fileName, 0); // this puts the value and type of the object on the stack
 				Type* type = findVarType(tree->operands[0]->value.operand);
-				int arg_offset = translate_class(type->def, tree->operands[1]->value.operand);
+				int arg_offset = translate_class(type->def, tree->operands[1]->value.operand)+1;
 				add_mem_imm(arg_offset)
 				wide_store()
+			//	pop()
+		
 
 
 			}
@@ -741,13 +754,13 @@ int get_func_offset(classDef* class, char * funcName) {
 			//classes->classes[i] = fixOffsetLikeFather(classes->classes[i]);
 	}
 	for (int i = 0; i<class->functionCount; i++) {
-		int isOverride = 0;
+		
+		func_offset++;
 		if ((strcmp(class->functions[i]->subroutine->name, funcName) == 0)) {
 
 
 			return func_offset;
 		}
-		func_offset++;
 		//if (!isOverride) {
 
 		////	put_label_func_vtable(class->name, class->functions[i]->subroutine->name);

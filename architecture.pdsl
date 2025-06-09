@@ -440,7 +440,7 @@ instruction add_mem_imm = { 0010 0011, imm16 as value } {
 		let x= m_stack:2[sp]; // our pointer
 		sp =sp + 2;
 		let z= m_stack:2[sp];// filler value
-		let y = x + value + 8 ;
+		let y = x + value*8  ;
 		
 		m_stack[sp]= y;
 		sp = sp - 2;
@@ -473,7 +473,19 @@ instruction init ={ 0001 1111,imm16 as target }{
     sp = sp - 2;   // Decrement stack pointer
     ip = ip + 1;   // Increment instruction pointer
   };
+  
+  instruction call_from_stack = { 0010 0100 } {
+	
+	let ptr= m_stack:2[sp]; // our pointer
+	esp = esp + 4; 
+	ram:2[esp] = ip + 1; // save return point
+	esp=esp + 4;
+	ram:2[esp]= ebp; // save the old ebp	
+	
 
+	ebp = esp;
+	ip = ptr;
+  };
 mnemonics:
   mnemonic init for init(target) "{1}";
   mnemonic push (value) "{1}";
@@ -507,6 +519,7 @@ mnemonics:
   mnemonic pop_hf () ;
   mnemonic call ( ptr) "{1}" ;
   mnemonic ret() ;
+  mnemonic call_from_stack() ;
   mnemonic load() ;
   mnemonic add_s for add_reg_imm(value) "{1}" ;
   mnemonic sub_s for sub_reg_imm(value) "{1}" ;

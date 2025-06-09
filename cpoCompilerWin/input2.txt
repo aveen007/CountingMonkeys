@@ -5,11 +5,10 @@ class ExampleClass (X, Y) extends Example (int , int)
 
     public function ShowMessage() as int
        
-       fib(0, 0);
+       printf(1);
     end function
     public function DoThing(b as X) as int       
-        dim r as B
-        fib(x, b);
+        printf(2);
     end function
 end class
 class Example (A, B)
@@ -17,13 +16,11 @@ class Example (A, B)
     public x as A
     public y as B
     public function DoThing(b as B) as int       
-       dim r as B
-       fib(x, b);
+       printf(3);
 
     end function
      public function DoOtherThing(b as B) as int       
-       dim r as B
-       fib(x, b);
+       printf(4);
 
     end function
     
@@ -32,9 +29,9 @@ end class
 function fib(n as int)
   dim ex as Example <int, int>
   dim ex_cl as ExampleClass <int, int>
-  ex.x = 5;
-  x = ex.ShowMessage();
   dim x as int
+  ex.x = 5;
+  x = ex_cl.ShowMessage();
   x = ex.x; 
   x;
 end function
