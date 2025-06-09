@@ -2,12 +2,19 @@
 	init CodeEnd
 	jump main
 vtable_ExampleClass:
-    dq ExampleClass_DoThing
-    dq Example_DoOtherThing
-    dq ExampleClass_ShowMessage
+    dq 3
+    dd ExampleClass_DoThing
+    dd 1
+    dd Example_DoOtherThing
+    dd 2
+    dd ExampleClass_ShowMessage
+    dd 3
 vtable_Example:
-    dq Example_DoThing
-    dq Example_DoOtherThing
+    dq 2
+    dd Example_DoThing
+    dd 4
+    dd Example_DoOtherThing
+    dd 5
 ExampleClass_ShowMessage:
 	push 1
 	push 2
@@ -78,7 +85,7 @@ fib:
 	add_s 2
 	load
 	load
-	add_mem_imm 2
+	add_mem_imm 3
 	load
 	pop
 	call_from_stack

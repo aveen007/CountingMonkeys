@@ -4,7 +4,7 @@
 #include "localVariable.h"
 
 
-
+int global_func_count = 0;
 #define asm_code_header "[section ram, code]\n\tjump start\n"
 #define asm_data_header "data:\n"
 #define asm_footer "halt:\n\thlt\n"
@@ -99,14 +99,16 @@ char* labelNameIdent(char* ident) {
     return c;
 }
 
-#define put_label_vtable(name) fprintf(asmCodeOut, "vtable_%s:\n", name);
+#define put_label_vtable(name,number) fprintf(asmCodeOut, "vtable_%s:\n    dq %x\n", name,number);
 #define put_label_class_inside(name) fprintf(asmCodeOut, "\tvtable_%s\n", name);
 #define put_label_arg_class(name) fprintf(asmCodeOut, "\t%s\n", name);
 #define put_label(name) fprintf(asmCodeOut, "%s:\n", name);
 #define put_comment(comment) fprintf(asmCodeOut, "\t\t;%s\n", comment);
 #define put_comment_var(comment) fprintf(asmCodeOut, "\t\t;%s\n", comment);
 #define put_label_func_vtable(className, funcName) \
-    fprintf(asmCodeOut, "    dq %s_%s\n", className, funcName); 
+    fprintf(asmCodeOut, "    dd %s_%s\n", className, funcName);
+#define put_label_func_offset_vtable() \
+    fprintf(asmCodeOut, "    dd %x\n", ++global_func_count); 
 #define put_label_var(name, type, value) \
     fprintf(asmDataOut, "%s: \n", name); \
     fprintf(asmDataOut, "    .type: dd 0x%x ; Offset for `type`\n", type); \
@@ -119,6 +121,7 @@ char* labelNameIdent(char* ident) {
     fprintf(asmDataOut, "%s: \n", name); \
     fprintf(asmDataOut, "    .type: dd 0x%x ; Offset for `type`\n", type); \
     fprintf(asmDataOut, "    .value: dd '%s' ; Offset for `value`\n", value);
+classDef* curr;
 int labelCnt = 0;
 int generateAsm(FunctionVariables*** funVars) {
 
@@ -594,7 +597,8 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 				translateOT(tree->operands[1], fileName, 0); // this puts the value and type of the object on the stack
 				Type* type = findVarType(tree->operands[1]->value.operand);
 				if (tree->operands[2]->type == NODE_TYPE_OPERATOR) {
-					int funcOffset = get_func_offset(type->def, tree->operands[2]->value.operator);
+					curr = type->def;
+					int funcOffset = get_func_offset(type->def, tree->operands[2]->value.operator)+1;
 					printf("hi");
 					for (int i = 0; i < tree->operands[2]->cntOperands; i++) {
 							translateOT(tree->operands[2]->operands[i], fileName, 0);
@@ -602,6 +606,7 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 					//add_mem_imm(0) //puts the address of heap 0 on stack
 					load() // load from heap 0, as in get vtable ptr
 					add_mem_imm(funcOffset) // get the func in vtable
+					funcOffset = 0;
 					load()// get the func
 					pop()// pop filler type value
 					call_from_stack()
@@ -707,7 +712,6 @@ int translateInstructions(controlFlowGraphBlock * node, char* fileName) {
 }
 
 
-classDef* curr;
 //TODO: this would only kind of work for one level of recurrsion, I guess
 int translate_vtable(classDef* class){
 	
@@ -730,21 +734,23 @@ int translate_vtable(classDef* class){
 				curr->functions[j]->subroutine->isOverride = 1;
 				class->functions[i]->subroutine->isOverride = 1;
 				put_label_func_vtable(curr->name, class->functions[i]->subroutine->name);
-
+				put_label_func_offset_vtable()
 			}
 		}
 		}
 		if (!class->functions[i]->subroutine->isOverride) {
 
 		put_label_func_vtable(class->name, class->functions[i]->subroutine->name);
+		put_label_func_offset_vtable()
+
 		}
 		class->functions[i]->subroutine->isOverride = 0;
 	}
 
 	
 }
+int func_offset = 0;
 int get_func_offset(classDef* class, char * funcName) {
-	int func_offset = 0;
 	// recursively get fathers and mark certain funcs as treated
 	if (class->baseType)
 	{
@@ -754,19 +760,63 @@ int get_func_offset(classDef* class, char * funcName) {
 			//classes->classes[i] = fixOffsetLikeFather(classes->classes[i]);
 	}
 	for (int i = 0; i<class->functionCount; i++) {
-		
-		func_offset++;
-		if ((strcmp(class->functions[i]->subroutine->name, funcName) == 0)) {
-
-
+	
+		if (strcmp(class->functions[i]->subroutine->name, funcName) == 0) {
 			return func_offset;
 		}
-		//if (!isOverride) {
+		if ((strcmp(class->name, curr->name) != 0)) {
 
-		////	put_label_func_vtable(class->name, class->functions[i]->subroutine->name);
-		//}
-		//isOverride = 0;
+
+			for (int j = 0; j < curr->functionCount; j++) {
+				if (strcmp(curr->functions[j]->subroutine->name, class->functions[i]->subroutine->name) == 0) {
+			
+					curr->functions[j]->subroutine->isOverride = 1;
+					class->functions[i]->subroutine->isOverride = 1;
+					func_offset++;
+				}
+			}
+		}
+		if (!class->functions[i]->subroutine->isOverride) {
+
+			func_offset++;
+		}
+		class->functions[i]->subroutine->isOverride = 0;
 	}
+	return func_offset;
+
+}
+int func_count = 0;
+int get_func_count(classDef* class) {
+	// recursively get fathers and mark certain funcs as treated
+	if (class->baseType)
+	{
+		get_func_count(class->baseType->def);
+		//	classes->classes[i]->baseType = findClass(classes, classes->classes[i]->baseType);
+			//TODO: here I want to fix the order of the childs funcs so they match those of the fathers, also the args
+			//classes->classes[i] = fixOffsetLikeFather(classes->classes[i]);
+	}
+	for (int i = 0; i<class->functionCount; i++) {
+		int isOverride = 0;
+		if ((strcmp(class->name, curr->name) != 0)) {
+
+
+			for (int j = 0; j < curr->functionCount; j++) {
+				if (strcmp(curr->functions[j]->subroutine->name, class->functions[i]->subroutine->name) == 0) {
+					isOverride = 1;
+					curr->functions[j]->subroutine->isOverride = 1;
+					class->functions[i]->subroutine->isOverride = 1;
+					func_count++;
+				}
+			}
+		}
+		if (!class->functions[i]->subroutine->isOverride) {
+
+			func_count++;
+		}
+		class->functions[i]->subroutine->isOverride = 0;
+	}
+		return func_count;
+
 
 
 }
@@ -813,7 +863,8 @@ int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, c
 	for (int i = 0; i < classes->classCount; i++)
 	{
 		curr = classes->classes[i];
-		put_label_vtable(classes->classes[i]->name);
+		put_label_vtable(classes->classes[i]->name,get_func_count( classes->classes[i]));
+		func_count = 0;
 		translate_vtable(classes->classes[i]);
 		//TODO: translating classes should be done dynamically
 	/*	put_label(classes->classes[i]->name)
