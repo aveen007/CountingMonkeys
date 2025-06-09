@@ -100,7 +100,7 @@ Subroutine** addSubroutine(Subroutine** list, Subroutine* newSub) {
 Subroutine* createSubroutine() {
 	Subroutine* subroutine = malloc(sizeof(Subroutine));
 	subroutine->InClass = NULL;
-	
+	subroutine->isOverride = 0;
 	return subroutine;
 }
 subroutineInfo* DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, ParseTree* tree) {

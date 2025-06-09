@@ -180,6 +180,7 @@ typedef struct controlFlowGraphBlock {
 
 typedef struct Subroutine {
     char* name;                            ///< The name of the subroutine.
+    int isOverride;
     struct controlFlowGraphBlock* cfg;    ///< Pointer to the control flow graph associated with the subroutine.
     struct SignatureDetails* signatureDetails; ///< Pointer to the signature details of the subroutine.
     char* InClass;

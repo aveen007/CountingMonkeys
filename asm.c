@@ -588,16 +588,52 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 				read();
 			}
 			else if (strcmp(tree->value.operator,"=.") == 0) {
-			//TODO: here I will read from field
-
+			// read from field
+				//TODO: function call from inside the class 
 				translateOT(tree->operands[1], fileName, 0); // this puts the value and type of the object on the stack
 				Type* type = findVarType(tree->operands[1]->value.operand);
+				if (tree->operands[2]->type == NODE_TYPE_OPERATOR) {
+					int funcOffset = get_func_offset(type->def, tree->operands[2]->value.operator);
+					printf("hi");
+					add_mem_imm(0) //puts the address of heap 0 on stack
+					load() // load from heap 0, as in get vtable ptr
+					add_mem_imm(funcOffset) // get the func in vtable
+					load()// get the func
+				// TODO: here I need to check if it's an operator, if it is-> it's a function call
+				// 1- get the function offset insied its class
+				// 2- when I need a function in asm to add the offset to 
+				// I shoud add_mem(0) to get the address of the beginning of the object in the heap
+				// I then load(), which gives me the address to the vtable  on the stack 
+				// Here I need a function to add a number to the thing on top of the stack (add_mem should do)
+				// load again , and I should get the address to the function, 
+				// translate the arguments of the func (operands)
+				// call (why not just call by name?), what does casting really do here  , how to call differently?
+				// I need a call that takes the pointer from the stack instead, here 
+				/*
+					for (int i = 0; i < tree->cntOperands; i++) {
+					translateOT(tree->operands[i], fileName, 0);
+				}
+			
+				FunctionVariables* func = findFunc(tree->value.operator);
+				for (int i = 0; i < func->cntArgs; i++) {
+					pop_sf();//here I am just saving a place for the called function's args in the SF of
+
+					pop_sf(); //I am poping for the type and value					// the caller function 
+				}
+				call(tree->value.operator);
+				char* lab = labelName();
+				
+				*/
+
+				}
+				else{
+
 				int arg_offset = translate_class(type->def, tree->operands[2]->value.operand);
 				add_mem_imm(arg_offset)
 				load()
-				translateOT(tree->operands[0], fileName, 1); // this puts the value and type of the object on the stack
+				translateOT(tree->operands[0], fileName, 1); // this puts the value and type of the object's vtable (we stored a pointer to it in the var) on the stack
 				wide_store()
-
+				}
 
 			}
 			else if (strcmp(tree->value.operator,".=") == 0) {
@@ -608,26 +644,14 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 				int arg_offset = translate_class(type->def, tree->operands[1]->value.operand);
 				add_mem_imm(arg_offset)
 				wide_store()
-				//TODO: here I will write in field
-				// from the var itself ( the first operand)
-				// get the vtable
-				// from it's class, get the offset of the arg
-				// find out the address of the arg
-				// store value there 
+
 
 			}
 			else {
 				for (int i = 0; i < tree->cntOperands; i++) {
 					translateOT(tree->operands[i], fileName, 0);
 				}
-				// function call
-				//char* returnLabel = labelName();
-			/*	push(returnLabel);
-				store("ret");*/
-				//jump(tree->value.operator);
-		/*		put_label(returnLabel);
-				push("halt");
-				store("ret");*/
+			
 				FunctionVariables* func = findFunc(tree->value.operator);
 				for (int i = 0; i < func->cntArgs; i++) {
 					pop_sf();//here I am just saving a place for the called function's args in the SF of
@@ -690,17 +714,48 @@ int translate_vtable(classDef* class){
 		for (int j = 0; j < curr->functionCount; j++) {
 			if (strcmp(curr->functions[j]->subroutine->name, class->functions[i]->subroutine->name) == 0) {
 				isOverride = 1;
+				curr->functions[j]->subroutine->isOverride = 1;
+				class->functions[i]->subroutine->isOverride = 1;
+				put_label_func_vtable(curr->name, class->functions[i]->subroutine->name);
+
 			}
 		}
 		}
-		if (!isOverride) {
+		if (!class->functions[i]->subroutine->isOverride) {
 
 		put_label_func_vtable(class->name, class->functions[i]->subroutine->name);
 		}
-		isOverride = 0;
+		class->functions[i]->subroutine->isOverride = 0;
 	}
 
 	
+}
+int get_func_offset(classDef* class, char * funcName) {
+	int func_offset = 0;
+	// recursively get fathers and mark certain funcs as treated
+	if (class->baseType)
+	{
+		get_func_offset(class->baseType->def,funcName);
+		//	classes->classes[i]->baseType = findClass(classes, classes->classes[i]->baseType);
+			//TODO: here I want to fix the order of the childs funcs so they match those of the fathers, also the args
+			//classes->classes[i] = fixOffsetLikeFather(classes->classes[i]);
+	}
+	for (int i = 0; i<class->functionCount; i++) {
+		int isOverride = 0;
+		if ((strcmp(class->functions[i]->subroutine->name, funcName) == 0)) {
+
+
+			return func_offset;
+		}
+		func_offset++;
+		//if (!isOverride) {
+
+		////	put_label_func_vtable(class->name, class->functions[i]->subroutine->name);
+		//}
+		//isOverride = 0;
+	}
+
+
 }
 int translate_class(classDef* class, char * arg) {
 	int var_offset = 0;

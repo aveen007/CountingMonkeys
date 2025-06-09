@@ -85,10 +85,10 @@ classDef* initClass(classDef* found, Type* parent , classDefInfo * classes) {
 		details->arguments = malloc(sizeof(ArgumentDef*) * found->functions[i]->subroutine->signatureDetails->cntArgs);
 		for (int l = 0; l < found->functions[i]->subroutine->signatureDetails->cntArgs; l++) {
 			ArgumentDef* argDef = malloc(sizeof(ArgumentDef));
-			argDef->name = found->functions[i]->subroutine->signatureDetails->arguments[i]->name;
-			argDef->type = matchGenericType(found->functions[i]->subroutine->signatureDetails->arguments[i]->type, found, parent);
+			argDef->name = found->functions[i]->subroutine->signatureDetails->arguments[l]->name;
+			argDef->type = matchGenericType(found->functions[i]->subroutine->signatureDetails->arguments[l]->type, found, parent);
 
-			details->arguments[i] = argDef;
+			details->arguments[l] = argDef;
 
 
 		}

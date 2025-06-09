@@ -7,7 +7,7 @@ class ExampleClass (X, Y) extends Example (int , int)
        
        fib(0, 0);
     end function
-    public function DoThing(b as B) as int       
+    public function DoThing(b as X) as int       
         dim r as B
         fib(x, b);
     end function
@@ -19,6 +19,12 @@ class Example (A, B)
     public function DoThing(b as B) as int       
        dim r as B
        fib(x, b);
+
+    end function
+     public function DoOtherThing(b as B) as int       
+       dim r as B
+       fib(x, b);
+
     end function
     
 
@@ -27,6 +33,7 @@ function fib(n as int)
   dim ex as Example <int, int>
   dim ex_cl as ExampleClass <int, int>
   ex.x = 5;
+  x = ex.ShowMessage();
   dim x as int
   x = ex.x; 
   x;
