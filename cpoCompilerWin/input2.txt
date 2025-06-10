@@ -26,14 +26,23 @@ class Example (A, B)
     
 
 end class
-function fib(n as int)
+function helper(n as int)
   dim ex as Example <int, int>
   dim ex_cl as ExampleClass <int, int>
   dim x as int
   ex.x = 5;
   x = ex_cl.ShowMessage();
   x = ex.x; 
-  M(ex, 5);
+  M(ex, n);
+  x;
+end function
+function fib(n as int)
+  dim ex as Example <int, int>
+  dim ex_cl as ExampleClass <int, int>
+  dim x as int
+  ex.x = 5;
+  x = ex.x; 
+  M(ex, n);
   x;
 end function
 function M(O, n as int)
@@ -65,8 +74,8 @@ end function
 function main()
   dim i as int
   i = 0;
- while i < 11
-     printf(fib(i));
+ while i < 5
+     printf(helper(5));
      i = i + 1;
    wend
     

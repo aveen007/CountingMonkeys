@@ -30,7 +30,7 @@ int global_func_count = 0;
 #define pop_sf() mnemonic_0("pop_sf")
 #define pop_hf() mnemonic_0("pop_hf")
 #define pop_vtable(value) mnemonic_1("pop_vtable", value)
-#define check_vtable(value) mnemonic_1("check_vtable", value)
+#define check_vtable() mnemonic_0("check_vtable")
 
 #define call(value) mnemonic_1("call", value)
 #define ret() mnemonic_0("ret")
@@ -598,7 +598,9 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 					translateOT(tree->operands[0], fileName, 0); // this puts the value and type of the object on the stack
 
 					load() // load from heap 0, as in get vtable ptr
-						check_vtable(tree->operands[1]->value.operand)
+						translateOT(tree->operands[1], fileName, 0); // this puts the value and type of the object on the stack
+
+						check_vtable()
 						char* error_label = labelName();
 						char* call_label = labelName();
 						char* end_label = labelName();
@@ -611,7 +613,7 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 						jump(end_label)
 						
 						put_label(call_label)
-						popOut()
+						//popOut()
 						call_from_stack()
 						jump(end_label)
 						put_label(end_label)

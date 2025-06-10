@@ -7,593 +7,697 @@ digraph {
 
 	edge [arrowsize=.5, color="black", style="bold"]
 
-	n000012FB057E5D80[label="Sourcer"]
-	n000012FB057B74D8[label="ClassDef"]
-	n000012FB057B73A0[label="ExampleClass"]
-	n000012FB057B7748[label="Parameter"]
-	n000012FB057B1BE0[label="X"]
-	n000012FB057B1D18[label="Y"]
-	n000012FB057B7880[label="Base"]
-	n000012FB057B79B8[label="Example"]
-	n000012FB057B1F88[label="TypeRef"]
-	n000012FB057B1AA8[label="int"]
-	n000012FB057B21F8[label="TypeRef"]
-	n000012FB057B1E50[label="int"]
-	n000012FB057B7AF0[label="Member"]
-	n000012FB057B2330[label="public"]
-	n000012FB057B2A80[label="Field"]
-	n000012FB057B25A0[label="ListIdentifier"]
-	n000012FB057B2468[label="z"]
-	n000012FB057B2948[label="TypeRef"]
-	n000012FB057B26D8[label="int"]
-	n000012FB057B2BB8[label="public"]
-	n000012FB057B4A30[label="FuncDef"]
-	n000012FB057B31D0[label="FuncSignature"]
-	n000012FB057B3308[label="ShowMessage"]
-	n000012FB057B2E28[label="ListArgdef"]
-	n000012FB057B3098[label="TypeRef"]
-	n000012FB057B2CF0[label="int"]
-	n000012FB057B4CA0[label="Expression"]
-	n000012FB057B4DD8[label="CallOrIndexer"]
-	n000012FB057B4550[label="ListExpr"]
-	n000012FB057B41A8[label="1"]
-	n000012FB057B4070[label="printf"]
-	n000012FB057B3CC8[label="end"]
-	n000012FB057B5048[label="public"]
-	n000012FB057B6EC0[label="FuncDef"]
-	n000012FB057B5660[label="FuncSignature"]
-	n000012FB057B5798[label="DoThing"]
-	n000012FB057B52B8[label="ListArgdef"]
-	n000012FB057B5528[label="TypeRef"]
-	n000012FB057B5180[label="int"]
-	n000012FB057B7130[label="Expression"]
-	n000012FB057B7268[label="CallOrIndexer"]
-	n000012FB057B69E0[label="ListExpr"]
-	n000012FB057B6638[label="2"]
-	n000012FB057B6500[label="printf"]
-	n000012FB057B6158[label="end"]
-	n000012FB057BD8C8[label="ClassDef"]
-	n000012FB057BD790[label="Example"]
-	n000012FB057BDB38[label="Parameter"]
-	n000012FB057B7C28[label="A"]
-	n000012FB057B7D60[label="B"]
-	n000012FB057BDC70[label="Member"]
-	n000012FB057B7E98[label="public"]
-	n000012FB057B85E8[label="Field"]
-	n000012FB057B8108[label="ListIdentifier"]
-	n000012FB057B7FD0[label="x"]
-	n000012FB057B84B0[label="TypeRef"]
-	n000012FB057B8378[label="A"]
-	n000012FB057B8720[label="public"]
-	n000012FB057B8E70[label="Field"]
-	n000012FB057B8990[label="ListIdentifier"]
-	n000012FB057B8858[label="y"]
-	n000012FB057B8D38[label="TypeRef"]
-	n000012FB057B8C00[label="B"]
-	n000012FB057B8FA8[label="public"]
-	n000012FB057BAE20[label="FuncDef"]
-	n000012FB057B95C0[label="FuncSignature"]
-	n000012FB057B96F8[label="DoThing"]
-	n000012FB057B9218[label="ListArgdef"]
-	n000012FB057B9488[label="TypeRef"]
-	n000012FB057B90E0[label="int"]
-	n000012FB057BB090[label="Expression"]
-	n000012FB057BB1C8[label="CallOrIndexer"]
-	n000012FB057BA940[label="ListExpr"]
-	n000012FB057BA598[label="3"]
-	n000012FB057BA460[label="printf"]
-	n000012FB057BA0B8[label="end"]
-	n000012FB057BB438[label="public"]
-	n000012FB057BD2B0[label="FuncDef"]
-	n000012FB057BBA50[label="FuncSignature"]
-	n000012FB057BBB88[label="DoOtherThing"]
-	n000012FB057BB6A8[label="ListArgdef"]
-	n000012FB057BB918[label="TypeRef"]
-	n000012FB057BB570[label="int"]
-	n000012FB057BD520[label="Expression"]
-	n000012FB057BD658[label="CallOrIndexer"]
-	n000012FB057BCDD0[label="ListExpr"]
-	n000012FB057BCA28[label="4"]
-	n000012FB057BC8F0[label="printf"]
-	n000012FB057BC548[label="end"]
-	n000012FB057C7D50[label="FuncDef"]
-	n000012FB057BE3C0[label="FuncSignature"]
-	n000012FB057BE4F8[label="fib"]
-	n000012FB057BE288[label="ListArgdef"]
-	n000012FB057BE018[label="ArgDef"]
-	n000012FB057BDDA8[label="n"]
-	n000012FB057BDEE0[label="TypeRef"]
-	n000012FB057BDA00[label="int"]
-	n000012FB057BED80[label="VarStatement"]
-	n000012FB057BE768[label="ListIdentifier"]
-	n000012FB057BE630[label="ex"]
-	n000012FB057BF128[label="TypeRef"]
-	n000012FB057BEFF0[label="Example"]
-	n000012FB057BEC48[label="TypeRef"]
-	n000012FB057BE9D8[label="int"]
-	n000012FB057BEEB8[label="TypeRef"]
-	n000012FB057BEB10[label="int"]
-	n000012FB057BF878[label="VarStatement"]
-	n000012FB057BF260[label="ListIdentifier"]
-	n000012FB057BE8A0[label="ex_cl"]
-	n000012FB057BFC20[label="TypeRef"]
-	n000012FB057BFAE8[label="ExampleClass"]
-	n000012FB057BF740[label="TypeRef"]
-	n000012FB057BF4D0[label="int"]
-	n000012FB057BF9B0[label="TypeRef"]
-	n000012FB057BF608[label="int"]
-	n000012FB057C0100[label="VarStatement"]
-	n000012FB057BFD58[label="ListIdentifier"]
-	n000012FB057BF398[label="x"]
-	n000012FB057C0238[label="TypeRef"]
-	n000012FB057BFFC8[label="int"]
-	n000012FB057C15B8[label="Expression"]
-	n000012FB057C16F0[label="="]
-	n000012FB057C1348[label="5"]
-	n000012FB057C1210[label="."]
-	n000012FB057C0FA0[label="ex"]
-	n000012FB057C0E68[label="x"]
-	n000012FB057C2A70[label="Expression"]
-	n000012FB057C4198[label="="]
-	n000012FB057C42D0[label="."]
-	n000012FB057C2E18[label="ex_cl"]
-	n000012FB057C3F28[label="CallOrIndexer"]
-	n000012FB057C36A0[label="ListExpr"]
-	n000012FB057C2F50[label="ShowMessage"]
-	n000012FB057C1A98[label="x"]
-	n000012FB057C4F00[label="Expression"]
-	n000012FB057C5788[label="="]
-	n000012FB057C5650[label="."]
-	n000012FB057C52A8[label="ex"]
-	n000012FB057C5518[label="x"]
-	n000012FB057C4540[label="x"]
-	n000012FB057C7600[label="Expression"]
-	n000012FB057C7738[label="CallOrIndexer"]
-	n000012FB057C6EB0[label="ListExpr"]
-	n000012FB057C6760[label="ex"]
-	n000012FB057C6B08[label="5"]
-	n000012FB057C6628[label="M"]
-	n000012FB057C7E88[label="Expression"]
-	n000012FB057C7AE0[label="x"]
-	n000012FB057C79A8[label="end"]
-	n000012FB057CA1E0[label="FuncDef"]
-	n000012FB057C8980[label="FuncSignature"]
-	n000012FB057C8AB8[label="M"]
-	n000012FB057C8848[label="ListArgdef"]
-	n000012FB057C80F8[label="ArgDef"]
-	n000012FB057C7FC0[label="O"]
-	n000012FB057C85D8[label="ArgDef"]
-	n000012FB057C8368[label="n"]
-	n000012FB057C84A0[label="TypeRef"]
-	n000012FB057C8230[label="int"]
-	n000012FB057CA450[label="Expression"]
-	n000012FB057CA588[label="CallOrIndexer"]
-	n000012FB057C9D00[label="ListExpr"]
-	n000012FB057C9958[label="7"]
-	n000012FB057C9820[label="printf"]
-	n000012FB057C9478[label="end"]
-	n000012FB057CC190[label="FuncDef"]
-	n000012FB057CA930[label="FuncSignature"]
-	n000012FB057CAA68[label="error"]
-	n000012FB057CA7F8[label="ListArgdef"]
-	n000012FB057CC400[label="Expression"]
-	n000012FB057CC538[label="CallOrIndexer"]
-	n000012FB057CBCB0[label="ListExpr"]
-	n000012FB057CB908[label="9"]
-	n000012FB057CB7D0[label="printf"]
-	n000012FB057CB428[label="end"]
-	n000012FB057DE9B8[label="FuncDef"]
-	n000012FB057CCDC0[label="FuncSignature"]
-	n000012FB057CCEF8[label="printf"]
-	n000012FB057CCC88[label="ListArgdef"]
-	n000012FB057CCA18[label="ArgDef"]
-	n000012FB057CC7A8[label="res"]
-	n000012FB057CC8E0[label="TypeRef"]
-	n000012FB057CC670[label="int"]
-	n000012FB057CD780[label="VarStatement"]
-	n000012FB057CD168[label="ListIdentifier"]
-	n000012FB057CD030[label="nextLine"]
-	n000012FB057CD2A0[label="revertedNum"]
-	n000012FB057CD3D8[label="tmp"]
-	n000012FB057CD8B8[label="TypeRef"]
-	n000012FB057CD648[label="int"]
-	n000012FB057CE3B0[label="Expression"]
-	n000012FB057CE890[label="="]
-	n000012FB057CE4E8[label="10"]
-	n000012FB057CDC60[label="nextLine"]
-	n000012FB057CF250[label="Expression"]
-	n000012FB057CF730[label="="]
-	n000012FB057CF388[label="0"]
-	n000012FB057CEB00[label="revertedNum"]
-	n000012FB057D59E8[label="WhileStatement"]
-	n000012FB057D5C58[label="Expression"]
-	n000012FB057D0228[label="!="]
-	n000012FB057D0498[label="0"]
-	n000012FB057CF9A0[label="res"]
-	n000012FB057D15A8[label="Expression"]
-	n000012FB057D1BC0[label="="]
-	n000012FB057D1A88[label="*"]
-	n000012FB057D1CF8[label="10"]
-	n000012FB057D1818[label="revertedNum"]
-	n000012FB057D0978[label="revertedNum"]
-	n000012FB057D2CD0[label="Expression"]
-	n000012FB057D32E8[label="="]
-	n000012FB057D31B0[label=""]
-	n000012FB057D3420[label="10"]
-	n000012FB057D2F40[label="res"]
-	n000012FB057D20A0[label="tmp"]
-	n000012FB057D43F8[label="Expression"]
-	n000012FB057D4A10[label="="]
-	n000012FB057D48D8[label="+"]
-	n000012FB057D4B48[label="tmp"]
-	n000012FB057D4668[label="revertedNum"]
-	n000012FB057D37C8[label="revertedNum"]
-	n000012FB057D5B20[label="Expression"]
-	n000012FB057D6138[label="="]
-	n000012FB057D6000[label="/"]
-	n000012FB057D6270[label="10"]
-	n000012FB057D5D90[label="res"]
-	n000012FB057D4EF0[label="res"]
-	n000012FB057DCA08[label="WhileStatement"]
-	n000012FB057DCC78[label="Expression"]
-	n000012FB057D6FD8[label="!="]
-	n000012FB057D7248[label="0"]
-	n000012FB057D6750[label="revertedNum"]
-	n000012FB057D8358[label="Expression"]
-	n000012FB057D8970[label="="]
-	n000012FB057D8838[label=""]
-	n000012FB057D8AA8[label="10"]
-	n000012FB057D85C8[label="revertedNum"]
-	n000012FB057D7728[label="tmp"]
-	n000012FB057D9A80[label="Expression"]
-	n000012FB057DA098[label="="]
-	n000012FB057D9F60[label="+"]
-	n000012FB057DA1D0[label="48"]
-	n000012FB057D9CF0[label="tmp"]
-	n000012FB057D8E50[label="tmp"]
-	n000012FB057DBA30[label="Expression"]
-	n000012FB057DBB68[label="CallOrIndexer"]
-	n000012FB057DB2E0[label="ListExpr"]
-	n000012FB057DAF38[label="tmp"]
-	n000012FB057DAE00[label="print"]
-	n000012FB057DCB40[label="Expression"]
-	n000012FB057DD158[label="="]
-	n000012FB057DD020[label="/"]
-	n000012FB057DD290[label="10"]
-	n000012FB057DCDB0[label="revertedNum"]
-	n000012FB057DBF10[label="revertedNum"]
-	n000012FB057DEC28[label="Expression"]
-	n000012FB057DED60[label="CallOrIndexer"]
-	n000012FB057DE4D8[label="ListExpr"]
-	n000012FB057DE130[label="10"]
-	n000012FB057DDFF8[label="print"]
-	n000012FB057DDC50[label="end"]
-	n000012FB057E4520[label="FuncDef"]
-	n000012FB057DF108[label="FuncSignature"]
-	n000012FB057DF240[label="main"]
-	n000012FB057DEFD0[label="ListArgdef"]
-	n000012FB057DF858[label="VarStatement"]
-	n000012FB057DF4B0[label="ListIdentifier"]
-	n000012FB057DF378[label="i"]
-	n000012FB057DF990[label="TypeRef"]
-	n000012FB057DF720[label="int"]
-	n000012FB057E0488[label="Expression"]
-	n000012FB057E0968[label="="]
-	n000012FB057E05C0[label="0"]
-	n000012FB057DFD38[label="i"]
-	n000012FB057E5288[label="WhileStatement"]
-	n000012FB057E54F8[label="Expression"]
-	n000012FB057E1460[label="<"]
-	n000012FB057E16D0[label="11"]
-	n000012FB057E0BD8[label="i"]
-	n000012FB057E42B0[label="Expression"]
-	n000012FB057E43E8[label="CallOrIndexer"]
-	n000012FB057E3A28[label="ListExpr"]
-	n000012FB057E3B60[label="CallOrIndexer"]
-	n000012FB057E32D8[label="ListExpr"]
-	n000012FB057E2F30[label="i"]
-	n000012FB057E2DF8[label="fib"]
-	n000012FB057E2B88[label="printf"]
-	n000012FB057E53C0[label="Expression"]
-	n000012FB057E59D8[label="="]
-	n000012FB057E58A0[label="+"]
-	n000012FB057E5B10[label="1"]
-	n000012FB057E5630[label="i"]
-	n000012FB057E4790[label="i"]
-	n000012FB057E0830[label="end"]
+	n0000127E7763D628[label="Sourcer"]
+	n0000127E776074D8[label="ClassDef"]
+	n0000127E776073A0[label="ExampleClass"]
+	n0000127E77607748[label="Parameter"]
+	n0000127E77601BE0[label="X"]
+	n0000127E77601D18[label="Y"]
+	n0000127E77607880[label="Base"]
+	n0000127E776079B8[label="Example"]
+	n0000127E77601F88[label="TypeRef"]
+	n0000127E77601AA8[label="int"]
+	n0000127E776021F8[label="TypeRef"]
+	n0000127E77601E50[label="int"]
+	n0000127E77607AF0[label="Member"]
+	n0000127E77602330[label="public"]
+	n0000127E77602A80[label="Field"]
+	n0000127E776025A0[label="ListIdentifier"]
+	n0000127E77602468[label="z"]
+	n0000127E77602948[label="TypeRef"]
+	n0000127E776026D8[label="int"]
+	n0000127E77602BB8[label="public"]
+	n0000127E77604A30[label="FuncDef"]
+	n0000127E776031D0[label="FuncSignature"]
+	n0000127E77603308[label="ShowMessage"]
+	n0000127E77602E28[label="ListArgdef"]
+	n0000127E77603098[label="TypeRef"]
+	n0000127E77602CF0[label="int"]
+	n0000127E77604CA0[label="Expression"]
+	n0000127E77604DD8[label="CallOrIndexer"]
+	n0000127E77604550[label="ListExpr"]
+	n0000127E776041A8[label="1"]
+	n0000127E77604070[label="printf"]
+	n0000127E77603CC8[label="end"]
+	n0000127E77605048[label="public"]
+	n0000127E77606EC0[label="FuncDef"]
+	n0000127E77605660[label="FuncSignature"]
+	n0000127E77605798[label="DoThing"]
+	n0000127E776052B8[label="ListArgdef"]
+	n0000127E77605528[label="TypeRef"]
+	n0000127E77605180[label="int"]
+	n0000127E77607130[label="Expression"]
+	n0000127E77607268[label="CallOrIndexer"]
+	n0000127E776069E0[label="ListExpr"]
+	n0000127E77606638[label="2"]
+	n0000127E77606500[label="printf"]
+	n0000127E77606158[label="end"]
+	n0000127E7760D8C8[label="ClassDef"]
+	n0000127E7760D790[label="Example"]
+	n0000127E7760DB38[label="Parameter"]
+	n0000127E77607C28[label="A"]
+	n0000127E77607D60[label="B"]
+	n0000127E7760DC70[label="Member"]
+	n0000127E77607E98[label="public"]
+	n0000127E776085E8[label="Field"]
+	n0000127E77608108[label="ListIdentifier"]
+	n0000127E77607FD0[label="x"]
+	n0000127E776084B0[label="TypeRef"]
+	n0000127E77608378[label="A"]
+	n0000127E77608720[label="public"]
+	n0000127E77608E70[label="Field"]
+	n0000127E77608990[label="ListIdentifier"]
+	n0000127E77608858[label="y"]
+	n0000127E77608D38[label="TypeRef"]
+	n0000127E77608C00[label="B"]
+	n0000127E77608FA8[label="public"]
+	n0000127E7760AE20[label="FuncDef"]
+	n0000127E776095C0[label="FuncSignature"]
+	n0000127E776096F8[label="DoThing"]
+	n0000127E77609218[label="ListArgdef"]
+	n0000127E77609488[label="TypeRef"]
+	n0000127E776090E0[label="int"]
+	n0000127E7760B090[label="Expression"]
+	n0000127E7760B1C8[label="CallOrIndexer"]
+	n0000127E7760A940[label="ListExpr"]
+	n0000127E7760A598[label="3"]
+	n0000127E7760A460[label="printf"]
+	n0000127E7760A0B8[label="end"]
+	n0000127E7760B438[label="public"]
+	n0000127E7760D2B0[label="FuncDef"]
+	n0000127E7760BA50[label="FuncSignature"]
+	n0000127E7760BB88[label="DoOtherThing"]
+	n0000127E7760B6A8[label="ListArgdef"]
+	n0000127E7760B918[label="TypeRef"]
+	n0000127E7760B570[label="int"]
+	n0000127E7760D520[label="Expression"]
+	n0000127E7760D658[label="CallOrIndexer"]
+	n0000127E7760CDD0[label="ListExpr"]
+	n0000127E7760CA28[label="4"]
+	n0000127E7760C8F0[label="printf"]
+	n0000127E7760C548[label="end"]
+	n0000127E77617D50[label="FuncDef"]
+	n0000127E7760E3C0[label="FuncSignature"]
+	n0000127E7760E4F8[label="helper"]
+	n0000127E7760E288[label="ListArgdef"]
+	n0000127E7760E018[label="ArgDef"]
+	n0000127E7760DDA8[label="n"]
+	n0000127E7760DEE0[label="TypeRef"]
+	n0000127E7760DA00[label="int"]
+	n0000127E7760ED80[label="VarStatement"]
+	n0000127E7760E768[label="ListIdentifier"]
+	n0000127E7760E630[label="ex"]
+	n0000127E7760F128[label="TypeRef"]
+	n0000127E7760EFF0[label="Example"]
+	n0000127E7760EC48[label="TypeRef"]
+	n0000127E7760E9D8[label="int"]
+	n0000127E7760EEB8[label="TypeRef"]
+	n0000127E7760EB10[label="int"]
+	n0000127E7760F878[label="VarStatement"]
+	n0000127E7760F260[label="ListIdentifier"]
+	n0000127E7760E8A0[label="ex_cl"]
+	n0000127E7760FC20[label="TypeRef"]
+	n0000127E7760FAE8[label="ExampleClass"]
+	n0000127E7760F740[label="TypeRef"]
+	n0000127E7760F4D0[label="int"]
+	n0000127E7760F9B0[label="TypeRef"]
+	n0000127E7760F608[label="int"]
+	n0000127E77610100[label="VarStatement"]
+	n0000127E7760FD58[label="ListIdentifier"]
+	n0000127E7760F398[label="x"]
+	n0000127E77610238[label="TypeRef"]
+	n0000127E7760FFC8[label="int"]
+	n0000127E776115B8[label="Expression"]
+	n0000127E776116F0[label="="]
+	n0000127E77611348[label="5"]
+	n0000127E77611210[label="."]
+	n0000127E77610FA0[label="ex"]
+	n0000127E77610E68[label="x"]
+	n0000127E77612A70[label="Expression"]
+	n0000127E77614198[label="="]
+	n0000127E776142D0[label="."]
+	n0000127E77612E18[label="ex_cl"]
+	n0000127E77613F28[label="CallOrIndexer"]
+	n0000127E776136A0[label="ListExpr"]
+	n0000127E77612F50[label="ShowMessage"]
+	n0000127E77611A98[label="x"]
+	n0000127E77614F00[label="Expression"]
+	n0000127E77615788[label="="]
+	n0000127E77615650[label="."]
+	n0000127E776152A8[label="ex"]
+	n0000127E77615518[label="x"]
+	n0000127E77614540[label="x"]
+	n0000127E77617600[label="Expression"]
+	n0000127E77617738[label="CallOrIndexer"]
+	n0000127E77616EB0[label="ListExpr"]
+	n0000127E77616760[label="ex"]
+	n0000127E77616B08[label="n"]
+	n0000127E77616628[label="M"]
+	n0000127E77617E88[label="Expression"]
+	n0000127E77617AE0[label="x"]
+	n0000127E776179A8[label="end"]
+	n0000127E7761F5F8[label="FuncDef"]
+	n0000127E77618710[label="FuncSignature"]
+	n0000127E77618848[label="fib"]
+	n0000127E776185D8[label="ListArgdef"]
+	n0000127E77618368[label="ArgDef"]
+	n0000127E776180F8[label="n"]
+	n0000127E77618230[label="TypeRef"]
+	n0000127E77617FC0[label="int"]
+	n0000127E776190D0[label="VarStatement"]
+	n0000127E77618AB8[label="ListIdentifier"]
+	n0000127E77618980[label="ex"]
+	n0000127E77619478[label="TypeRef"]
+	n0000127E77619340[label="Example"]
+	n0000127E77618F98[label="TypeRef"]
+	n0000127E77618D28[label="int"]
+	n0000127E77619208[label="TypeRef"]
+	n0000127E77618E60[label="int"]
+	n0000127E77619BC8[label="VarStatement"]
+	n0000127E776195B0[label="ListIdentifier"]
+	n0000127E77618BF0[label="ex_cl"]
+	n0000127E77619F70[label="TypeRef"]
+	n0000127E77619E38[label="ExampleClass"]
+	n0000127E77619A90[label="TypeRef"]
+	n0000127E77619820[label="int"]
+	n0000127E77619D00[label="TypeRef"]
+	n0000127E77619958[label="int"]
+	n0000127E7761A450[label="VarStatement"]
+	n0000127E7761A0A8[label="ListIdentifier"]
+	n0000127E776196E8[label="x"]
+	n0000127E7761A588[label="TypeRef"]
+	n0000127E7761A318[label="int"]
+	n0000127E7761B908[label="Expression"]
+	n0000127E7761BA40[label="="]
+	n0000127E7761B698[label="5"]
+	n0000127E7761B560[label="."]
+	n0000127E7761B2F0[label="ex"]
+	n0000127E7761B1B8[label="x"]
+	n0000127E7761C7A8[label="Expression"]
+	n0000127E7761D030[label="="]
+	n0000127E7761CEF8[label="."]
+	n0000127E7761CB50[label="ex"]
+	n0000127E7761CDC0[label="x"]
+	n0000127E7761BDE8[label="x"]
+	n0000127E7761EEA8[label="Expression"]
+	n0000127E7761EFE0[label="CallOrIndexer"]
+	n0000127E7761E758[label="ListExpr"]
+	n0000127E7761E008[label="ex"]
+	n0000127E7761E3B0[label="n"]
+	n0000127E7761DED0[label="M"]
+	n0000127E7761F730[label="Expression"]
+	n0000127E7761F388[label="x"]
+	n0000127E7761F250[label="end"]
+	n0000127E77621A88[label="FuncDef"]
+	n0000127E77620228[label="FuncSignature"]
+	n0000127E77620360[label="M"]
+	n0000127E776200F0[label="ListArgdef"]
+	n0000127E7761F9A0[label="ArgDef"]
+	n0000127E7761F868[label="O"]
+	n0000127E7761FE80[label="ArgDef"]
+	n0000127E7761FC10[label="n"]
+	n0000127E7761FD48[label="TypeRef"]
+	n0000127E7761FAD8[label="int"]
+	n0000127E77621CF8[label="Expression"]
+	n0000127E77621E30[label="CallOrIndexer"]
+	n0000127E776215A8[label="ListExpr"]
+	n0000127E77621200[label="7"]
+	n0000127E776210C8[label="printf"]
+	n0000127E77620D20[label="end"]
+	n0000127E77623A38[label="FuncDef"]
+	n0000127E776221D8[label="FuncSignature"]
+	n0000127E77622310[label="error"]
+	n0000127E776220A0[label="ListArgdef"]
+	n0000127E77623CA8[label="Expression"]
+	n0000127E77623DE0[label="CallOrIndexer"]
+	n0000127E77623558[label="ListExpr"]
+	n0000127E776231B0[label="9"]
+	n0000127E77623078[label="printf"]
+	n0000127E77622CD0[label="end"]
+	n0000127E77636260[label="FuncDef"]
+	n0000127E77624668[label="FuncSignature"]
+	n0000127E776247A0[label="printf"]
+	n0000127E77624530[label="ListArgdef"]
+	n0000127E776242C0[label="ArgDef"]
+	n0000127E77624050[label="res"]
+	n0000127E77624188[label="TypeRef"]
+	n0000127E77623F18[label="int"]
+	n0000127E77625028[label="VarStatement"]
+	n0000127E77624A10[label="ListIdentifier"]
+	n0000127E776248D8[label="nextLine"]
+	n0000127E77624B48[label="revertedNum"]
+	n0000127E77624C80[label="tmp"]
+	n0000127E77625160[label="TypeRef"]
+	n0000127E77624EF0[label="int"]
+	n0000127E77625C58[label="Expression"]
+	n0000127E77626138[label="="]
+	n0000127E77625D90[label="10"]
+	n0000127E77625508[label="nextLine"]
+	n0000127E77626AF8[label="Expression"]
+	n0000127E77626FD8[label="="]
+	n0000127E77626C30[label="0"]
+	n0000127E776263A8[label="revertedNum"]
+	n0000127E7762D290[label="WhileStatement"]
+	n0000127E7762D500[label="Expression"]
+	n0000127E77627AD0[label="!="]
+	n0000127E77627D40[label="0"]
+	n0000127E77627248[label="res"]
+	n0000127E77628E50[label="Expression"]
+	n0000127E77629468[label="="]
+	n0000127E77629330[label="*"]
+	n0000127E776295A0[label="10"]
+	n0000127E776290C0[label="revertedNum"]
+	n0000127E77628220[label="revertedNum"]
+	n0000127E7762A578[label="Expression"]
+	n0000127E7762AB90[label="="]
+	n0000127E7762AA58[label=""]
+	n0000127E7762ACC8[label="10"]
+	n0000127E7762A7E8[label="res"]
+	n0000127E77629948[label="tmp"]
+	n0000127E7762BCA0[label="Expression"]
+	n0000127E7762C2B8[label="="]
+	n0000127E7762C180[label="+"]
+	n0000127E7762C3F0[label="tmp"]
+	n0000127E7762BF10[label="revertedNum"]
+	n0000127E7762B070[label="revertedNum"]
+	n0000127E7762D3C8[label="Expression"]
+	n0000127E7762D9E0[label="="]
+	n0000127E7762D8A8[label="/"]
+	n0000127E7762DB18[label="10"]
+	n0000127E7762D638[label="res"]
+	n0000127E7762C798[label="res"]
+	n0000127E776342B0[label="WhileStatement"]
+	n0000127E77634520[label="Expression"]
+	n0000127E7762E880[label="!="]
+	n0000127E7762EAF0[label="0"]
+	n0000127E7762DFF8[label="revertedNum"]
+	n0000127E7762FC00[label="Expression"]
+	n0000127E77630218[label="="]
+	n0000127E776300E0[label=""]
+	n0000127E77630350[label="10"]
+	n0000127E7762FE70[label="revertedNum"]
+	n0000127E7762EFD0[label="tmp"]
+	n0000127E77631328[label="Expression"]
+	n0000127E77631940[label="="]
+	n0000127E77631808[label="+"]
+	n0000127E77631A78[label="48"]
+	n0000127E77631598[label="tmp"]
+	n0000127E776306F8[label="tmp"]
+	n0000127E776332D8[label="Expression"]
+	n0000127E77633410[label="CallOrIndexer"]
+	n0000127E77632B88[label="ListExpr"]
+	n0000127E776327E0[label="tmp"]
+	n0000127E776326A8[label="print"]
+	n0000127E776343E8[label="Expression"]
+	n0000127E77634A00[label="="]
+	n0000127E776348C8[label="/"]
+	n0000127E77634B38[label="10"]
+	n0000127E77634658[label="revertedNum"]
+	n0000127E776337B8[label="revertedNum"]
+	n0000127E776364D0[label="Expression"]
+	n0000127E77636608[label="CallOrIndexer"]
+	n0000127E77635D80[label="ListExpr"]
+	n0000127E776359D8[label="10"]
+	n0000127E776358A0[label="print"]
+	n0000127E776354F8[label="end"]
+	n0000127E7763BDC8[label="FuncDef"]
+	n0000127E776369B0[label="FuncSignature"]
+	n0000127E77636AE8[label="main"]
+	n0000127E77636878[label="ListArgdef"]
+	n0000127E77637100[label="VarStatement"]
+	n0000127E77636D58[label="ListIdentifier"]
+	n0000127E77636C20[label="i"]
+	n0000127E77637238[label="TypeRef"]
+	n0000127E77636FC8[label="int"]
+	n0000127E77637D30[label="Expression"]
+	n0000127E77638210[label="="]
+	n0000127E77637E68[label="0"]
+	n0000127E776375E0[label="i"]
+	n0000127E7763CB30[label="WhileStatement"]
+	n0000127E7763CDA0[label="Expression"]
+	n0000127E77638D08[label="<"]
+	n0000127E77638F78[label="5"]
+	n0000127E77638480[label="i"]
+	n0000127E7763BB58[label="Expression"]
+	n0000127E7763BC90[label="CallOrIndexer"]
+	n0000127E7763B2D0[label="ListExpr"]
+	n0000127E7763B408[label="CallOrIndexer"]
+	n0000127E7763AB80[label="ListExpr"]
+	n0000127E7763A7D8[label="5"]
+	n0000127E7763A6A0[label="helper"]
+	n0000127E7763A430[label="printf"]
+	n0000127E7763CC68[label="Expression"]
+	n0000127E7763D280[label="="]
+	n0000127E7763D148[label="+"]
+	n0000127E7763D3B8[label="1"]
+	n0000127E7763CED8[label="i"]
+	n0000127E7763C038[label="i"]
+	n0000127E776380D8[label="end"]
 
-		n000012FB057E5D80 -> n000012FB057B74D8		// Sourcer -> ClassDef
-		n000012FB057B74D8 -> n000012FB057B73A0		// ClassDef -> ExampleClass
-		n000012FB057B74D8 -> n000012FB057B7748		// ClassDef -> Parameter
-		n000012FB057B7748 -> n000012FB057B1BE0		// Parameter -> X
-		n000012FB057B7748 -> n000012FB057B1D18		// Parameter -> Y
-		n000012FB057B74D8 -> n000012FB057B7880		// ClassDef -> Base
-		n000012FB057B7880 -> n000012FB057B79B8		// Base -> Example
-		n000012FB057B79B8 -> n000012FB057B1F88		// Example -> TypeRef
-		n000012FB057B1F88 -> n000012FB057B1AA8		// TypeRef -> int
-		n000012FB057B79B8 -> n000012FB057B21F8		// Example -> TypeRef
-		n000012FB057B21F8 -> n000012FB057B1E50		// TypeRef -> int
-		n000012FB057B74D8 -> n000012FB057B7AF0		// ClassDef -> Member
-		n000012FB057B7AF0 -> n000012FB057B2330		// Member -> public
-		n000012FB057B7AF0 -> n000012FB057B2A80		// Member -> Field
-		n000012FB057B2A80 -> n000012FB057B25A0		// Field -> ListIdentifier
-		n000012FB057B25A0 -> n000012FB057B2468		// ListIdentifier -> z
-		n000012FB057B2A80 -> n000012FB057B2948		// Field -> TypeRef
-		n000012FB057B2948 -> n000012FB057B26D8		// TypeRef -> int
-		n000012FB057B7AF0 -> n000012FB057B2BB8		// Member -> public
-		n000012FB057B7AF0 -> n000012FB057B4A30		// Member -> FuncDef
-		n000012FB057B4A30 -> n000012FB057B31D0		// FuncDef -> FuncSignature
-		n000012FB057B31D0 -> n000012FB057B3308		// FuncSignature -> ShowMessage
-		n000012FB057B3308 -> n000012FB057B2E28		// ShowMessage -> ListArgdef
-		n000012FB057B31D0 -> n000012FB057B3098		// FuncSignature -> TypeRef
-		n000012FB057B3098 -> n000012FB057B2CF0		// TypeRef -> int
-		n000012FB057B4A30 -> n000012FB057B4CA0		// FuncDef -> Expression
-		n000012FB057B4CA0 -> n000012FB057B4DD8		// Expression -> CallOrIndexer
-		n000012FB057B4DD8 -> n000012FB057B4550		// CallOrIndexer -> ListExpr
-		n000012FB057B4550 -> n000012FB057B41A8		// ListExpr -> 1
-		n000012FB057B4DD8 -> n000012FB057B4070		// CallOrIndexer -> printf
-		n000012FB057B4A30 -> n000012FB057B3CC8		// FuncDef -> end
-		n000012FB057B7AF0 -> n000012FB057B5048		// Member -> public
-		n000012FB057B7AF0 -> n000012FB057B6EC0		// Member -> FuncDef
-		n000012FB057B6EC0 -> n000012FB057B5660		// FuncDef -> FuncSignature
-		n000012FB057B5660 -> n000012FB057B5798		// FuncSignature -> DoThing
-		n000012FB057B5798 -> n000012FB057B52B8		// DoThing -> ListArgdef
-		n000012FB057B5660 -> n000012FB057B5528		// FuncSignature -> TypeRef
-		n000012FB057B5528 -> n000012FB057B5180		// TypeRef -> int
-		n000012FB057B6EC0 -> n000012FB057B7130		// FuncDef -> Expression
-		n000012FB057B7130 -> n000012FB057B7268		// Expression -> CallOrIndexer
-		n000012FB057B7268 -> n000012FB057B69E0		// CallOrIndexer -> ListExpr
-		n000012FB057B69E0 -> n000012FB057B6638		// ListExpr -> 2
-		n000012FB057B7268 -> n000012FB057B6500		// CallOrIndexer -> printf
-		n000012FB057B6EC0 -> n000012FB057B6158		// FuncDef -> end
-		n000012FB057E5D80 -> n000012FB057BD8C8		// Sourcer -> ClassDef
-		n000012FB057BD8C8 -> n000012FB057BD790		// ClassDef -> Example
-		n000012FB057BD8C8 -> n000012FB057BDB38		// ClassDef -> Parameter
-		n000012FB057BDB38 -> n000012FB057B7C28		// Parameter -> A
-		n000012FB057BDB38 -> n000012FB057B7D60		// Parameter -> B
-		n000012FB057BD8C8 -> n000012FB057BDC70		// ClassDef -> Member
-		n000012FB057BDC70 -> n000012FB057B7E98		// Member -> public
-		n000012FB057BDC70 -> n000012FB057B85E8		// Member -> Field
-		n000012FB057B85E8 -> n000012FB057B8108		// Field -> ListIdentifier
-		n000012FB057B8108 -> n000012FB057B7FD0		// ListIdentifier -> x
-		n000012FB057B85E8 -> n000012FB057B84B0		// Field -> TypeRef
-		n000012FB057B84B0 -> n000012FB057B8378		// TypeRef -> A
-		n000012FB057BDC70 -> n000012FB057B8720		// Member -> public
-		n000012FB057BDC70 -> n000012FB057B8E70		// Member -> Field
-		n000012FB057B8E70 -> n000012FB057B8990		// Field -> ListIdentifier
-		n000012FB057B8990 -> n000012FB057B8858		// ListIdentifier -> y
-		n000012FB057B8E70 -> n000012FB057B8D38		// Field -> TypeRef
-		n000012FB057B8D38 -> n000012FB057B8C00		// TypeRef -> B
-		n000012FB057BDC70 -> n000012FB057B8FA8		// Member -> public
-		n000012FB057BDC70 -> n000012FB057BAE20		// Member -> FuncDef
-		n000012FB057BAE20 -> n000012FB057B95C0		// FuncDef -> FuncSignature
-		n000012FB057B95C0 -> n000012FB057B96F8		// FuncSignature -> DoThing
-		n000012FB057B96F8 -> n000012FB057B9218		// DoThing -> ListArgdef
-		n000012FB057B95C0 -> n000012FB057B9488		// FuncSignature -> TypeRef
-		n000012FB057B9488 -> n000012FB057B90E0		// TypeRef -> int
-		n000012FB057BAE20 -> n000012FB057BB090		// FuncDef -> Expression
-		n000012FB057BB090 -> n000012FB057BB1C8		// Expression -> CallOrIndexer
-		n000012FB057BB1C8 -> n000012FB057BA940		// CallOrIndexer -> ListExpr
-		n000012FB057BA940 -> n000012FB057BA598		// ListExpr -> 3
-		n000012FB057BB1C8 -> n000012FB057BA460		// CallOrIndexer -> printf
-		n000012FB057BAE20 -> n000012FB057BA0B8		// FuncDef -> end
-		n000012FB057BDC70 -> n000012FB057BB438		// Member -> public
-		n000012FB057BDC70 -> n000012FB057BD2B0		// Member -> FuncDef
-		n000012FB057BD2B0 -> n000012FB057BBA50		// FuncDef -> FuncSignature
-		n000012FB057BBA50 -> n000012FB057BBB88		// FuncSignature -> DoOtherThing
-		n000012FB057BBB88 -> n000012FB057BB6A8		// DoOtherThing -> ListArgdef
-		n000012FB057BBA50 -> n000012FB057BB918		// FuncSignature -> TypeRef
-		n000012FB057BB918 -> n000012FB057BB570		// TypeRef -> int
-		n000012FB057BD2B0 -> n000012FB057BD520		// FuncDef -> Expression
-		n000012FB057BD520 -> n000012FB057BD658		// Expression -> CallOrIndexer
-		n000012FB057BD658 -> n000012FB057BCDD0		// CallOrIndexer -> ListExpr
-		n000012FB057BCDD0 -> n000012FB057BCA28		// ListExpr -> 4
-		n000012FB057BD658 -> n000012FB057BC8F0		// CallOrIndexer -> printf
-		n000012FB057BD2B0 -> n000012FB057BC548		// FuncDef -> end
-		n000012FB057E5D80 -> n000012FB057C7D50		// Sourcer -> FuncDef
-		n000012FB057C7D50 -> n000012FB057BE3C0		// FuncDef -> FuncSignature
-		n000012FB057BE3C0 -> n000012FB057BE4F8		// FuncSignature -> fib
-		n000012FB057BE4F8 -> n000012FB057BE288		// fib -> ListArgdef
-		n000012FB057BE288 -> n000012FB057BE018		// ListArgdef -> ArgDef
-		n000012FB057BE018 -> n000012FB057BDDA8		// ArgDef -> n
-		n000012FB057BE018 -> n000012FB057BDEE0		// ArgDef -> TypeRef
-		n000012FB057BDEE0 -> n000012FB057BDA00		// TypeRef -> int
-		n000012FB057C7D50 -> n000012FB057BED80		// FuncDef -> VarStatement
-		n000012FB057BED80 -> n000012FB057BE768		// VarStatement -> ListIdentifier
-		n000012FB057BE768 -> n000012FB057BE630		// ListIdentifier -> ex
-		n000012FB057BED80 -> n000012FB057BF128		// VarStatement -> TypeRef
-		n000012FB057BF128 -> n000012FB057BEFF0		// TypeRef -> Example
-		n000012FB057BEFF0 -> n000012FB057BEC48		// Example -> TypeRef
-		n000012FB057BEC48 -> n000012FB057BE9D8		// TypeRef -> int
-		n000012FB057BEFF0 -> n000012FB057BEEB8		// Example -> TypeRef
-		n000012FB057BEEB8 -> n000012FB057BEB10		// TypeRef -> int
-		n000012FB057C7D50 -> n000012FB057BF878		// FuncDef -> VarStatement
-		n000012FB057BF878 -> n000012FB057BF260		// VarStatement -> ListIdentifier
-		n000012FB057BF260 -> n000012FB057BE8A0		// ListIdentifier -> ex_cl
-		n000012FB057BF878 -> n000012FB057BFC20		// VarStatement -> TypeRef
-		n000012FB057BFC20 -> n000012FB057BFAE8		// TypeRef -> ExampleClass
-		n000012FB057BFAE8 -> n000012FB057BF740		// ExampleClass -> TypeRef
-		n000012FB057BF740 -> n000012FB057BF4D0		// TypeRef -> int
-		n000012FB057BFAE8 -> n000012FB057BF9B0		// ExampleClass -> TypeRef
-		n000012FB057BF9B0 -> n000012FB057BF608		// TypeRef -> int
-		n000012FB057C7D50 -> n000012FB057C0100		// FuncDef -> VarStatement
-		n000012FB057C0100 -> n000012FB057BFD58		// VarStatement -> ListIdentifier
-		n000012FB057BFD58 -> n000012FB057BF398		// ListIdentifier -> x
-		n000012FB057C0100 -> n000012FB057C0238		// VarStatement -> TypeRef
-		n000012FB057C0238 -> n000012FB057BFFC8		// TypeRef -> int
-		n000012FB057C7D50 -> n000012FB057C15B8		// FuncDef -> Expression
-		n000012FB057C15B8 -> n000012FB057C16F0		// Expression -> =
-		n000012FB057C16F0 -> n000012FB057C1348		// = -> 5
-		n000012FB057C16F0 -> n000012FB057C1210		// = -> .
-		n000012FB057C1210 -> n000012FB057C0FA0		// . -> ex
-		n000012FB057C1210 -> n000012FB057C0E68		// . -> x
-		n000012FB057C7D50 -> n000012FB057C2A70		// FuncDef -> Expression
-		n000012FB057C2A70 -> n000012FB057C4198		// Expression -> =
-		n000012FB057C4198 -> n000012FB057C42D0		// = -> .
-		n000012FB057C42D0 -> n000012FB057C2E18		// . -> ex_cl
-		n000012FB057C42D0 -> n000012FB057C3F28		// . -> CallOrIndexer
-		n000012FB057C3F28 -> n000012FB057C36A0		// CallOrIndexer -> ListExpr
-		n000012FB057C3F28 -> n000012FB057C2F50		// CallOrIndexer -> ShowMessage
-		n000012FB057C4198 -> n000012FB057C1A98		// = -> x
-		n000012FB057C7D50 -> n000012FB057C4F00		// FuncDef -> Expression
-		n000012FB057C4F00 -> n000012FB057C5788		// Expression -> =
-		n000012FB057C5788 -> n000012FB057C5650		// = -> .
-		n000012FB057C5650 -> n000012FB057C52A8		// . -> ex
-		n000012FB057C5650 -> n000012FB057C5518		// . -> x
-		n000012FB057C5788 -> n000012FB057C4540		// = -> x
-		n000012FB057C7D50 -> n000012FB057C7600		// FuncDef -> Expression
-		n000012FB057C7600 -> n000012FB057C7738		// Expression -> CallOrIndexer
-		n000012FB057C7738 -> n000012FB057C6EB0		// CallOrIndexer -> ListExpr
-		n000012FB057C6EB0 -> n000012FB057C6760		// ListExpr -> ex
-		n000012FB057C6EB0 -> n000012FB057C6B08		// ListExpr -> 5
-		n000012FB057C7738 -> n000012FB057C6628		// CallOrIndexer -> M
-		n000012FB057C7D50 -> n000012FB057C7E88		// FuncDef -> Expression
-		n000012FB057C7E88 -> n000012FB057C7AE0		// Expression -> x
-		n000012FB057C7D50 -> n000012FB057C79A8		// FuncDef -> end
-		n000012FB057E5D80 -> n000012FB057CA1E0		// Sourcer -> FuncDef
-		n000012FB057CA1E0 -> n000012FB057C8980		// FuncDef -> FuncSignature
-		n000012FB057C8980 -> n000012FB057C8AB8		// FuncSignature -> M
-		n000012FB057C8AB8 -> n000012FB057C8848		// M -> ListArgdef
-		n000012FB057C8848 -> n000012FB057C80F8		// ListArgdef -> ArgDef
-		n000012FB057C80F8 -> n000012FB057C7FC0		// ArgDef -> O
-		n000012FB057C8848 -> n000012FB057C85D8		// ListArgdef -> ArgDef
-		n000012FB057C85D8 -> n000012FB057C8368		// ArgDef -> n
-		n000012FB057C85D8 -> n000012FB057C84A0		// ArgDef -> TypeRef
-		n000012FB057C84A0 -> n000012FB057C8230		// TypeRef -> int
-		n000012FB057CA1E0 -> n000012FB057CA450		// FuncDef -> Expression
-		n000012FB057CA450 -> n000012FB057CA588		// Expression -> CallOrIndexer
-		n000012FB057CA588 -> n000012FB057C9D00		// CallOrIndexer -> ListExpr
-		n000012FB057C9D00 -> n000012FB057C9958		// ListExpr -> 7
-		n000012FB057CA588 -> n000012FB057C9820		// CallOrIndexer -> printf
-		n000012FB057CA1E0 -> n000012FB057C9478		// FuncDef -> end
-		n000012FB057E5D80 -> n000012FB057CC190		// Sourcer -> FuncDef
-		n000012FB057CC190 -> n000012FB057CA930		// FuncDef -> FuncSignature
-		n000012FB057CA930 -> n000012FB057CAA68		// FuncSignature -> error
-		n000012FB057CAA68 -> n000012FB057CA7F8		// error -> ListArgdef
-		n000012FB057CC190 -> n000012FB057CC400		// FuncDef -> Expression
-		n000012FB057CC400 -> n000012FB057CC538		// Expression -> CallOrIndexer
-		n000012FB057CC538 -> n000012FB057CBCB0		// CallOrIndexer -> ListExpr
-		n000012FB057CBCB0 -> n000012FB057CB908		// ListExpr -> 9
-		n000012FB057CC538 -> n000012FB057CB7D0		// CallOrIndexer -> printf
-		n000012FB057CC190 -> n000012FB057CB428		// FuncDef -> end
-		n000012FB057E5D80 -> n000012FB057DE9B8		// Sourcer -> FuncDef
-		n000012FB057DE9B8 -> n000012FB057CCDC0		// FuncDef -> FuncSignature
-		n000012FB057CCDC0 -> n000012FB057CCEF8		// FuncSignature -> printf
-		n000012FB057CCEF8 -> n000012FB057CCC88		// printf -> ListArgdef
-		n000012FB057CCC88 -> n000012FB057CCA18		// ListArgdef -> ArgDef
-		n000012FB057CCA18 -> n000012FB057CC7A8		// ArgDef -> res
-		n000012FB057CCA18 -> n000012FB057CC8E0		// ArgDef -> TypeRef
-		n000012FB057CC8E0 -> n000012FB057CC670		// TypeRef -> int
-		n000012FB057DE9B8 -> n000012FB057CD780		// FuncDef -> VarStatement
-		n000012FB057CD780 -> n000012FB057CD168		// VarStatement -> ListIdentifier
-		n000012FB057CD168 -> n000012FB057CD030		// ListIdentifier -> nextLine
-		n000012FB057CD168 -> n000012FB057CD2A0		// ListIdentifier -> revertedNum
-		n000012FB057CD168 -> n000012FB057CD3D8		// ListIdentifier -> tmp
-		n000012FB057CD780 -> n000012FB057CD8B8		// VarStatement -> TypeRef
-		n000012FB057CD8B8 -> n000012FB057CD648		// TypeRef -> int
-		n000012FB057DE9B8 -> n000012FB057CE3B0		// FuncDef -> Expression
-		n000012FB057CE3B0 -> n000012FB057CE890		// Expression -> =
-		n000012FB057CE890 -> n000012FB057CE4E8		// = -> 10
-		n000012FB057CE890 -> n000012FB057CDC60		// = -> nextLine
-		n000012FB057DE9B8 -> n000012FB057CF250		// FuncDef -> Expression
-		n000012FB057CF250 -> n000012FB057CF730		// Expression -> =
-		n000012FB057CF730 -> n000012FB057CF388		// = -> 0
-		n000012FB057CF730 -> n000012FB057CEB00		// = -> revertedNum
-		n000012FB057DE9B8 -> n000012FB057D59E8		// FuncDef -> WhileStatement
-		n000012FB057D59E8 -> n000012FB057D5C58		// WhileStatement -> Expression
-		n000012FB057D5C58 -> n000012FB057D0228		// Expression -> !=
-		n000012FB057D0228 -> n000012FB057D0498		// != -> 0
-		n000012FB057D0228 -> n000012FB057CF9A0		// != -> res
-		n000012FB057D59E8 -> n000012FB057D15A8		// WhileStatement -> Expression
-		n000012FB057D15A8 -> n000012FB057D1BC0		// Expression -> =
-		n000012FB057D1BC0 -> n000012FB057D1A88		// = -> *
-		n000012FB057D1A88 -> n000012FB057D1CF8		// * -> 10
-		n000012FB057D1A88 -> n000012FB057D1818		// * -> revertedNum
-		n000012FB057D1BC0 -> n000012FB057D0978		// = -> revertedNum
-		n000012FB057D59E8 -> n000012FB057D2CD0		// WhileStatement -> Expression
-		n000012FB057D2CD0 -> n000012FB057D32E8		// Expression -> =
-		n000012FB057D32E8 -> n000012FB057D31B0		// = -> 
-		n000012FB057D31B0 -> n000012FB057D3420		// > 10
-		n000012FB057D31B0 -> n000012FB057D2F40		// > res
-		n000012FB057D32E8 -> n000012FB057D20A0		// = -> tmp
-		n000012FB057D59E8 -> n000012FB057D43F8		// WhileStatement -> Expression
-		n000012FB057D43F8 -> n000012FB057D4A10		// Expression -> =
-		n000012FB057D4A10 -> n000012FB057D48D8		// = -> +
-		n000012FB057D48D8 -> n000012FB057D4B48		// + -> tmp
-		n000012FB057D48D8 -> n000012FB057D4668		// + -> revertedNum
-		n000012FB057D4A10 -> n000012FB057D37C8		// = -> revertedNum
-		n000012FB057D59E8 -> n000012FB057D5B20		// WhileStatement -> Expression
-		n000012FB057D5B20 -> n000012FB057D6138		// Expression -> =
-		n000012FB057D6138 -> n000012FB057D6000		// = -> /
-		n000012FB057D6000 -> n000012FB057D6270		// / -> 10
-		n000012FB057D6000 -> n000012FB057D5D90		// / -> res
-		n000012FB057D6138 -> n000012FB057D4EF0		// = -> res
-		n000012FB057DE9B8 -> n000012FB057DCA08		// FuncDef -> WhileStatement
-		n000012FB057DCA08 -> n000012FB057DCC78		// WhileStatement -> Expression
-		n000012FB057DCC78 -> n000012FB057D6FD8		// Expression -> !=
-		n000012FB057D6FD8 -> n000012FB057D7248		// != -> 0
-		n000012FB057D6FD8 -> n000012FB057D6750		// != -> revertedNum
-		n000012FB057DCA08 -> n000012FB057D8358		// WhileStatement -> Expression
-		n000012FB057D8358 -> n000012FB057D8970		// Expression -> =
-		n000012FB057D8970 -> n000012FB057D8838		// = -> 
-		n000012FB057D8838 -> n000012FB057D8AA8		// > 10
-		n000012FB057D8838 -> n000012FB057D85C8		// > revertedNum
-		n000012FB057D8970 -> n000012FB057D7728		// = -> tmp
-		n000012FB057DCA08 -> n000012FB057D9A80		// WhileStatement -> Expression
-		n000012FB057D9A80 -> n000012FB057DA098		// Expression -> =
-		n000012FB057DA098 -> n000012FB057D9F60		// = -> +
-		n000012FB057D9F60 -> n000012FB057DA1D0		// + -> 48
-		n000012FB057D9F60 -> n000012FB057D9CF0		// + -> tmp
-		n000012FB057DA098 -> n000012FB057D8E50		// = -> tmp
-		n000012FB057DCA08 -> n000012FB057DBA30		// WhileStatement -> Expression
-		n000012FB057DBA30 -> n000012FB057DBB68		// Expression -> CallOrIndexer
-		n000012FB057DBB68 -> n000012FB057DB2E0		// CallOrIndexer -> ListExpr
-		n000012FB057DB2E0 -> n000012FB057DAF38		// ListExpr -> tmp
-		n000012FB057DBB68 -> n000012FB057DAE00		// CallOrIndexer -> print
-		n000012FB057DCA08 -> n000012FB057DCB40		// WhileStatement -> Expression
-		n000012FB057DCB40 -> n000012FB057DD158		// Expression -> =
-		n000012FB057DD158 -> n000012FB057DD020		// = -> /
-		n000012FB057DD020 -> n000012FB057DD290		// / -> 10
-		n000012FB057DD020 -> n000012FB057DCDB0		// / -> revertedNum
-		n000012FB057DD158 -> n000012FB057DBF10		// = -> revertedNum
-		n000012FB057DE9B8 -> n000012FB057DEC28		// FuncDef -> Expression
-		n000012FB057DEC28 -> n000012FB057DED60		// Expression -> CallOrIndexer
-		n000012FB057DED60 -> n000012FB057DE4D8		// CallOrIndexer -> ListExpr
-		n000012FB057DE4D8 -> n000012FB057DE130		// ListExpr -> 10
-		n000012FB057DED60 -> n000012FB057DDFF8		// CallOrIndexer -> print
-		n000012FB057DE9B8 -> n000012FB057DDC50		// FuncDef -> end
-		n000012FB057E5D80 -> n000012FB057E4520		// Sourcer -> FuncDef
-		n000012FB057E4520 -> n000012FB057DF108		// FuncDef -> FuncSignature
-		n000012FB057DF108 -> n000012FB057DF240		// FuncSignature -> main
-		n000012FB057DF240 -> n000012FB057DEFD0		// main -> ListArgdef
-		n000012FB057E4520 -> n000012FB057DF858		// FuncDef -> VarStatement
-		n000012FB057DF858 -> n000012FB057DF4B0		// VarStatement -> ListIdentifier
-		n000012FB057DF4B0 -> n000012FB057DF378		// ListIdentifier -> i
-		n000012FB057DF858 -> n000012FB057DF990		// VarStatement -> TypeRef
-		n000012FB057DF990 -> n000012FB057DF720		// TypeRef -> int
-		n000012FB057E4520 -> n000012FB057E0488		// FuncDef -> Expression
-		n000012FB057E0488 -> n000012FB057E0968		// Expression -> =
-		n000012FB057E0968 -> n000012FB057E05C0		// = -> 0
-		n000012FB057E0968 -> n000012FB057DFD38		// = -> i
-		n000012FB057E4520 -> n000012FB057E5288		// FuncDef -> WhileStatement
-		n000012FB057E5288 -> n000012FB057E54F8		// WhileStatement -> Expression
-		n000012FB057E54F8 -> n000012FB057E1460		// Expression -> <
-		n000012FB057E1460 -> n000012FB057E16D0		// < -> 11
-		n000012FB057E1460 -> n000012FB057E0BD8		// < -> i
-		n000012FB057E5288 -> n000012FB057E42B0		// WhileStatement -> Expression
-		n000012FB057E42B0 -> n000012FB057E43E8		// Expression -> CallOrIndexer
-		n000012FB057E43E8 -> n000012FB057E3A28		// CallOrIndexer -> ListExpr
-		n000012FB057E3A28 -> n000012FB057E3B60		// ListExpr -> CallOrIndexer
-		n000012FB057E3B60 -> n000012FB057E32D8		// CallOrIndexer -> ListExpr
-		n000012FB057E32D8 -> n000012FB057E2F30		// ListExpr -> i
-		n000012FB057E3B60 -> n000012FB057E2DF8		// CallOrIndexer -> fib
-		n000012FB057E43E8 -> n000012FB057E2B88		// CallOrIndexer -> printf
-		n000012FB057E5288 -> n000012FB057E53C0		// WhileStatement -> Expression
-		n000012FB057E53C0 -> n000012FB057E59D8		// Expression -> =
-		n000012FB057E59D8 -> n000012FB057E58A0		// = -> +
-		n000012FB057E58A0 -> n000012FB057E5B10		// + -> 1
-		n000012FB057E58A0 -> n000012FB057E5630		// + -> i
-		n000012FB057E59D8 -> n000012FB057E4790		// = -> i
-		n000012FB057E4520 -> n000012FB057E0830		// FuncDef -> end
+		n0000127E7763D628 -> n0000127E776074D8		// Sourcer -> ClassDef
+		n0000127E776074D8 -> n0000127E776073A0		// ClassDef -> ExampleClass
+		n0000127E776074D8 -> n0000127E77607748		// ClassDef -> Parameter
+		n0000127E77607748 -> n0000127E77601BE0		// Parameter -> X
+		n0000127E77607748 -> n0000127E77601D18		// Parameter -> Y
+		n0000127E776074D8 -> n0000127E77607880		// ClassDef -> Base
+		n0000127E77607880 -> n0000127E776079B8		// Base -> Example
+		n0000127E776079B8 -> n0000127E77601F88		// Example -> TypeRef
+		n0000127E77601F88 -> n0000127E77601AA8		// TypeRef -> int
+		n0000127E776079B8 -> n0000127E776021F8		// Example -> TypeRef
+		n0000127E776021F8 -> n0000127E77601E50		// TypeRef -> int
+		n0000127E776074D8 -> n0000127E77607AF0		// ClassDef -> Member
+		n0000127E77607AF0 -> n0000127E77602330		// Member -> public
+		n0000127E77607AF0 -> n0000127E77602A80		// Member -> Field
+		n0000127E77602A80 -> n0000127E776025A0		// Field -> ListIdentifier
+		n0000127E776025A0 -> n0000127E77602468		// ListIdentifier -> z
+		n0000127E77602A80 -> n0000127E77602948		// Field -> TypeRef
+		n0000127E77602948 -> n0000127E776026D8		// TypeRef -> int
+		n0000127E77607AF0 -> n0000127E77602BB8		// Member -> public
+		n0000127E77607AF0 -> n0000127E77604A30		// Member -> FuncDef
+		n0000127E77604A30 -> n0000127E776031D0		// FuncDef -> FuncSignature
+		n0000127E776031D0 -> n0000127E77603308		// FuncSignature -> ShowMessage
+		n0000127E77603308 -> n0000127E77602E28		// ShowMessage -> ListArgdef
+		n0000127E776031D0 -> n0000127E77603098		// FuncSignature -> TypeRef
+		n0000127E77603098 -> n0000127E77602CF0		// TypeRef -> int
+		n0000127E77604A30 -> n0000127E77604CA0		// FuncDef -> Expression
+		n0000127E77604CA0 -> n0000127E77604DD8		// Expression -> CallOrIndexer
+		n0000127E77604DD8 -> n0000127E77604550		// CallOrIndexer -> ListExpr
+		n0000127E77604550 -> n0000127E776041A8		// ListExpr -> 1
+		n0000127E77604DD8 -> n0000127E77604070		// CallOrIndexer -> printf
+		n0000127E77604A30 -> n0000127E77603CC8		// FuncDef -> end
+		n0000127E77607AF0 -> n0000127E77605048		// Member -> public
+		n0000127E77607AF0 -> n0000127E77606EC0		// Member -> FuncDef
+		n0000127E77606EC0 -> n0000127E77605660		// FuncDef -> FuncSignature
+		n0000127E77605660 -> n0000127E77605798		// FuncSignature -> DoThing
+		n0000127E77605798 -> n0000127E776052B8		// DoThing -> ListArgdef
+		n0000127E77605660 -> n0000127E77605528		// FuncSignature -> TypeRef
+		n0000127E77605528 -> n0000127E77605180		// TypeRef -> int
+		n0000127E77606EC0 -> n0000127E77607130		// FuncDef -> Expression
+		n0000127E77607130 -> n0000127E77607268		// Expression -> CallOrIndexer
+		n0000127E77607268 -> n0000127E776069E0		// CallOrIndexer -> ListExpr
+		n0000127E776069E0 -> n0000127E77606638		// ListExpr -> 2
+		n0000127E77607268 -> n0000127E77606500		// CallOrIndexer -> printf
+		n0000127E77606EC0 -> n0000127E77606158		// FuncDef -> end
+		n0000127E7763D628 -> n0000127E7760D8C8		// Sourcer -> ClassDef
+		n0000127E7760D8C8 -> n0000127E7760D790		// ClassDef -> Example
+		n0000127E7760D8C8 -> n0000127E7760DB38		// ClassDef -> Parameter
+		n0000127E7760DB38 -> n0000127E77607C28		// Parameter -> A
+		n0000127E7760DB38 -> n0000127E77607D60		// Parameter -> B
+		n0000127E7760D8C8 -> n0000127E7760DC70		// ClassDef -> Member
+		n0000127E7760DC70 -> n0000127E77607E98		// Member -> public
+		n0000127E7760DC70 -> n0000127E776085E8		// Member -> Field
+		n0000127E776085E8 -> n0000127E77608108		// Field -> ListIdentifier
+		n0000127E77608108 -> n0000127E77607FD0		// ListIdentifier -> x
+		n0000127E776085E8 -> n0000127E776084B0		// Field -> TypeRef
+		n0000127E776084B0 -> n0000127E77608378		// TypeRef -> A
+		n0000127E7760DC70 -> n0000127E77608720		// Member -> public
+		n0000127E7760DC70 -> n0000127E77608E70		// Member -> Field
+		n0000127E77608E70 -> n0000127E77608990		// Field -> ListIdentifier
+		n0000127E77608990 -> n0000127E77608858		// ListIdentifier -> y
+		n0000127E77608E70 -> n0000127E77608D38		// Field -> TypeRef
+		n0000127E77608D38 -> n0000127E77608C00		// TypeRef -> B
+		n0000127E7760DC70 -> n0000127E77608FA8		// Member -> public
+		n0000127E7760DC70 -> n0000127E7760AE20		// Member -> FuncDef
+		n0000127E7760AE20 -> n0000127E776095C0		// FuncDef -> FuncSignature
+		n0000127E776095C0 -> n0000127E776096F8		// FuncSignature -> DoThing
+		n0000127E776096F8 -> n0000127E77609218		// DoThing -> ListArgdef
+		n0000127E776095C0 -> n0000127E77609488		// FuncSignature -> TypeRef
+		n0000127E77609488 -> n0000127E776090E0		// TypeRef -> int
+		n0000127E7760AE20 -> n0000127E7760B090		// FuncDef -> Expression
+		n0000127E7760B090 -> n0000127E7760B1C8		// Expression -> CallOrIndexer
+		n0000127E7760B1C8 -> n0000127E7760A940		// CallOrIndexer -> ListExpr
+		n0000127E7760A940 -> n0000127E7760A598		// ListExpr -> 3
+		n0000127E7760B1C8 -> n0000127E7760A460		// CallOrIndexer -> printf
+		n0000127E7760AE20 -> n0000127E7760A0B8		// FuncDef -> end
+		n0000127E7760DC70 -> n0000127E7760B438		// Member -> public
+		n0000127E7760DC70 -> n0000127E7760D2B0		// Member -> FuncDef
+		n0000127E7760D2B0 -> n0000127E7760BA50		// FuncDef -> FuncSignature
+		n0000127E7760BA50 -> n0000127E7760BB88		// FuncSignature -> DoOtherThing
+		n0000127E7760BB88 -> n0000127E7760B6A8		// DoOtherThing -> ListArgdef
+		n0000127E7760BA50 -> n0000127E7760B918		// FuncSignature -> TypeRef
+		n0000127E7760B918 -> n0000127E7760B570		// TypeRef -> int
+		n0000127E7760D2B0 -> n0000127E7760D520		// FuncDef -> Expression
+		n0000127E7760D520 -> n0000127E7760D658		// Expression -> CallOrIndexer
+		n0000127E7760D658 -> n0000127E7760CDD0		// CallOrIndexer -> ListExpr
+		n0000127E7760CDD0 -> n0000127E7760CA28		// ListExpr -> 4
+		n0000127E7760D658 -> n0000127E7760C8F0		// CallOrIndexer -> printf
+		n0000127E7760D2B0 -> n0000127E7760C548		// FuncDef -> end
+		n0000127E7763D628 -> n0000127E77617D50		// Sourcer -> FuncDef
+		n0000127E77617D50 -> n0000127E7760E3C0		// FuncDef -> FuncSignature
+		n0000127E7760E3C0 -> n0000127E7760E4F8		// FuncSignature -> helper
+		n0000127E7760E4F8 -> n0000127E7760E288		// helper -> ListArgdef
+		n0000127E7760E288 -> n0000127E7760E018		// ListArgdef -> ArgDef
+		n0000127E7760E018 -> n0000127E7760DDA8		// ArgDef -> n
+		n0000127E7760E018 -> n0000127E7760DEE0		// ArgDef -> TypeRef
+		n0000127E7760DEE0 -> n0000127E7760DA00		// TypeRef -> int
+		n0000127E77617D50 -> n0000127E7760ED80		// FuncDef -> VarStatement
+		n0000127E7760ED80 -> n0000127E7760E768		// VarStatement -> ListIdentifier
+		n0000127E7760E768 -> n0000127E7760E630		// ListIdentifier -> ex
+		n0000127E7760ED80 -> n0000127E7760F128		// VarStatement -> TypeRef
+		n0000127E7760F128 -> n0000127E7760EFF0		// TypeRef -> Example
+		n0000127E7760EFF0 -> n0000127E7760EC48		// Example -> TypeRef
+		n0000127E7760EC48 -> n0000127E7760E9D8		// TypeRef -> int
+		n0000127E7760EFF0 -> n0000127E7760EEB8		// Example -> TypeRef
+		n0000127E7760EEB8 -> n0000127E7760EB10		// TypeRef -> int
+		n0000127E77617D50 -> n0000127E7760F878		// FuncDef -> VarStatement
+		n0000127E7760F878 -> n0000127E7760F260		// VarStatement -> ListIdentifier
+		n0000127E7760F260 -> n0000127E7760E8A0		// ListIdentifier -> ex_cl
+		n0000127E7760F878 -> n0000127E7760FC20		// VarStatement -> TypeRef
+		n0000127E7760FC20 -> n0000127E7760FAE8		// TypeRef -> ExampleClass
+		n0000127E7760FAE8 -> n0000127E7760F740		// ExampleClass -> TypeRef
+		n0000127E7760F740 -> n0000127E7760F4D0		// TypeRef -> int
+		n0000127E7760FAE8 -> n0000127E7760F9B0		// ExampleClass -> TypeRef
+		n0000127E7760F9B0 -> n0000127E7760F608		// TypeRef -> int
+		n0000127E77617D50 -> n0000127E77610100		// FuncDef -> VarStatement
+		n0000127E77610100 -> n0000127E7760FD58		// VarStatement -> ListIdentifier
+		n0000127E7760FD58 -> n0000127E7760F398		// ListIdentifier -> x
+		n0000127E77610100 -> n0000127E77610238		// VarStatement -> TypeRef
+		n0000127E77610238 -> n0000127E7760FFC8		// TypeRef -> int
+		n0000127E77617D50 -> n0000127E776115B8		// FuncDef -> Expression
+		n0000127E776115B8 -> n0000127E776116F0		// Expression -> =
+		n0000127E776116F0 -> n0000127E77611348		// = -> 5
+		n0000127E776116F0 -> n0000127E77611210		// = -> .
+		n0000127E77611210 -> n0000127E77610FA0		// . -> ex
+		n0000127E77611210 -> n0000127E77610E68		// . -> x
+		n0000127E77617D50 -> n0000127E77612A70		// FuncDef -> Expression
+		n0000127E77612A70 -> n0000127E77614198		// Expression -> =
+		n0000127E77614198 -> n0000127E776142D0		// = -> .
+		n0000127E776142D0 -> n0000127E77612E18		// . -> ex_cl
+		n0000127E776142D0 -> n0000127E77613F28		// . -> CallOrIndexer
+		n0000127E77613F28 -> n0000127E776136A0		// CallOrIndexer -> ListExpr
+		n0000127E77613F28 -> n0000127E77612F50		// CallOrIndexer -> ShowMessage
+		n0000127E77614198 -> n0000127E77611A98		// = -> x
+		n0000127E77617D50 -> n0000127E77614F00		// FuncDef -> Expression
+		n0000127E77614F00 -> n0000127E77615788		// Expression -> =
+		n0000127E77615788 -> n0000127E77615650		// = -> .
+		n0000127E77615650 -> n0000127E776152A8		// . -> ex
+		n0000127E77615650 -> n0000127E77615518		// . -> x
+		n0000127E77615788 -> n0000127E77614540		// = -> x
+		n0000127E77617D50 -> n0000127E77617600		// FuncDef -> Expression
+		n0000127E77617600 -> n0000127E77617738		// Expression -> CallOrIndexer
+		n0000127E77617738 -> n0000127E77616EB0		// CallOrIndexer -> ListExpr
+		n0000127E77616EB0 -> n0000127E77616760		// ListExpr -> ex
+		n0000127E77616EB0 -> n0000127E77616B08		// ListExpr -> n
+		n0000127E77617738 -> n0000127E77616628		// CallOrIndexer -> M
+		n0000127E77617D50 -> n0000127E77617E88		// FuncDef -> Expression
+		n0000127E77617E88 -> n0000127E77617AE0		// Expression -> x
+		n0000127E77617D50 -> n0000127E776179A8		// FuncDef -> end
+		n0000127E7763D628 -> n0000127E7761F5F8		// Sourcer -> FuncDef
+		n0000127E7761F5F8 -> n0000127E77618710		// FuncDef -> FuncSignature
+		n0000127E77618710 -> n0000127E77618848		// FuncSignature -> fib
+		n0000127E77618848 -> n0000127E776185D8		// fib -> ListArgdef
+		n0000127E776185D8 -> n0000127E77618368		// ListArgdef -> ArgDef
+		n0000127E77618368 -> n0000127E776180F8		// ArgDef -> n
+		n0000127E77618368 -> n0000127E77618230		// ArgDef -> TypeRef
+		n0000127E77618230 -> n0000127E77617FC0		// TypeRef -> int
+		n0000127E7761F5F8 -> n0000127E776190D0		// FuncDef -> VarStatement
+		n0000127E776190D0 -> n0000127E77618AB8		// VarStatement -> ListIdentifier
+		n0000127E77618AB8 -> n0000127E77618980		// ListIdentifier -> ex
+		n0000127E776190D0 -> n0000127E77619478		// VarStatement -> TypeRef
+		n0000127E77619478 -> n0000127E77619340		// TypeRef -> Example
+		n0000127E77619340 -> n0000127E77618F98		// Example -> TypeRef
+		n0000127E77618F98 -> n0000127E77618D28		// TypeRef -> int
+		n0000127E77619340 -> n0000127E77619208		// Example -> TypeRef
+		n0000127E77619208 -> n0000127E77618E60		// TypeRef -> int
+		n0000127E7761F5F8 -> n0000127E77619BC8		// FuncDef -> VarStatement
+		n0000127E77619BC8 -> n0000127E776195B0		// VarStatement -> ListIdentifier
+		n0000127E776195B0 -> n0000127E77618BF0		// ListIdentifier -> ex_cl
+		n0000127E77619BC8 -> n0000127E77619F70		// VarStatement -> TypeRef
+		n0000127E77619F70 -> n0000127E77619E38		// TypeRef -> ExampleClass
+		n0000127E77619E38 -> n0000127E77619A90		// ExampleClass -> TypeRef
+		n0000127E77619A90 -> n0000127E77619820		// TypeRef -> int
+		n0000127E77619E38 -> n0000127E77619D00		// ExampleClass -> TypeRef
+		n0000127E77619D00 -> n0000127E77619958		// TypeRef -> int
+		n0000127E7761F5F8 -> n0000127E7761A450		// FuncDef -> VarStatement
+		n0000127E7761A450 -> n0000127E7761A0A8		// VarStatement -> ListIdentifier
+		n0000127E7761A0A8 -> n0000127E776196E8		// ListIdentifier -> x
+		n0000127E7761A450 -> n0000127E7761A588		// VarStatement -> TypeRef
+		n0000127E7761A588 -> n0000127E7761A318		// TypeRef -> int
+		n0000127E7761F5F8 -> n0000127E7761B908		// FuncDef -> Expression
+		n0000127E7761B908 -> n0000127E7761BA40		// Expression -> =
+		n0000127E7761BA40 -> n0000127E7761B698		// = -> 5
+		n0000127E7761BA40 -> n0000127E7761B560		// = -> .
+		n0000127E7761B560 -> n0000127E7761B2F0		// . -> ex
+		n0000127E7761B560 -> n0000127E7761B1B8		// . -> x
+		n0000127E7761F5F8 -> n0000127E7761C7A8		// FuncDef -> Expression
+		n0000127E7761C7A8 -> n0000127E7761D030		// Expression -> =
+		n0000127E7761D030 -> n0000127E7761CEF8		// = -> .
+		n0000127E7761CEF8 -> n0000127E7761CB50		// . -> ex
+		n0000127E7761CEF8 -> n0000127E7761CDC0		// . -> x
+		n0000127E7761D030 -> n0000127E7761BDE8		// = -> x
+		n0000127E7761F5F8 -> n0000127E7761EEA8		// FuncDef -> Expression
+		n0000127E7761EEA8 -> n0000127E7761EFE0		// Expression -> CallOrIndexer
+		n0000127E7761EFE0 -> n0000127E7761E758		// CallOrIndexer -> ListExpr
+		n0000127E7761E758 -> n0000127E7761E008		// ListExpr -> ex
+		n0000127E7761E758 -> n0000127E7761E3B0		// ListExpr -> n
+		n0000127E7761EFE0 -> n0000127E7761DED0		// CallOrIndexer -> M
+		n0000127E7761F5F8 -> n0000127E7761F730		// FuncDef -> Expression
+		n0000127E7761F730 -> n0000127E7761F388		// Expression -> x
+		n0000127E7761F5F8 -> n0000127E7761F250		// FuncDef -> end
+		n0000127E7763D628 -> n0000127E77621A88		// Sourcer -> FuncDef
+		n0000127E77621A88 -> n0000127E77620228		// FuncDef -> FuncSignature
+		n0000127E77620228 -> n0000127E77620360		// FuncSignature -> M
+		n0000127E77620360 -> n0000127E776200F0		// M -> ListArgdef
+		n0000127E776200F0 -> n0000127E7761F9A0		// ListArgdef -> ArgDef
+		n0000127E7761F9A0 -> n0000127E7761F868		// ArgDef -> O
+		n0000127E776200F0 -> n0000127E7761FE80		// ListArgdef -> ArgDef
+		n0000127E7761FE80 -> n0000127E7761FC10		// ArgDef -> n
+		n0000127E7761FE80 -> n0000127E7761FD48		// ArgDef -> TypeRef
+		n0000127E7761FD48 -> n0000127E7761FAD8		// TypeRef -> int
+		n0000127E77621A88 -> n0000127E77621CF8		// FuncDef -> Expression
+		n0000127E77621CF8 -> n0000127E77621E30		// Expression -> CallOrIndexer
+		n0000127E77621E30 -> n0000127E776215A8		// CallOrIndexer -> ListExpr
+		n0000127E776215A8 -> n0000127E77621200		// ListExpr -> 7
+		n0000127E77621E30 -> n0000127E776210C8		// CallOrIndexer -> printf
+		n0000127E77621A88 -> n0000127E77620D20		// FuncDef -> end
+		n0000127E7763D628 -> n0000127E77623A38		// Sourcer -> FuncDef
+		n0000127E77623A38 -> n0000127E776221D8		// FuncDef -> FuncSignature
+		n0000127E776221D8 -> n0000127E77622310		// FuncSignature -> error
+		n0000127E77622310 -> n0000127E776220A0		// error -> ListArgdef
+		n0000127E77623A38 -> n0000127E77623CA8		// FuncDef -> Expression
+		n0000127E77623CA8 -> n0000127E77623DE0		// Expression -> CallOrIndexer
+		n0000127E77623DE0 -> n0000127E77623558		// CallOrIndexer -> ListExpr
+		n0000127E77623558 -> n0000127E776231B0		// ListExpr -> 9
+		n0000127E77623DE0 -> n0000127E77623078		// CallOrIndexer -> printf
+		n0000127E77623A38 -> n0000127E77622CD0		// FuncDef -> end
+		n0000127E7763D628 -> n0000127E77636260		// Sourcer -> FuncDef
+		n0000127E77636260 -> n0000127E77624668		// FuncDef -> FuncSignature
+		n0000127E77624668 -> n0000127E776247A0		// FuncSignature -> printf
+		n0000127E776247A0 -> n0000127E77624530		// printf -> ListArgdef
+		n0000127E77624530 -> n0000127E776242C0		// ListArgdef -> ArgDef
+		n0000127E776242C0 -> n0000127E77624050		// ArgDef -> res
+		n0000127E776242C0 -> n0000127E77624188		// ArgDef -> TypeRef
+		n0000127E77624188 -> n0000127E77623F18		// TypeRef -> int
+		n0000127E77636260 -> n0000127E77625028		// FuncDef -> VarStatement
+		n0000127E77625028 -> n0000127E77624A10		// VarStatement -> ListIdentifier
+		n0000127E77624A10 -> n0000127E776248D8		// ListIdentifier -> nextLine
+		n0000127E77624A10 -> n0000127E77624B48		// ListIdentifier -> revertedNum
+		n0000127E77624A10 -> n0000127E77624C80		// ListIdentifier -> tmp
+		n0000127E77625028 -> n0000127E77625160		// VarStatement -> TypeRef
+		n0000127E77625160 -> n0000127E77624EF0		// TypeRef -> int
+		n0000127E77636260 -> n0000127E77625C58		// FuncDef -> Expression
+		n0000127E77625C58 -> n0000127E77626138		// Expression -> =
+		n0000127E77626138 -> n0000127E77625D90		// = -> 10
+		n0000127E77626138 -> n0000127E77625508		// = -> nextLine
+		n0000127E77636260 -> n0000127E77626AF8		// FuncDef -> Expression
+		n0000127E77626AF8 -> n0000127E77626FD8		// Expression -> =
+		n0000127E77626FD8 -> n0000127E77626C30		// = -> 0
+		n0000127E77626FD8 -> n0000127E776263A8		// = -> revertedNum
+		n0000127E77636260 -> n0000127E7762D290		// FuncDef -> WhileStatement
+		n0000127E7762D290 -> n0000127E7762D500		// WhileStatement -> Expression
+		n0000127E7762D500 -> n0000127E77627AD0		// Expression -> !=
+		n0000127E77627AD0 -> n0000127E77627D40		// != -> 0
+		n0000127E77627AD0 -> n0000127E77627248		// != -> res
+		n0000127E7762D290 -> n0000127E77628E50		// WhileStatement -> Expression
+		n0000127E77628E50 -> n0000127E77629468		// Expression -> =
+		n0000127E77629468 -> n0000127E77629330		// = -> *
+		n0000127E77629330 -> n0000127E776295A0		// * -> 10
+		n0000127E77629330 -> n0000127E776290C0		// * -> revertedNum
+		n0000127E77629468 -> n0000127E77628220		// = -> revertedNum
+		n0000127E7762D290 -> n0000127E7762A578		// WhileStatement -> Expression
+		n0000127E7762A578 -> n0000127E7762AB90		// Expression -> =
+		n0000127E7762AB90 -> n0000127E7762AA58		// = -> 
+		n0000127E7762AA58 -> n0000127E7762ACC8		// > 10
+		n0000127E7762AA58 -> n0000127E7762A7E8		// > res
+		n0000127E7762AB90 -> n0000127E77629948		// = -> tmp
+		n0000127E7762D290 -> n0000127E7762BCA0		// WhileStatement -> Expression
+		n0000127E7762BCA0 -> n0000127E7762C2B8		// Expression -> =
+		n0000127E7762C2B8 -> n0000127E7762C180		// = -> +
+		n0000127E7762C180 -> n0000127E7762C3F0		// + -> tmp
+		n0000127E7762C180 -> n0000127E7762BF10		// + -> revertedNum
+		n0000127E7762C2B8 -> n0000127E7762B070		// = -> revertedNum
+		n0000127E7762D290 -> n0000127E7762D3C8		// WhileStatement -> Expression
+		n0000127E7762D3C8 -> n0000127E7762D9E0		// Expression -> =
+		n0000127E7762D9E0 -> n0000127E7762D8A8		// = -> /
+		n0000127E7762D8A8 -> n0000127E7762DB18		// / -> 10
+		n0000127E7762D8A8 -> n0000127E7762D638		// / -> res
+		n0000127E7762D9E0 -> n0000127E7762C798		// = -> res
+		n0000127E77636260 -> n0000127E776342B0		// FuncDef -> WhileStatement
+		n0000127E776342B0 -> n0000127E77634520		// WhileStatement -> Expression
+		n0000127E77634520 -> n0000127E7762E880		// Expression -> !=
+		n0000127E7762E880 -> n0000127E7762EAF0		// != -> 0
+		n0000127E7762E880 -> n0000127E7762DFF8		// != -> revertedNum
+		n0000127E776342B0 -> n0000127E7762FC00		// WhileStatement -> Expression
+		n0000127E7762FC00 -> n0000127E77630218		// Expression -> =
+		n0000127E77630218 -> n0000127E776300E0		// = -> 
+		n0000127E776300E0 -> n0000127E77630350		// > 10
+		n0000127E776300E0 -> n0000127E7762FE70		// > revertedNum
+		n0000127E77630218 -> n0000127E7762EFD0		// = -> tmp
+		n0000127E776342B0 -> n0000127E77631328		// WhileStatement -> Expression
+		n0000127E77631328 -> n0000127E77631940		// Expression -> =
+		n0000127E77631940 -> n0000127E77631808		// = -> +
+		n0000127E77631808 -> n0000127E77631A78		// + -> 48
+		n0000127E77631808 -> n0000127E77631598		// + -> tmp
+		n0000127E77631940 -> n0000127E776306F8		// = -> tmp
+		n0000127E776342B0 -> n0000127E776332D8		// WhileStatement -> Expression
+		n0000127E776332D8 -> n0000127E77633410		// Expression -> CallOrIndexer
+		n0000127E77633410 -> n0000127E77632B88		// CallOrIndexer -> ListExpr
+		n0000127E77632B88 -> n0000127E776327E0		// ListExpr -> tmp
+		n0000127E77633410 -> n0000127E776326A8		// CallOrIndexer -> print
+		n0000127E776342B0 -> n0000127E776343E8		// WhileStatement -> Expression
+		n0000127E776343E8 -> n0000127E77634A00		// Expression -> =
+		n0000127E77634A00 -> n0000127E776348C8		// = -> /
+		n0000127E776348C8 -> n0000127E77634B38		// / -> 10
+		n0000127E776348C8 -> n0000127E77634658		// / -> revertedNum
+		n0000127E77634A00 -> n0000127E776337B8		// = -> revertedNum
+		n0000127E77636260 -> n0000127E776364D0		// FuncDef -> Expression
+		n0000127E776364D0 -> n0000127E77636608		// Expression -> CallOrIndexer
+		n0000127E77636608 -> n0000127E77635D80		// CallOrIndexer -> ListExpr
+		n0000127E77635D80 -> n0000127E776359D8		// ListExpr -> 10
+		n0000127E77636608 -> n0000127E776358A0		// CallOrIndexer -> print
+		n0000127E77636260 -> n0000127E776354F8		// FuncDef -> end
+		n0000127E7763D628 -> n0000127E7763BDC8		// Sourcer -> FuncDef
+		n0000127E7763BDC8 -> n0000127E776369B0		// FuncDef -> FuncSignature
+		n0000127E776369B0 -> n0000127E77636AE8		// FuncSignature -> main
+		n0000127E77636AE8 -> n0000127E77636878		// main -> ListArgdef
+		n0000127E7763BDC8 -> n0000127E77637100		// FuncDef -> VarStatement
+		n0000127E77637100 -> n0000127E77636D58		// VarStatement -> ListIdentifier
+		n0000127E77636D58 -> n0000127E77636C20		// ListIdentifier -> i
+		n0000127E77637100 -> n0000127E77637238		// VarStatement -> TypeRef
+		n0000127E77637238 -> n0000127E77636FC8		// TypeRef -> int
+		n0000127E7763BDC8 -> n0000127E77637D30		// FuncDef -> Expression
+		n0000127E77637D30 -> n0000127E77638210		// Expression -> =
+		n0000127E77638210 -> n0000127E77637E68		// = -> 0
+		n0000127E77638210 -> n0000127E776375E0		// = -> i
+		n0000127E7763BDC8 -> n0000127E7763CB30		// FuncDef -> WhileStatement
+		n0000127E7763CB30 -> n0000127E7763CDA0		// WhileStatement -> Expression
+		n0000127E7763CDA0 -> n0000127E77638D08		// Expression -> <
+		n0000127E77638D08 -> n0000127E77638F78		// < -> 5
+		n0000127E77638D08 -> n0000127E77638480		// < -> i
+		n0000127E7763CB30 -> n0000127E7763BB58		// WhileStatement -> Expression
+		n0000127E7763BB58 -> n0000127E7763BC90		// Expression -> CallOrIndexer
+		n0000127E7763BC90 -> n0000127E7763B2D0		// CallOrIndexer -> ListExpr
+		n0000127E7763B2D0 -> n0000127E7763B408		// ListExpr -> CallOrIndexer
+		n0000127E7763B408 -> n0000127E7763AB80		// CallOrIndexer -> ListExpr
+		n0000127E7763AB80 -> n0000127E7763A7D8		// ListExpr -> 5
+		n0000127E7763B408 -> n0000127E7763A6A0		// CallOrIndexer -> helper
+		n0000127E7763BC90 -> n0000127E7763A430		// CallOrIndexer -> printf
+		n0000127E7763CB30 -> n0000127E7763CC68		// WhileStatement -> Expression
+		n0000127E7763CC68 -> n0000127E7763D280		// Expression -> =
+		n0000127E7763D280 -> n0000127E7763D148		// = -> +
+		n0000127E7763D148 -> n0000127E7763D3B8		// + -> 1
+		n0000127E7763D148 -> n0000127E7763CED8		// + -> i
+		n0000127E7763D280 -> n0000127E7763C038		// = -> i
+		n0000127E7763BDC8 -> n0000127E776380D8		// FuncDef -> end
 
 }

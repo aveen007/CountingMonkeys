@@ -485,7 +485,12 @@ instruction init ={ 0001 1111,imm16 as target }{
 	ebp = esp;
 	ip = ptr;
   };
-    instruction check_vtable = { 0010 0101, imm16 as func } {
+    instruction check_vtable = { 0010 0101 } {
+		sp=sp + 2;
+		let type=m_stack:2[sp];//pop type
+		sp=sp + 2;
+		let func = m_stack:2[sp];//pop value	
+		
 		sp= sp + 2; // pop the pointer to the value in ram
 		let ptr= m_stack:2[sp];		
 		let y = ram:2[ptr];
@@ -502,7 +507,7 @@ instruction init ={ 0001 1111,imm16 as target }{
 			found = 1;
 			m_stack[sp]= ram:2[ptr - 4];
 			sp = sp - 2;// after this I need some for loop to check all the funcs
-			ip = ip + 3;
+			ip = ip + 1;
 			break;
 			}
 			y = y - 1;
@@ -512,7 +517,7 @@ instruction init ={ 0001 1111,imm16 as target }{
 			sp = sp - 2;// after this I need some for loop to check all the funcs
 		
 		}
-		ip = ip + 3;
+		ip = ip + 1;
 		
   };
 mnemonics:
@@ -540,7 +545,7 @@ mnemonics:
   mnemonic read();
   mnemonic write();
   mnemonic jmp_emp(ptr) "{1}";
-  mnemonic check_vtable (func) "{1}";
+  mnemonic check_vtable () ;
   mnemonic push_sf (value) "{1}" ;
   mnemonic pop_vtable (value) "{1}" ;
   mnemonic pop_sf () ;
