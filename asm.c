@@ -25,10 +25,12 @@ int global_func_count = 0;
 
 #define push_sf() mnemonic_0("push_sf")
 #define push_hf() mnemonic_0("push_hf")
+#define popOut() mnemonic_0("popOut")
 
 #define pop_sf() mnemonic_0("pop_sf")
 #define pop_hf() mnemonic_0("pop_hf")
 #define pop_vtable(value) mnemonic_1("pop_vtable", value)
+#define check_vtable(value) mnemonic_1("check_vtable", value)
 
 #define call(value) mnemonic_1("call", value)
 #define ret() mnemonic_0("ret")
@@ -591,6 +593,49 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 				}
 				read();
 			}
+			else if (strcmp(tree->value.operator,"M") == 0) {
+					printf("haha");
+					translateOT(tree->operands[0], fileName, 0); // this puts the value and type of the object on the stack
+
+					load() // load from heap 0, as in get vtable ptr
+						check_vtable(tree->operands[1]->value.operand)
+						char* error_label = labelName();
+						char* call_label = labelName();
+						char* end_label = labelName();
+						jz(error_label)
+						jump(call_label)
+						// put a label inside which there is call from stack
+						ret()
+						put_label(error_label)
+						call("error")
+						jump(end_label)
+						
+						put_label(call_label)
+						popOut()
+						call_from_stack()
+						jump(end_label)
+						put_label(end_label)
+
+						// I will make it return either the address or 0 
+						// if I get -1 I will jump zero to a label that will call error print
+						// otherwise I will call the address
+						//add_mem_imm(funcOffset) // get the func in vtable
+						//funcOffset = 0;
+						//load()// get the func
+						//pop()// pop filler type value
+						//call_from_stack()
+						//wide_store()
+						// 
+						// 
+
+						//get vtable of object
+						// get the first param which has the number of methods
+						// check each method with the number we have 
+						// jump to printf yes or printf error
+					//special function :)
+
+				
+			}
 			else if (strcmp(tree->value.operator,"=.") == 0) {
 			// read from field
 				//TODO: function call from inside the class 
@@ -966,6 +1011,8 @@ int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, c
 			}
 		
 		translateCfg(subroutines[i]->cfg, NULL, fileName);
+		
+		
 		if (strcmp(subroutines[i]->name, "main") != 0) {
 			//here I want to take the last variable which I put on top of the stack and put it inside the return label and push that to the stack instead
 			//char* lab = labelName();

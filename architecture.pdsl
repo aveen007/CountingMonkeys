@@ -48,8 +48,7 @@ instructions:
   };
 
   instruction popOut = { 0000 0010 } {
-    sp = sp + 2;        // Increment stack pointer
-    outp = m_stack:2[sp]; // Retrieve value from stack to standard output
+    sp = sp - 2;        // Increment stack pointer
     ip = ip + 1;        // Increment instruction pointer
   };
 
@@ -486,6 +485,36 @@ instruction init ={ 0001 1111,imm16 as target }{
 	ebp = esp;
 	ip = ptr;
   };
+    instruction check_vtable = { 0010 0101, imm16 as func } {
+		sp= sp + 2; // pop the pointer to the value in ram
+		let ptr= m_stack:2[sp];		
+		let y = ram:2[ptr];
+		
+		
+		
+		ptr = ptr + 4;
+		let found = 0;
+		while y > 0 do{
+		    ptr = ptr + 8;
+			let value = ram:2[ptr];
+			if value == func then
+			{
+			found = 1;
+			m_stack[sp]= ram:2[ptr - 4];
+			sp = sp - 2;// after this I need some for loop to check all the funcs
+			ip = ip + 3;
+			break;
+			}
+			y = y - 1;
+			}
+		if found == 0 then {
+			m_stack[sp]= 0;
+			sp = sp - 2;// after this I need some for loop to check all the funcs
+		
+		}
+		ip = ip + 3;
+		
+  };
 mnemonics:
   mnemonic init for init(target) "{1}";
   mnemonic push (value) "{1}";
@@ -511,7 +540,7 @@ mnemonics:
   mnemonic read();
   mnemonic write();
   mnemonic jmp_emp(ptr) "{1}";
-  
+  mnemonic check_vtable (func) "{1}";
   mnemonic push_sf (value) "{1}" ;
   mnemonic pop_vtable (value) "{1}" ;
   mnemonic pop_sf () ;

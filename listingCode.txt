@@ -23,8 +23,6 @@ ExampleClass_ShowMessage:
 	call printf
 	ret
 ExampleClass_DoThing:
-	sub_s 1
-	wide_store
 	push 2
 	push 2
 	pop_sf
@@ -32,8 +30,6 @@ ExampleClass_DoThing:
 	call printf
 	ret
 Example_DoThing:
-	sub_s 1
-	wide_store
 	push 3
 	push 2
 	pop_sf
@@ -41,8 +37,6 @@ Example_DoThing:
 	call printf
 	ret
 Example_DoOtherThing:
-	sub_s 1
-	wide_store
 	push 4
 	push 2
 	pop_sf
@@ -96,8 +90,41 @@ fib:
 	load
 	add_s 3
 	wide_store
+	add_s 1
+	load
+	load
+	check_vtable 5
+	jz label_9
+	jump label_10
+	ret
+label_9:
+	call error
+	jump label_11
+label_10:
+	popOut
+	call_from_stack
+	jump label_11
+label_11:
 	add_s 3
 	load
+	ret
+M:
+	sub_s 1
+	wide_store
+	sub_s 2
+	wide_store
+	push 7
+	push 2
+	pop_sf
+	pop_sf
+	call printf
+	ret
+error:
+	push 9
+	push 2
+	pop_sf
+	pop_sf
+	call printf
 	ret
 printf:
 	sub_s 1
@@ -129,22 +156,22 @@ printf:
 	add_s 2
 	wide_store
 		;while
-label_11:
+label_18:
 	push 0
 	push 2
 	sub_s 1
 	load
 	wide_sub
 	pop
-	jz label_13
+	jz label_20
 	push 1
 		;false branch
-	jump label_14
-label_13:
+	jump label_21
+label_20:
 	push 0
 		;true branch
-label_14:
-	jz label_15
+label_21:
+	jz label_22
 		;while body
 	push 10
 	push 2
@@ -174,26 +201,26 @@ label_14:
 	wide_div
 	sub_s 1
 	wide_store
-	jump label_11
-label_15:
+	jump label_18
+label_22:
 		;end while
 		;while
-label_19:
+label_26:
 	push 0
 	push 2
 	add_s 2
 	load
 	wide_sub
 	pop
-	jz label_21
+	jz label_28
 	push 1
 		;false branch
-	jump label_22
-label_21:
+	jump label_29
+label_28:
 	push 0
 		;true branch
-label_22:
-	jz label_23
+label_29:
+	jz label_30
 		;while body
 	push 10
 	push 2
@@ -220,8 +247,8 @@ label_22:
 	wide_div
 	add_s 2
 	wide_store
-	jump label_19
-label_23:
+	jump label_26
+label_30:
 		;end while
 	push 10
 	push 2
@@ -240,22 +267,22 @@ main:
 	add_s 1
 	wide_store
 		;while
-label_29:
+label_36:
 	push 11
 	push 2
 	add_s 1
 	load
 	wide_sub
 	pop
-	jlt label_31
+	jlt label_38
 	push 0
 		;false branch
-	jump label_32
-label_31:
+	jump label_39
+label_38:
 	push 1
 		;true branch
-label_32:
-	jz label_33
+label_39:
+	jz label_40
 		;while body
 	add_s 1
 	load
@@ -272,8 +299,8 @@ label_32:
 	wide_add
 	add_s 1
 	wide_store
-	jump label_29
-label_33:
+	jump label_36
+label_40:
 		;end while
 	jump halt
 halt:

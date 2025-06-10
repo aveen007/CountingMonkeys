@@ -7,7 +7,7 @@ class ExampleClass (X, Y) extends Example (int , int)
        
        printf(1);
     end function
-    public function DoThing(b as X) as int       
+    public function DoThing() as int       
         printf(2);
     end function
 end class
@@ -15,11 +15,11 @@ class Example (A, B)
 
     public x as A
     public y as B
-    public function DoThing(b as B) as int       
+    public function DoThing() as int       
        printf(3);
 
     end function
-     public function DoOtherThing(b as B) as int       
+     public function DoOtherThing() as int       
        printf(4);
 
     end function
@@ -33,7 +33,14 @@ function fib(n as int)
   ex.x = 5;
   x = ex_cl.ShowMessage();
   x = ex.x; 
+  M(ex, 5);
   x;
+end function
+function M(O, n as int)
+ printf(7);
+end function
+function error()
+ printf(9);
 end function
  
 function printf(res as int)
