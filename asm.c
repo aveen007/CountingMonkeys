@@ -252,8 +252,9 @@ void check_type(char* operand,char * fileName, int isAssignment) {
 			else {
 				sub_s(-1*offset)
 			}
+			
 			if (isAssignment == 0) {
-		load()// so load takes the pointer from the top of the stack and pushes the 
+				load()// so load takes the pointer from the top of the stack and pushes the 
 			// type and value of the var
 			// so if it's not assignement we want those values and we want to pop
 			// the pointer
@@ -426,6 +427,13 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 			else if (strcmp(tree->value.operator, "=") == 0) {
 				for (int i = 0; i < tree->cntOperands; i++) {
 					translateOT(tree->operands[i], fileName, 1);
+					Type* varType = findVarType(tree->operands[i]->value.operand);
+					if (varType) {
+
+					if (varType->def&& i==0) {
+					load()
+					}
+					}
 				}
 				isAssignement = 0;
 			    // find offset of the var
@@ -594,7 +602,6 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 				read();
 			}
 			else if (strcmp(tree->value.operator,"M") == 0) {
-					printf("haha");
 					translateOT(tree->operands[0], fileName, 0); // this puts the value and type of the object on the stack
 
 					load() // load from heap 0, as in get vtable ptr

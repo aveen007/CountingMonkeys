@@ -16,34 +16,188 @@ vtable_Example:
     dd Example_DoOtherThing
     dd 5
 ExampleClass_ShowMessage:
-	push 1
-	push 2
-	pop_sf
-	pop_sf
-	call printf
-	ret
-ExampleClass_DoThing:
-	push 2
-	push 2
-	pop_sf
-	pop_sf
-	call printf
-	ret
-Example_DoThing:
 	push 3
 	push 2
 	pop_sf
 	pop_sf
 	call printf
 	ret
-Example_DoOtherThing:
+ExampleClass_DoThing:
+	push 1
+	push 2
+	pop_sf
+	pop_sf
+	call printf
+	ret
+Example_DoThing:
 	push 4
 	push 2
 	pop_sf
 	pop_sf
 	call printf
 	ret
+Example_DoOtherThing:
+	push 5
+	push 2
+	pop_sf
+	pop_sf
+	call printf
+	ret
 helper:
+	sub_s 1
+	wide_store
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	push_hf
+	pop_vtable vtable_Example
+	pop_hf
+	pop_hf
+	pop_hf
+	pop_hf
+	add_s 1
+	wide_store
+	push_hf
+	pop_vtable vtable_ExampleClass
+	pop_hf
+	pop_hf
+	add_s 2
+	wide_store
+	push 0
+	push 2
+	add_s 3
+	wide_store
+	add_s 1
+	load
+	load
+	sub_s 1
+	load
+	check_vtable
+	jz label_8
+	jump label_9
+	ret
+label_8:
+	call error
+	jump label_10
+label_9:
+	call_from_stack
+	jump label_10
+label_10:
+	push 10
+	push 2
+	pop
+	write
+	add_s 3
+	load
+	ret
+helper2:
+	sub_s 1
+	wide_store
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	push_hf
+	pop_vtable vtable_Example
+	pop_hf
+	pop_hf
+	pop_hf
+	pop_hf
+	add_s 1
+	wide_store
+	push_hf
+	pop_vtable vtable_ExampleClass
+	pop_hf
+	pop_hf
+	add_s 2
+	wide_store
+	push 0
+	push 2
+	add_s 3
+	wide_store
+	add_s 2
+	load
+	load
+	sub_s 1
+	load
+	check_vtable
+	jz label_12
+	jump label_13
+	ret
+label_12:
+	call error
+	jump label_14
+label_13:
+	call_from_stack
+	jump label_14
+label_14:
+	push 10
+	push 2
+	pop
+	write
+	add_s 3
+	load
+	ret
+helper3:
+	sub_s 1
+	wide_store
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	pop_sf
+	push_hf
+	pop_vtable vtable_Example
+	pop_hf
+	pop_hf
+	pop_hf
+	pop_hf
+	add_s 1
+	wide_store
+	push_hf
+	pop_vtable vtable_ExampleClass
+	pop_hf
+	pop_hf
+	add_s 2
+	wide_store
+	push 0
+	push 2
+	add_s 3
+	wide_store
+	add_s 1
+	load
+	add_s 2
+	wide_store
+	add_s 2
+	load
+	load
+	sub_s 1
+	load
+	check_vtable
+	jz label_16
+	jump label_17
+	ret
+label_16:
+	call error
+	jump label_18
+label_17:
+	call_from_stack
+	jump label_18
+label_18:
+	push 10
+	push 2
+	pop
+	write
+	add_s 3
+	load
+	ret
+fib:
 	sub_s 1
 	wide_store
 	pop_sf
@@ -96,74 +250,16 @@ helper:
 	sub_s 1
 	load
 	check_vtable
-	jz label_9
-	jump label_10
+	jz label_21
+	jump label_22
 	ret
-label_9:
+label_21:
 	call error
-	jump label_11
-label_10:
+	jump label_23
+label_22:
 	call_from_stack
-	jump label_11
-label_11:
-	add_s 3
-	load
-	ret
-fib:
-	sub_s 1
-	wide_store
-	pop_sf
-	pop_sf
-	pop_sf
-	pop_sf
-	pop_sf
-	pop_sf
-	push_hf
-	pop_vtable vtable_Example
-	pop_hf
-	pop_hf
-	pop_hf
-	pop_hf
-	add_s 1
-	wide_store
-	push_hf
-	pop_vtable vtable_ExampleClass
-	pop_hf
-	pop_hf
-	add_s 2
-	wide_store
-	push 0
-	push 2
-	add_s 3
-	wide_store
-	push 5
-	push 2
-	add_s 1
-	load
-	add_mem_imm 1
-	wide_store
-	add_s 1
-	load
-	add_mem_imm 1
-	load
-	add_s 3
-	wide_store
-	add_s 1
-	load
-	load
-	sub_s 1
-	load
-	check_vtable
-	jz label_13
-	jump label_14
-	ret
-label_13:
-	call error
-	jump label_15
-label_14:
-	call_from_stack
-	jump label_15
-label_15:
+	jump label_23
+label_23:
 	add_s 3
 	load
 	ret
@@ -179,11 +275,150 @@ M:
 	call printf
 	ret
 error:
-	push 9
+	push 109
 	push 2
-	pop_sf
-	pop_sf
-	call printf
+	pop
+	write
+	push 101
+	push 2
+	pop
+	write
+	push 116
+	push 2
+	pop
+	write
+	push 104
+	push 2
+	pop
+	write
+	push 111
+	push 2
+	pop
+	write
+	push 100
+	push 2
+	pop
+	write
+	push 32
+	push 2
+	pop
+	write
+	push 100
+	push 2
+	pop
+	write
+	push 111
+	push 2
+	pop
+	write
+	push 101
+	push 2
+	pop
+	write
+	push 115
+	push 2
+	pop
+	write
+	push 32
+	push 2
+	pop
+	write
+	push 110
+	push 2
+	pop
+	write
+	push 111
+	push 2
+	pop
+	write
+	push 116
+	push 2
+	pop
+	write
+	push 32
+	push 2
+	pop
+	write
+	push 101
+	push 2
+	pop
+	write
+	push 120
+	push 2
+	pop
+	write
+	push 105
+	push 2
+	pop
+	write
+	push 115
+	push 2
+	pop
+	write
+	push 116
+	push 2
+	pop
+	write
+	push 32
+	push 2
+	pop
+	write
+	push 105
+	push 2
+	pop
+	write
+	push 110
+	push 2
+	pop
+	write
+	push 32
+	push 2
+	pop
+	write
+	push 116
+	push 2
+	pop
+	write
+	push 104
+	push 2
+	pop
+	write
+	push 105
+	push 2
+	pop
+	write
+	push 115
+	push 2
+	pop
+	write
+	push 32
+	push 2
+	pop
+	write
+	push 99
+	push 2
+	pop
+	write
+	push 108
+	push 2
+	pop
+	write
+	push 97
+	push 2
+	pop
+	write
+	push 115
+	push 2
+	pop
+	write
+	push 115
+	push 2
+	pop
+	write
+	push 10
+	push 2
+	pop
+	write
 	ret
 printf:
 	sub_s 1
@@ -215,22 +450,22 @@ printf:
 	add_s 2
 	wide_store
 		;while
-label_22:
+label_64:
 	push 0
 	push 2
 	sub_s 1
 	load
 	wide_sub
 	pop
-	jz label_24
+	jz label_66
 	push 1
 		;false branch
-	jump label_25
-label_24:
+	jump label_67
+label_66:
 	push 0
 		;true branch
-label_25:
-	jz label_26
+label_67:
+	jz label_68
 		;while body
 	push 10
 	push 2
@@ -260,26 +495,26 @@ label_25:
 	wide_div
 	sub_s 1
 	wide_store
-	jump label_22
-label_26:
+	jump label_64
+label_68:
 		;end while
 		;while
-label_30:
+label_72:
 	push 0
 	push 2
 	add_s 2
 	load
 	wide_sub
 	pop
-	jz label_32
+	jz label_74
 	push 1
 		;false branch
-	jump label_33
-label_32:
+	jump label_75
+label_74:
 	push 0
 		;true branch
-label_33:
-	jz label_34
+label_75:
+	jz label_76
 		;while body
 	push 10
 	push 2
@@ -306,8 +541,8 @@ label_33:
 	wide_div
 	add_s 2
 	wide_store
-	jump label_30
-label_34:
+	jump label_72
+label_76:
 		;end while
 	push 10
 	push 2
@@ -326,31 +561,28 @@ main:
 	add_s 1
 	wide_store
 		;while
-label_40:
-	push 5
+label_82:
+	push 7
 	push 2
 	add_s 1
 	load
 	wide_sub
 	pop
-	jlt label_42
+	jlt label_84
 	push 0
 		;false branch
-	jump label_43
-label_42:
+	jump label_85
+label_84:
 	push 1
 		;true branch
-label_43:
-	jz label_44
+label_85:
+	jz label_86
 		;while body
-	push 5
-	push 2
+	add_s 1
+	load
 	pop_sf
 	pop_sf
 	call helper
-	pop_sf
-	pop_sf
-	call printf
 	push 1
 	push 2
 	add_s 1
@@ -358,8 +590,82 @@ label_43:
 	wide_add
 	add_s 1
 	wide_store
-	jump label_40
-label_44:
+	jump label_82
+label_86:
+		;end while
+	push 0
+	push 2
+	add_s 1
+	wide_store
+		;while
+label_90:
+	push 7
+	push 2
+	add_s 1
+	load
+	wide_sub
+	pop
+	jlt label_92
+	push 0
+		;false branch
+	jump label_93
+label_92:
+	push 1
+		;true branch
+label_93:
+	jz label_94
+		;while body
+	add_s 1
+	load
+	pop_sf
+	pop_sf
+	call helper2
+	push 1
+	push 2
+	add_s 1
+	load
+	wide_add
+	add_s 1
+	wide_store
+	jump label_90
+label_94:
+		;end while
+	push 0
+	push 2
+	add_s 1
+	wide_store
+		;while
+label_98:
+	push 7
+	push 2
+	add_s 1
+	load
+	wide_sub
+	pop
+	jlt label_100
+	push 0
+		;false branch
+	jump label_101
+label_100:
+	push 1
+		;true branch
+label_101:
+	jz label_102
+		;while body
+	add_s 1
+	load
+	pop_sf
+	pop_sf
+	call helper3
+	push 1
+	push 2
+	add_s 1
+	load
+	wide_add
+	add_s 1
+	wide_store
+	jump label_98
+label_102:
 		;end while
 	jump halt
 halt:

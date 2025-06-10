@@ -5,10 +5,10 @@ class ExampleClass (X, Y) extends Example (int , int)
 
     public function ShowMessage() as int
        
-       printf(1);
+       printf(3);
     end function
     public function DoThing() as int       
-        printf(2);
+        printf(1);
     end function
 end class
 class Example (A, B)
@@ -16,11 +16,11 @@ class Example (A, B)
     public x as A
     public y as B
     public function DoThing() as int       
-       printf(3);
+       printf(4);
 
     end function
      public function DoOtherThing() as int       
-       printf(4);
+       printf(5);
 
     end function
     
@@ -30,10 +30,25 @@ function helper(n as int)
   dim ex as Example <int, int>
   dim ex_cl as ExampleClass <int, int>
   dim x as int
-  ex.x = 5;
-  x = ex_cl.ShowMessage();
-  x = ex.x; 
   M(ex, n);
+  print(10);
+  x;
+end function
+function helper2(n as int)
+  dim ex as Example <int, int>
+  dim ex_cl as ExampleClass <int, int>
+  dim x as int
+  M(ex_cl, n);
+  print(10);
+  x;
+end function
+function helper3(n as int)
+  dim ex as Example <int, int>
+  dim ex_cl as ExampleClass <int, int>
+  dim x as int
+  ex_cl = ex;
+  M(ex_cl, n);
+  print(10);
   x;
 end function
 function fib(n as int)
@@ -41,6 +56,7 @@ function fib(n as int)
   dim ex_cl as ExampleClass <int, int>
   dim x as int
   ex.x = 5;
+  x = ex_cl.ShowMessage();
   x = ex.x; 
   M(ex, n);
   x;
@@ -49,7 +65,42 @@ function M(O, n as int)
  printf(7);
 end function
 function error()
- printf(9);
+    print(109);   
+    print(101);   
+    print(116);   
+    print(104);   
+    print(111);   
+    print(100);   
+    print(32);    
+    print(100);   
+    print(111);   
+    print(101);   
+    print(115);   
+    print(32);    
+    print(110);   
+    print(111);   
+    print(116);   
+    print(32);    
+    print(101);   
+    print(120);   
+    print(105);   
+    print(115);   
+    print(116);   
+    print(32);    
+    print(105);   
+    print(110);   
+    print(32);    
+    print(116);   
+    print(104);   
+    print(105);   
+    print(115);   
+    print(32);    
+    print(99);    
+    print(108);   
+    print(97);    
+    print(115);   
+    print(115);   
+    print(10);    
 end function
  
 function printf(res as int)
@@ -74,8 +125,17 @@ end function
 function main()
   dim i as int
   i = 0;
- while i < 5
-     printf(helper(5));
+ while i < 7
+     helper(i);
+     i = i + 1;
+   wend
+     i = 0;
+ while i < 7
+     helper2(i);
+     i = i + 1;
+   wend  i = 0;
+ while i < 7
+     helper3(i);
      i = i + 1;
    wend
     

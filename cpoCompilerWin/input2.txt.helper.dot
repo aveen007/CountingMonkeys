@@ -4,12 +4,10 @@ ranksep=.4;
 bgcolor="lightgrey";  node [shape=box, fixedsize=false, fontsize=12, fontname="Helvetica-bold", fontcolor="blue"
 width=.25, height=.25, color="black", fillcolor="white", style="filled, solid, bold"];
 
-edge [arrowsize=.5, color="black", style="bold"]    n0000120A74923A40 [label="BaseBlock\n OT: [ .=(ex , x , 5)]
-OT: [ =.(x , ex_cl ,  ShowMessage)]
-OT: [ =.(x , ex , x)]
-OT: [ M(ex , n)]
+edge [arrowsize=.5, color="black", style="bold"]    n0000126D3A2A29C0 [label="BaseBlock\n OT: [ M(ex , n)]
+OT: [ print(10)]
 OT: [x]
 "]
-    n0000120A74923E00 [label="BaseBlock\n "]
-    n0000120A74923A40 -> n0000120A74923E00
+    n0000126D3A2A2CC0 [label="BaseBlock\n "]
+    n0000126D3A2A29C0 -> n0000126D3A2A2CC0
 }
