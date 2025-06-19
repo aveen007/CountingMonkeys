@@ -625,39 +625,20 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 						jump(end_label)
 						put_label(end_label)
 
-						// I will make it return either the address or 0 
-						// if I get -1 I will jump zero to a label that will call error print
-						// otherwise I will call the address
-						//add_mem_imm(funcOffset) // get the func in vtable
-						//funcOffset = 0;
-						//load()// get the func
-						//pop()// pop filler type value
-						//call_from_stack()
-						//wide_store()
-						// 
-						// 
-
-						//get vtable of object
-						// get the first param which has the number of methods
-						// check each method with the number we have 
-						// jump to printf yes or printf error
-					//special function :)
-
 				
 			}
 			else if (strcmp(tree->value.operator,"=.") == 0) {
 			// read from field
-				//TODO: function call from inside the class 
+		
 				translateOT(tree->operands[1], fileName, 0); // this puts the value and type of the object on the stack
 				Type* type = findVarType(tree->operands[1]->value.operand);
 				if (tree->operands[2]->type == NODE_TYPE_OPERATOR) {
 					curr = type->def;
 					int funcOffset = get_func_offset(type->def, tree->operands[2]->value.operator)+1;
-					printf("hi");
+			
 					for (int i = 0; i < tree->operands[2]->cntOperands; i++) {
 							translateOT(tree->operands[2]->operands[i], fileName, 0);
 					}
-					//add_mem_imm(0) //puts the address of heap 0 on stack
 					load() // load from heap 0, as in get vtable ptr
 					add_mem_imm(funcOffset) // get the func in vtable
 					funcOffset = 0;
@@ -665,33 +646,7 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 					pop()// pop filler type value
 					call_from_stack()
 					wide_store()
-				//	pop()
-				
-				// TODO: here I need to check if it's an operator, if it is-> it's a function call
-				// 1- get the function offset insied its class
-				// 2- when I need a function in asm to add the offset to 
-				// I shoud add_mem(0) to get the address of the beginning of the object in the heap
-				// I then load(), which gives me the address to the vtable  on the stack 
-				// Here I need a function to add a number to the thing on top of the stack (add_mem should do)
-				// load again , and I should get the address to the function, 
-				// translate the arguments of the func (operands)
-				// call (why not just call by name?), what does casting really do here  , how to call differently?
-				// I need a call that takes the pointer from the stack instead, here 
-				/*
-					for (int i = 0; i < tree->cntOperands; i++) {
-					translateOT(tree->operands[i], fileName, 0);
-				}
 			
-				FunctionVariables* func = findFunc(tree->value.operator);
-				for (int i = 0; i < func->cntArgs; i++) {
-					pop_sf();//here I am just saving a place for the called function's args in the SF of
-
-					pop_sf(); //I am poping for the type and value					// the caller function 
-				}
-				call(tree->value.operator);
-				char* lab = labelName();
-				
-				*/
 
 				}
 				else{
@@ -701,7 +656,6 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 				load()
 				translateOT(tree->operands[0], fileName, 1); // this puts the value and type of the object's vtable (we stored a pointer to it in the var) on the stack
 				wide_store()
-			//	pop()
 		
 				}
 
@@ -714,9 +668,6 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 				int arg_offset = translate_class(type->def, tree->operands[1]->value.operand)+1;
 				add_mem_imm(arg_offset)
 				wide_store()
-			//	pop()
-		
-
 
 			}
 			else {
@@ -732,13 +683,7 @@ int translateOT(OTNode* tree, char * fileName, int isAssignement) {
 				}
 				call(tree->value.operator);
 				char* lab = labelName();
-				//I don't remember what this code was for?
-				// yeah so I remember, this is so that I save the value that I returned in some label and push the label
-				// but I don't need that cuz I already pushed the value that I want
-				//put_label_var(lab, 2, 16);// 2 bytes for the value, the 0 is a dynamic thing for type
-				//push(lab);
-				//wide_store()
-				//push(lab);
+		
 
 			}
 
@@ -766,16 +711,13 @@ int translateInstructions(controlFlowGraphBlock * node, char* fileName) {
 }
 
 
-//TODO: this would only kind of work for one level of recurrsion, I guess
 int translate_vtable(classDef* class){
 	
 	// recursively get fathers and mark certain funcs as treated
 	if (class->baseType)
 	{
 		translate_vtable(class->baseType->def);
-		//	classes->classes[i]->baseType = findClass(classes, classes->classes[i]->baseType);
-			//TODO: here I want to fix the order of the childs funcs so they match those of the fathers, also the args
-			//classes->classes[i] = fixOffsetLikeFather(classes->classes[i]);
+	
 	}
 	for (int i = 0; i<class->functionCount; i++) {
 		int isOverride = 0;
@@ -880,30 +822,16 @@ int translate_class(classDef* class, char * arg) {
 	if (class->baseType)
 	{
 		translate_class(class->baseType->def, arg);
-		//	classes->classes[i]->baseType = findClass(classes, classes->classes[i]->baseType);
-			//TODO: here I want to fix the order of the childs funcs so they match those of the fathers, also the args
-			//classes->classes[i] = fixOffsetLikeFather(classes->classes[i]);
+
 	}
 	for (int i = 0; i<class->argumentCount; i++) {
-	/*	int isOverride = 0;
-		if ((strcmp(class->name, curr->name) != 0)) {
-		
 
-			for (int j = 0; j < curr->functionCount; j++) {
-				if (strcmp(curr->functions[j]->subroutine->name, class->functions[i]->subroutine->name) == 0) {
-					isOverride = 1;
-				}
-			}
-		}
-		if (!isOverride) {*/
 		if ((strcmp(class->arguments[i]->argument->name, arg) == 0)) {
 			break;
 
 		}
 		var_offset++;
-		//put_label_arg_class(class->arguments[i]->argument->name);
-		//}
-		//isOverride = 0;
+	
 	}
 	return var_offset;
 
@@ -920,12 +848,7 @@ int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, c
 		put_label_vtable(classes->classes[i]->name,get_func_count( classes->classes[i]));
 		func_count = 0;
 		translate_vtable(classes->classes[i]);
-		//TODO: translating classes should be done dynamically
-	/*	put_label(classes->classes[i]->name)
-		put_label_class_inside(classes->classes[i]->name)
-		translate_class(classes->classes[i]);*/
 
-		// for extends
 		
 	}
 	
@@ -967,44 +890,22 @@ int translate(Subroutine** subroutines, FunctionVariables ** funcVars,int cnt, c
 			VarNode* locals = funcVars[i]->localVariables;
 			for (int j = 0; j < funcVars[i]->cntVars;j++) {
 
-			//HERE : I am initializing the type 
-				// create a label with the type of the variable and value zero
-				// push the label
-				// sub_s the offset of the var
-				// wide_store the initialized value 
-				/*char* lab = labelName();*/
-				/*translate_variable(lab, locals->type);*/
-				//push(lab);
-				//Everywhere else I push value and then push type
-
+		
 				if (locals->type->def) {
-					printf("hi");
-					// I will pick this random value 0x7A00, to set my heap pointer init to
-					// 
-					//TODO: here I created an object, and here I should add it to the heap
-					// get the value of the heap base pointer
-					// 
-					// push the vtable label
-					// allocate enough space for args by moving current heap ptr
-					// return something?
-					// heap base pointer = current heap ptr? or not
-					// I also need to save the label for the v_table in the beggining of the heap object
+					
 					push_hf()
 					pop_vtable(mystrcat("vtable_", locals->type->def->name))
 					for (int k = 0; k < locals->type->def->argumentCount; k++) {
-						//here I may need to pop more or less space depending on the type of the variable
 						pop_hf();
 						pop_hf();
 					}
 					
 						
 
-					// instead of push_i(0), I need to somehow push the value of the heap pointer, so each object points to its object
 					translate_type(locals->type);
 					add_s(locals->offset)
 					wide_store()
 					locals = locals->next;
-					//TODO:  start testing the dot operator to get a function and argument from vtables and heaps
 				}
 				else {
 				push_i(0)//some randome init value 
@@ -1046,10 +947,10 @@ int translateCfgIfStatement(controlFlowGraphBlock* node, controlFlowGraphBlock* 
 	translateInstructions(node, fileName);
 
 	put_comment("if")
-		//TODO: type check that the condition is an expression that returns the type bool
+		
 	goThroughLabelCount = labelCounter;
 	char* goThrough = labelName();
-		//print(goThroughLabelCount);
+		
 
 	char* elseLabel="";
 		

@@ -11,7 +11,7 @@ int isElsing = 0;
 /// let's take an example A<T> is later initialized as A<int>
 /// 
 /// T is key
-/// class is A<T> (A as an unitialized classf
+/// class is A<T> (A as an unitialized class
 ///  
 /// generic type is A<int>  (as a type)
 /// 
@@ -39,15 +39,9 @@ Type* matchGenericType(Type* key, classDef* class, Type* genericType) {
 	}
 		if (key->kind == TYPE_GENERIC) {
 
-			//for (int k = 0; k < class->parametersCount; k++) {
-
-			//	/*for (int i = 0; i < key->data.genericType.parametersCount; i++) {
-
-			//		key->data.genericType.parameters[i] = matchGenericType(key->data.genericType.parameters[i], class, genericType);
-
-			//	}*/
+		
 			//// here I basically treat something like A<T, Z>, T and Z are params, but the base of the type A must be a class
-			//}
+		
 				return findClass(allClasses, key);
 
 		}
@@ -65,7 +59,6 @@ classDef* initClass(classDef* found, Type* parent , classDefInfo * classes) {
 	newClass->parameterNames = malloc(sizeof(char*) * newClass->parametersCount);
 	for (int i = 0; i < newClass->parametersCount; i++) {
 		newClass->parameterNames[i] = found->parameterNames[i];
-	//	newClass->parameterNames[i] = get_type_name(parent->data.genericType.parameters[i]);
 	}
 	newClass->argumentCount = found->argumentCount;
 	newClass->arguments = malloc(sizeof(ArgumentInfo*) * found->argumentCount);
@@ -92,11 +85,7 @@ classDef* initClass(classDef* found, Type* parent , classDefInfo * classes) {
 
 
 		}
-		//TODO: if return type does not exist make it null 
-	/*	if (found->functions[i]->subroutine->signatureDetails->returnType) {
 
-		details->returnType = matchGenericType(found->functions[i]->subroutine->signatureDetails->returnType, found, parent);
-		}*/
 		
 		func->name = found->functions[i]->subroutine->name;
 		func->signatureDetails = details;
@@ -134,13 +123,6 @@ Type* findClass(classDefInfo* classes, Type * parent) {
 		}
 	} 
 				return parent;
-	//TODO: check if I commented correctly
-		// here I am considering the case : if the function is inside a class and has a parameter with type T a for example, I need to match it to the initializing type  
-	//	return matchGenericType(parent,current,currentGeneric );
-		// should the functions inside classes be also amongst the full list of cfgs, when I traverse them if I find a custom type, it could be either a class or also it could be a parameter inside a class
-		// I don't want to not traverse them to set the fathers in case it's just a class, 
-		// I also don't want to traverse twice and possibly lose information, 
-
 
 
 
@@ -198,12 +180,9 @@ classDef* fixOffsetLikeFather(classDef* class) {
 	return class;
 }
 
-//TODO: in handleType in controlGraph.c, do generic handeling
 classSubrountineInfo* setTypes(Subroutine** subroutines, int cnt, char* fileName, classDefInfo* classes) {
 
-	// TODO: traverse all classes and create a new class for instantiated
-	// TODO: set classDef as this created class for custom types 
-	
+
 	for (int i = 0; i < classes->classCount; i++)
 	{
 		// for extends
@@ -211,7 +190,6 @@ classSubrountineInfo* setTypes(Subroutine** subroutines, int cnt, char* fileName
 		if (classes->classes[i]->baseType)
 		{
 			classes->classes[i]->baseType = findClass(classes, classes->classes[i]->baseType);
-			//TODO: here I want to fix the order of the childs funcs so they match those of the fathers, also the args
 			classes->classes[i] = fixOffsetLikeFather(classes->classes[i]);
 		
 		}
@@ -230,21 +208,6 @@ classSubrountineInfo* setTypes(Subroutine** subroutines, int cnt, char* fileName
 	return info;
 }
 
-
-
-//controlFlowGraphBlock* traverseCfgType(controlFlowGraphBlock* old) {
-//
-//	// here I am just creating the start block
-//	//current = cfg;
-//	//currentCG = cfg->called;
-//	//Stack* openNodes = createStack();
-//	//push(openNodes, tree);
-//	controlFlowGraphBlock* end = ConstructCFGType( cfg);
-//	controlFlowGraphBlock* cfgEnd = createCFGBlock(old->ast, BaseBlock);
-//	insertCFGBlock(end, cfgEnd);
-//
-//}
-//
 
 controlFlowGraphBlock* copyNode(controlFlowGraphBlock* node) {
 	controlFlowGraphBlock* copy = createCFGBlock(node->ast, node->blocktype);
@@ -268,12 +231,11 @@ controlFlowGraphBlock* traverseCfgIfStatementType(controlFlowGraphBlock* node, c
 	isElsing = isElseNode;
 	controlFlowGraphBlock* copyIfNode = copyNode(node);
 	
-		//node->nodes[0];
 	
 	copyIfNode->nodes[0]  = traverseCfgType(node->nodes[0], node, fileName, classes);
 	
 	if (isElseNode == 1) {
-		// ElseNode = node->nodes[1];
+
 		copyIfNode->nodes[1] = traverseCfgType(node->nodes[1], node, fileName, classes);
 	}
 	node->drawn = 0;
@@ -284,7 +246,7 @@ controlFlowGraphBlock* traverseCfgIfStatementType(controlFlowGraphBlock* node, c
 }
 controlFlowGraphBlock* traverseCfgWhileStatementType(controlFlowGraphBlock* node, controlFlowGraphBlock* start,  char* fileName, classDefInfo* classes) {
 	controlFlowGraphBlock* WhileNode = copyNode(node);
-	// whilebody = node->nodes[0];
+
 	WhileNode->nodes[0] = traverseCfgType(node->nodes[0], node, fileName, classes);
 	WhileNode->nodes[1] = traverseCfgType(node->nodes[1], node, fileName, classes);
 	WhileNode->drawn = 0;
@@ -337,7 +299,6 @@ cfgBlockContent* copyInstructionsVarStatement(cfgBlockContent* old) {
 		ids[k] = old->varDec->Ids[k];
 	}
 
-	//TODO: Handle the type , I actually need to see if it's a generic or a custom , I need the parameters of the class that brought it in, if brought by a class
 	Type* instructionType = matchGenericType(old->varDec->type, current, currentGeneric);
 	varDeclaration* varDecl = CreateVarDeclaration(ids, old->varDec->cntId, instructionType);
 	content->type = TYPE_VARDECLARATION;
@@ -370,7 +331,6 @@ OTNode* copyOperationsTree(OTNode* oldOT) {
 		}
 		return OT;
 
-		//base = base->children[0];
 	}
 	
 		else {
@@ -378,9 +338,6 @@ OTNode* copyOperationsTree(OTNode* oldOT) {
 			return OT;
 		
 		}
-	
-	//OT->cntOperands = base->childrenCount;
-	//OT->operands = malloc(sizeof(OTNode*) * base->childrenCount);
 
 
 }
@@ -425,7 +382,6 @@ controlFlowGraphBlock* traverseCfgType(controlFlowGraphBlock* cfg, controlFlowGr
 		if (cfg->blocktype == IfExitBlock && cfg->drawn > 1) {
 			cfg->drawn = 0;
 			
-			//ret = cfg;//TODO: hot fix, check what to do with if exit drawn maybe I need to set it to zero somewhere 
 			break;
 		}
 

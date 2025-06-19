@@ -26,8 +26,8 @@ CfgsInfo* createCfgsInfo(ParseTree* ast) {
 	return info;
 }
 controlFlowGraphBlock** createCfgs(ParseTree* ast) {
-	
-	controlFlowGraphBlock** cfgs = (controlFlowGraphBlock**)malloc(sizeof(controlFlowGraphBlock*) );
+
+	controlFlowGraphBlock** cfgs = (controlFlowGraphBlock**)malloc(sizeof(controlFlowGraphBlock*));
 
 	procedures = 0;
 	cfgsCount = 0;
@@ -36,9 +36,9 @@ controlFlowGraphBlock** createCfgs(ParseTree* ast) {
 }
 controlFlowGraphBlock** addCfgs(controlFlowGraphBlock* cfg) {
 	cfgsCount++;
-	cfgs = (controlFlowGraphBlock**)realloc(cfgs, sizeof(controlFlowGraphBlock*)*cfgsCount);
+	cfgs = (controlFlowGraphBlock**)realloc(cfgs, sizeof(controlFlowGraphBlock*) * cfgsCount);
 	cfgs[cfgsCount - 1] = cfg;
-	procedures ++;
+	procedures++;
 
 	return cfgs;
 }
@@ -94,7 +94,7 @@ Subroutine** addSubroutine(Subroutine** list, Subroutine* newSub) {
 	countSubroutines++;
 	list = (Subroutine**)realloc(list, sizeof(Subroutine*) * (countSubroutines));
 
-	list[countSubroutines-1] = newSub;
+	list[countSubroutines - 1] = newSub;
 	return list;
 }
 Subroutine* createSubroutine() {
@@ -106,88 +106,88 @@ Subroutine* createSubroutine() {
 subroutineInfo* DefineSubprogram(char* fileName, controlFlowGraphBlock** cfgs, ParseTree* tree) {
 
 
-		// get the funcDefs, attach each one to a subroutine and get for each subroutine the required details
-		  // construct the proper cfg for each subroutine
-		//tree = tree->children[0];
-		//refractor all of the code , 
+	// get the funcDefs, attach each one to a subroutine and get for each subroutine the required details
+	  // construct the proper cfg for each subroutine
+	//tree = tree->children[0];
+	//refractor all of the code , 
 	subroutineInfo* info = malloc(sizeof(subroutineInfo));
-		Subroutine** subprograms = createSubroutines(tree);
-		if (tree) {
-			//tree = tree->children[0];
+	Subroutine** subprograms = createSubroutines(tree);
+	if (tree) {
+		//tree = tree->children[0];
 
-			for (int i = 0; i < tree->childrenCount; i++) {
-		
-				if (strcmp(tree->children[i]->token, "ClassDef") == 0) {
+		for (int i = 0; i < tree->childrenCount; i++) {
 
-					classDef* class = createClassDef(tree->children[i]->children[0]->token);
-					for (int x = 1; x < tree->children[i]->childrenCount; x++) {
-						AccessModifier modifire;
-						if (strcmp(tree->children[i]->children[x]->token, "Member") == 0) {
-							ParseTree* memberTree = tree->children[i]->children[x];
+			if (strcmp(tree->children[i]->token, "ClassDef") == 0) {
 
-							for (int j = 1; j < memberTree->childrenCount; j++) {
+				classDef* class = createClassDef(tree->children[i]->children[0]->token);
+				for (int x = 1; x < tree->children[i]->childrenCount; x++) {
+					AccessModifier modifire;
+					if (strcmp(tree->children[i]->children[x]->token, "Member") == 0) {
+						ParseTree* memberTree = tree->children[i]->children[x];
+
+						for (int j = 1; j < memberTree->childrenCount; j++) {
 
 
-								if (strcmp(memberTree->children[j]->token, "FuncDef") == 0) {
-									Subroutine* sub = createSubroutine();
-									char* name = memberTree->children[j]->children[0]->children[0]->token;
-									Position* pos = (Position*)malloc(sizeof(Position));
-									pos->line = memberTree->children[j]->children[0]->line;
-									pos->width = memberTree->children[j]->children[0]->position;
+							if (strcmp(memberTree->children[j]->token, "FuncDef") == 0) {
+								Subroutine* sub = createSubroutine();
+								char* name = memberTree->children[j]->children[0]->children[0]->token;
+								Position* pos = (Position*)malloc(sizeof(Position));
+								pos->line = memberTree->children[j]->children[0]->line;
+								pos->width = memberTree->children[j]->children[0]->position;
 
-									sub->name = name;
-									sub->InClass = class->name;
-									sub->cfg = cfgs[countSubroutines];
+								sub->name = name;
+								sub->InClass = class->name;
+								sub->cfg = cfgs[countSubroutines];
 
-									sub->signatureDetails = createSignatureDetails(memberTree->children[j]->children[0]);
-									sub->signatureDetails->position = pos;
-									subprograms = addSubroutine(subprograms, sub);
-
-								}
+								sub->signatureDetails = createSignatureDetails(memberTree->children[j]->children[0]);
+								sub->signatureDetails->position = pos;
+								subprograms = addSubroutine(subprograms, sub);
 
 							}
-						}
-						else {
-							if (strcmp(tree->children[i]->children[x]->token, "Base") == 0) {
-								if (tree->children[i]->children[x]->childrenCount > 1) {
-									//then it's generic and has parameters (not custom)
-									Type* base = create_simple_type(TYPE_CUSTOM, tree->children[i]->children[x]->children[0]->token);
 
-								}
-								//TODO : here generic 
+						}
+					}
+					else {
+						if (strcmp(tree->children[i]->children[x]->token, "Base") == 0) {
+							if (tree->children[i]->children[x]->childrenCount > 1) {
+								
 								Type* base = create_simple_type(TYPE_CUSTOM, tree->children[i]->children[x]->children[0]->token);
-								class->baseType = base;
+
 							}
 						
-							
-				}
+							Type* base = create_simple_type(TYPE_CUSTOM, tree->children[i]->children[x]->children[0]->token);
+							class->baseType = base;
+						}
+
 
 					}
+
 				}
-
-
-				if (strcmp(tree->children[i]->token, "FuncDef") == 0) {
-					Subroutine* sub = createSubroutine();
-
-					char* name = tree->children[i]->children[0]->children[0]->token;
-					Position* pos = (Position*)malloc(sizeof(Position));
-					pos->line = tree->children[i]->children[0]->line;
-					pos->width = tree->children[i]->children[0]->position;
-
-					sub->name = name;
-					sub->cfg = cfgs[countSubroutines];
-					sub->signatureDetails = createSignatureDetails(tree->children[i]->children[0]);
-					sub->signatureDetails->position = pos;
-					subprograms = addSubroutine(subprograms, sub);
-				}
-
 			}
-			info->subroutines = subprograms;
-			info->count = countSubroutines;
-				return info;
-				
+
+
+			if (strcmp(tree->children[i]->token, "FuncDef") == 0) {
+				Subroutine* sub = createSubroutine();
+
+				char* name = tree->children[i]->children[0]->children[0]->token;
+				Position* pos = (Position*)malloc(sizeof(Position));
+				pos->line = tree->children[i]->children[0]->line;
+				pos->width = tree->children[i]->children[0]->position;
+
+				sub->name = name;
+				sub->cfg = cfgs[countSubroutines];
+				sub->signatureDetails = createSignatureDetails(tree->children[i]->children[0]);
+				sub->signatureDetails->position = pos;
+				subprograms = addSubroutine(subprograms, sub);
+			}
+
 		}
-			
+		info->subroutines = subprograms;
+		info->count = countSubroutines;
+		return info;
+
+	}
+
 	return;
 
 }
@@ -199,12 +199,12 @@ char* get_type_name(Type* type) {
 	if (type->kind == TYPE_SIMPLE) {
 		if (type->data.simpleType.type == TYPE_CUSTOM) {
 
-		if (type->data.simpleType.custom_id)
-		{
-			return type->data.simpleType.custom_id;
+			if (type->data.simpleType.custom_id)
+			{
+				return type->data.simpleType.custom_id;
+			}
 		}
-		}
-	
+
 
 		return SimpleType_STRING[type->data.simpleType.type];
 	}
@@ -213,17 +213,17 @@ char* get_type_name(Type* type) {
 	}
 	if (type->kind == TYPE_ARRAY) {
 		return get_type_name(type->data.arrayType.elementType);
-	
+
 	}
 
 }
-Type* create_generic_type(char * class_name, int param_count, ParseTree* base){
+Type* create_generic_type(char* class_name, int param_count, ParseTree* base) {
 
 	Type* type = (Type*)malloc(sizeof(Type));
 	type->kind = TYPE_GENERIC;
 	type->data.genericType.name = class_name;
 	type->data.genericType.parametersCount = param_count;
-	type->data.genericType.parameters = malloc(sizeof(Type)*param_count);
+	type->data.genericType.parameters = malloc(sizeof(Type) * param_count);
 	for (int i = 0; i < param_count; i++) {
 		type->data.genericType.parameters[i] = HandleType(base->children[i]);
 		// set the parameters
@@ -302,8 +302,7 @@ Type* HandleType(ParseTree* typeNode) {
 			return create_simple_type(TYPE_STRING, "");
 		}
 		// Custom type handling can be extended as needed
-		if (typeNode->children[0]->childrenCount>1) {
-			// TODO: create generic type function is a bit differenty , I have to make them the same using the grammer
+		if (typeNode->children[0]->childrenCount > 1) {
 			return create_generic_type(typeNode->children[0]->token, typeNode->children[0]->childrenCount, typeNode->children[0]);
 		}
 		return create_simple_type(TYPE_CUSTOM, typeName);
@@ -393,7 +392,7 @@ char* printTree(char* treeText, OTNode* node) {
 	return treeText;
 }
 
-varDeclaration* CreateVarDeclaration(char** Ids,int cnt, Type* type) {
+varDeclaration* CreateVarDeclaration(char** Ids, int cnt, Type* type) {
 	varDeclaration* var = (varDeclaration*)malloc(sizeof(varDeclaration));
 	var->Ids = Ids;
 	var->type = type;
@@ -412,33 +411,31 @@ OTNode* HandleOperationsTree(ParseTree* base) {
 		base = base->children[0];
 	}
 	else {
-		if (strcmp(base->token, "Unary")!=0) {
+		if (strcmp(base->token, "Unary") != 0) {
 
 			if (base->childrenCount > 0) {
 				if (strcmp(base->token, "=") == 0) {
-					//TODO: handle more complex statements in the grammar like x.x.x.x , actually here I am just checking
-					// left and right of an assignment, but dots can appear between dots and should ideally be handled seperately
-						// handling three operator structure of the memeber accesstree
-						if (strcmp(base->children[1]->token, ".") == 0) {
-							OT = createOperatorNode(".="); //Write in field
-							OT->cntOperands = 3;
-							OT->operands = malloc(sizeof(OTNode*) * 3);
-							OT->operands[0] = HandleOperationsTree(base->children[1]->children[0]);
-							OT->operands[1] = HandleOperationsTree(base->children[1]->children[1]);
-							OT->operands[2] = HandleOperationsTree(base->children[0]);
-							return OT;
+					
+					if (strcmp(base->children[1]->token, ".") == 0) {
+						OT = createOperatorNode(".="); //Write in field
+						OT->cntOperands = 3;
+						OT->operands = malloc(sizeof(OTNode*) * 3);
+						OT->operands[0] = HandleOperationsTree(base->children[1]->children[0]);
+						OT->operands[1] = HandleOperationsTree(base->children[1]->children[1]);
+						OT->operands[2] = HandleOperationsTree(base->children[0]);
+						return OT;
 					}
-						if (strcmp(base->children[0]->token, ".") == 0) {
-							OT = createOperatorNode("=."); // read from field
-							OT->cntOperands = 3;
-							OT->operands = malloc(sizeof(OTNode*) * 3);
-							OT->operands[0] = HandleOperationsTree(base->children[1]);
-							OT->operands[1] = HandleOperationsTree(base->children[0]->children[0]);
-							OT->operands[2] = HandleOperationsTree(base->children[0]->children[1]);
-							return OT;
+					if (strcmp(base->children[0]->token, ".") == 0) {
+						OT = createOperatorNode("=."); // read from field
+						OT->cntOperands = 3;
+						OT->operands = malloc(sizeof(OTNode*) * 3);
+						OT->operands[0] = HandleOperationsTree(base->children[1]);
+						OT->operands[1] = HandleOperationsTree(base->children[0]->children[0]);
+						OT->operands[2] = HandleOperationsTree(base->children[0]->children[1]);
+						return OT;
 
-						}
-						
+					}
+
 				}
 				OT = createOperatorNode(base->token);
 
@@ -451,7 +448,7 @@ OTNode* HandleOperationsTree(ParseTree* base) {
 		else {
 			OT = createOperatorNode(base->children[0]->token);
 			OT->cntOperands = 1;
-			OT->operands = malloc(sizeof(OTNode*) );
+			OT->operands = malloc(sizeof(OTNode*));
 
 			OT->operands[0] = HandleOperationsTree(base->children[1]);
 			return OT;
@@ -707,14 +704,14 @@ CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree, int procedure) {
 		//tree = tree->children[0];
 		CfgsInfo* cfgsInfo = createCfgsInfo(tree);
 		cfgs = cfgsInfo->cfgs;
-		
+
 
 		for (int i = 0; i < tree->childrenCount; i++) {
 			procedure++;
 			procedures = procedure;
-	
+
 			if (strcmp(tree->children[i]->token, "ClassDef") == 0) {
-				char* baseClassName = NULL; // TODO get base type name if presented, otherwise NULL
+				char* baseClassName = NULL; 
 				classDef* class = createClassDef(tree->children[i]->children[0]->token);
 				for (int x = 1; x < tree->children[i]->childrenCount; x++) {
 					if (strcmp(tree->children[i]->children[x]->token, "Member") == 0) {
@@ -737,11 +734,9 @@ CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree, int procedure) {
 								if (strcmp(memberTree->children[j]->token, "FuncDef") == 0) {
 									Subroutine* func = createSubroutine();
 									func->signatureDetails = createSignatureDetails(memberTree->children[j]->children[0]);
-									//controlFlowGraphBlock ** temp= processCfg(memberTree->children[j], cfgsInfo, fileName);
 									cfgsInfo->cfgs = processCfg(memberTree->children[j], cfgsInfo, fileName);
-									//maybe I should not add cfgs of classes to the rest of the cfgs
-									func->cfg = cfgsInfo->cfgs[cfgsCount-1];
-									func->name= memberTree->children[j]->children[0]->children[0]->token;
+									func->cfg = cfgsInfo->cfgs[cfgsCount - 1];
+									func->name = memberTree->children[j]->children[0]->children[0]->token;
 									FunctionInfo* funcInfo = createFunctionInfo(modifire, class->functionCount, func);
 									addFunctionToClass(class, funcInfo);
 								}
@@ -760,8 +755,6 @@ CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree, int procedure) {
 												argDef->type->kind = TYPE_NONE;
 
 											}
-											/*	if (argsTree->childrenCount > 0) {
-												}*/
 											ArgumentInfo* argInfo = createArgumentInfo(modifire, class->argumentCount, argDef);
 											addArgumentToClass(class, argInfo);
 										}
@@ -770,40 +763,40 @@ CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree, int procedure) {
 							}
 						}
 					}
+					else {
+						if (strcmp(tree->children[i]->children[x]->token, "Base") == 0) {
+							if (tree->children[i]->children[x]->children[0]->childrenCount > 1) {
+
+								Type* base = create_generic_type(tree->children[i]->children[x]->children[0]->token, tree->children[i]->children[x]->children[0]->childrenCount, tree->children[i]->children[x]->children[0]);
+								class->baseType = base;
+
+							}
+							else {
+
+								Type* base = create_simple_type(TYPE_CUSTOM, tree->children[i]->children[x]->children[0]->token);
+								class->baseType = base;
+							}
+						}
 						else {
-								if (strcmp(tree->children[i]->children[x]->token, "Base") == 0) {
-									if (tree->children[i]->children[x]->children[0]->childrenCount > 1) {
-
-										Type* base = create_generic_type(tree->children[i]->children[x]->children[0]->token, tree->children[i]->children[x]->children[0]->childrenCount, tree->children[i]->children[x]->children[0]);
-										class->baseType = base;
-
-									}
-									else {
-
-									Type* base = create_simple_type(TYPE_CUSTOM, tree->children[i]->children[x]->children[0]->token);
-									class->baseType = base;
-									}
+							if (strcmp(tree->children[i]->children[x]->token, "Parameter") == 0) {
+								for (int y = 0; y < tree->children[i]->children[x]->childrenCount; y++) {
+									addParameterName(class, tree->children[i]->children[x]->children[y]->token);
 								}
-								else {
-									if (strcmp(tree->children[i]->children[x]->token, "Parameter") == 0) {
-										for (int y = 0; y < tree->children[i]->children[x]->childrenCount; y++) {
-											addParameterName(class, tree->children[i]->children[x]->children[y]->token);
-										}
-									}
-								}
+							}
 						}
 					}
+				}
 
 				cfgsInfo->classes = addClassDefInfo(cfgsInfo->classes, class);
-				}
-			
+			}
+
 			if (strcmp(tree->children[i]->token, "ExternFuncDef") == 0) {
 				ExternFuncDef* exter = createExternFuncDef(tree->children[i]);
 			}
 			else {
 				if (strcmp(tree->children[i]->token, "FuncDef") == 0) {
 
-					cfgsInfo->cfgs=processCfg(tree->children[i], cfgsInfo, fileName);
+					cfgsInfo->cfgs = processCfg(tree->children[i], cfgsInfo, fileName);
 
 				}
 
@@ -813,12 +806,12 @@ CfgsInfo* CFGInterfacer(char* fileName, ParseTree* tree, int procedure) {
 
 		}
 
-				cfgsInfo->errors = errors;
-				return cfgsInfo;
+		cfgsInfo->errors = errors;
+		return cfgsInfo;
 	}
 	return;
 }
-controlFlowGraphBlock** processCfg(ParseTree* tree, CfgsInfo * cfgsInfo, char* fileName) {
+controlFlowGraphBlock** processCfg(ParseTree* tree, CfgsInfo* cfgsInfo, char* fileName) {
 	controlFlowGraphBlock* cfg = createCFGBlock(tree, BaseBlock);
 	// here I am just creating the start block
 	current = cfg;
@@ -831,7 +824,7 @@ controlFlowGraphBlock** processCfg(ParseTree* tree, CfgsInfo * cfgsInfo, char* f
 
 	cfgs = addCfgs(cfg);
 	// print the result to a file
-	CreateFilePrint(fileName, cfgsInfo, cfgs[cfgsCount-1]);
+	CreateFilePrint(fileName, cfgsInfo, cfgs[cfgsCount - 1]);
 	return cfgs;
 }
 void CreateFilePrint(char* fileName, CfgsInfo* info, controlFlowGraphBlock* cfg) {
@@ -859,7 +852,7 @@ cfgBlockContent* createInstructionsVarStatement(ParseTree* ast) {
 		ids[k] = ast->children[0]->children[k]->token;
 	}
 	Type* instructionType = HandleType(ast->children[1]);
-	varDeclaration* varDecl = CreateVarDeclaration(ids, ast->children[0]->childrenCount,instructionType);
+	varDeclaration* varDecl = CreateVarDeclaration(ids, ast->children[0]->childrenCount, instructionType);
 	content->type = TYPE_VARDECLARATION;
 	content->varDec = varDecl;  // Assign var declaration to the union
 	return content;
@@ -875,7 +868,7 @@ cfgBlockContent* createInstructionsExpression(ParseTree* ast) {
 }
 
 int ImWhile = 0;
-controlFlowGraphBlock* ConstructCFGIfStatement(Stack* openNodes, controlFlowGraphBlock * start) {
+controlFlowGraphBlock* ConstructCFGIfStatement(Stack* openNodes, controlFlowGraphBlock* start) {
 	ParseTree* tree = pop(openNodes);
 	controlFlowGraphBlock* IfStatementCfg = createCFGBlock(tree, IfBlock);
 	InsertInstruction(IfStatementCfg->instructions, tree->children[0]);
@@ -885,7 +878,7 @@ controlFlowGraphBlock* ConstructCFGIfStatement(Stack* openNodes, controlFlowGrap
 	ParseTree* Father = pop(openNodes);
 	insertCFGBlock(start, IfStatementCfg);
 	// make sure the father node is getting connected to this one 
-	
+
 
 	controlFlowGraphBlock* thenBlock = createCFGBlock(tree->children[1], ThenBlock);
 	insertCFGBlock(IfStatementCfg, thenBlock);
@@ -927,7 +920,7 @@ controlFlowGraphBlock* ConstructCFGWhileStatement(Stack* openNodes, controlFlowG
 	InsertInstruction(WhileBlockCfg->instructions, tree->children[0]);
 	controlFlowGraphBlock* whileBodyBlock = createCFGBlock(tree->children[1], WhileBodyBlock);
 	for (int i = 1; i < tree->childrenCount; i++) {
-	InsertInstruction(whileBodyBlock->instructions, tree->children[i]);
+		InsertInstruction(whileBodyBlock->instructions, tree->children[i]);
 	}
 
 	insertCFGBlock(WhileBlockCfg, whileBodyBlock);
@@ -955,12 +948,12 @@ controlFlowGraphBlock* ConstructCFGBaseStatement(Stack* openNodes, controlFlowGr
 
 		if (strcmp(tree->children[i]->token, "FuncSignature") == 0)
 			continue;
-		if (strcmp(tree->children[i]->token, "Expression") == 0|| strcmp(tree->children[i]->token, "VarStatement") == 0) {
+		if (strcmp(tree->children[i]->token, "Expression") == 0 || strcmp(tree->children[i]->token, "VarStatement") == 0) {
 
 			InsertInstruction(start->instructions, tree->children[i]);
 			continue;
 		}
-		 // Assuming the node holds a pointer to a block
+		// Assuming the node holds a pointer to a block
 		push(openNodes, tree->children[i]);
 		outBlock = ConstructCFG(openNodes, start);
 		if (outBlock->blocktype == BreakBlock) {
@@ -974,9 +967,9 @@ controlFlowGraphBlock* ConstructCFGBaseStatement(Stack* openNodes, controlFlowGr
 	if (outBlock == NULL) {
 		return start;
 	}
-	
-	
-	
+
+
+
 	return outBlock;
 
 
@@ -989,11 +982,11 @@ controlFlowGraphBlock* ConstructCFG(Stack* openNodes, controlFlowGraphBlock* sta
 
 	if (strcmp(tree->token, "IfStatement") == 0)
 	{
-		 end=ConstructCFGIfStatement(openNodes, start);
+		end = ConstructCFGIfStatement(openNodes, start);
 	}
 	else if (strcmp(tree->token, "WhileStatement") == 0) {
 		ImWhile = 1;
-		end=ConstructCFGWhileStatement(openNodes, start);
+		end = ConstructCFGWhileStatement(openNodes, start);
 	}
 	else if (strcmp(tree->token, "BreakStatement") == 0) {
 		if (ImWhile == 0) {
@@ -1001,15 +994,15 @@ controlFlowGraphBlock* ConstructCFG(Stack* openNodes, controlFlowGraphBlock* sta
 			addErrorCFG(&errors, errorBreak);
 		}
 		pop(openNodes);
-		controlFlowGraphBlock* breakBlock= createCFGBlock(tree, BreakBlock);;
-			ParseTree* Father = pop(openNodes);
-			insertCFGBlock(start, breakBlock);
+		controlFlowGraphBlock* breakBlock = createCFGBlock(tree, BreakBlock);;
+		ParseTree* Father = pop(openNodes);
+		insertCFGBlock(start, breakBlock);
 		return breakBlock;
 	}
-	
+
 	else {
-	
-		end=ConstructCFGBaseStatement(openNodes,start);
+
+		end = ConstructCFGBaseStatement(openNodes, start);
 
 
 	}
@@ -1045,7 +1038,7 @@ char* writeDotGraphOperationsTree(controlFlowGraphBlock* cfg, FILE* file) {
 	return treeText;
 }
 
-void writeDotGraphIfStatement(controlFlowGraphBlock* node, FILE* file,controlFlowGraphBlock* start) {
+void writeDotGraphIfStatement(controlFlowGraphBlock* node, FILE* file, controlFlowGraphBlock* start) {
 	int isElseNode = node->outNodeCount > 1 ? 1 : 0;
 	isElse = isElseNode;
 	fprintf(file, "    n%p ", node);
@@ -1057,12 +1050,12 @@ void writeDotGraphIfStatement(controlFlowGraphBlock* node, FILE* file,controlFlo
 
 	controlFlowGraphBlock* ThenNode = node->nodes[0];
 	fprintf(file, "    n%p -> n%p [label=\"True\" color=\"green\"]\n", node, ThenNode);
-		 writeDotGraph(ThenNode, file, node);
+	writeDotGraph(ThenNode, file, node);
 	if (isElseNode == 1) {
 		controlFlowGraphBlock* ElseNode = node->nodes[1];
 		fprintf(file, "    n%p -> n%p [label=\"True\" color=\"red\"]\n", node, ElseNode);
 
-		 writeDotGraph(ElseNode, file,node);
+		writeDotGraph(ElseNode, file, node);
 
 
 	}
@@ -1070,14 +1063,14 @@ void writeDotGraphIfStatement(controlFlowGraphBlock* node, FILE* file,controlFlo
 	node->drawn = 0;
 
 
-	return ;
+	return;
 }
 void writeDotGraphWhileStatement(controlFlowGraphBlock* node, FILE* file, controlFlowGraphBlock* start) {
 
 	fprintf(file, "    n%p ", node);
 	printBlockToFile(BlockType_STRING[node->blocktype], file, node);
 	fprintf(file, "    n%p -> n%p\n", start, node);
-	
+
 
 
 
@@ -1090,25 +1083,25 @@ void writeDotGraphWhileStatement(controlFlowGraphBlock* node, FILE* file, contro
 	writeDotGraph(exitWhilebody, file, node);
 	node->drawn = 0;
 
-	
+
 	return exitWhilebody;
-	
+
 
 }
 void writeDotGraphBaseStatement(controlFlowGraphBlock* node, FILE* file, controlFlowGraphBlock* start) {
-		fprintf(file, "    n%p ", node);
-		printBlockToFile(BlockType_STRING[node->blocktype], file, node);
-		if (start != NULL&& !( node->blocktype==ElseBlock|| node->blocktype == ThenBlock ||node->blocktype == WhileBodyBlock || node->blocktype == WhileExitBlock)) {
-			fprintf(file, "    n%p -> n%p\n", start,node );
+	fprintf(file, "    n%p ", node);
+	printBlockToFile(BlockType_STRING[node->blocktype], file, node);
+	if (start != NULL && !(node->blocktype == ElseBlock || node->blocktype == ThenBlock || node->blocktype == WhileBodyBlock || node->blocktype == WhileExitBlock)) {
+		fprintf(file, "    n%p -> n%p\n", start, node);
 
-		}
-	
+	}
 
-		 writeDotGraph(node->nodes[0], file, node);
-		 if (node->blocktype == IfExitBlock && isElse==0) {
-			 node->drawn = 0;
-		 }
-		 return ;
+
+	writeDotGraph(node->nodes[0], file, node);
+	if (node->blocktype == IfExitBlock && isElse == 0) {
+		node->drawn = 0;
+	}
+	return;
 
 }
 void printBlockToFile(char* blockType, FILE* file, controlFlowGraphBlock* node) {
@@ -1128,18 +1121,18 @@ void writeDotGraph(controlFlowGraphBlock* cfg, FILE* file, controlFlowGraphBlock
 	switch (cfg->blocktype)
 	{
 	case IfBlock:
-		writeDotGraphIfStatement( cfg, file,start);
+		writeDotGraphIfStatement(cfg, file, start);
 		break;
 	case WhileBlock:
 		if (cfg->drawn == 0) {
 			cfg->drawn = 1;
-			 writeDotGraphWhileStatement(cfg, file, start);
+			writeDotGraphWhileStatement(cfg, file, start);
 		}
-		else if (cfg->drawn==1) {
+		else if (cfg->drawn == 1) {
 			cfg->drawn = 2;
 			fprintf(file, "    n%p -> n%p\n", start, cfg);
 
-			return ;
+			return;
 		}
 		else {
 			return;
@@ -1152,37 +1145,37 @@ void writeDotGraph(controlFlowGraphBlock* cfg, FILE* file, controlFlowGraphBlock
 		fprintf(file, "    n%p -> n%p\n", start, cfg);
 		if (cfg->outNodeCount > 0) {
 
-		fprintf(file, "    n%p -> n%p\n", cfg, cfg->nodes[0]);
+			fprintf(file, "    n%p -> n%p\n", cfg, cfg->nodes[0]);
 		}
-		return ;
+		return;
 		break;
 	case BaseBlock:
 		if (cfg->outNodeCount <= 0) {
 			fprintf(file, "    n%p ", cfg);
 			printBlockToFile(BlockType_STRING[cfg->blocktype], file, cfg);
-				fprintf(file, "    n%p -> n%p\n", start, cfg);
-			return ;
+			fprintf(file, "    n%p -> n%p\n", start, cfg);
+			return;
 		}
-		writeDotGraphBaseStatement( cfg, file,start);
+		writeDotGraphBaseStatement(cfg, file, start);
 
 		break;
 	default:
 		if (cfg->blocktype == IfExitBlock) {
 			cfg->drawn++;
 		}
-		if (cfg->blocktype == IfExitBlock&&cfg->drawn>1) {
+		if (cfg->blocktype == IfExitBlock && cfg->drawn > 1) {
 			fprintf(file, "    n%p -> n%p\n", start, cfg);
 			cfg->drawn = 0;
 			break;
 		}
-	
+
 		if (cfg->outNodeCount <= 0) {
 			fprintf(file, "    n%p ", cfg);
 			printBlockToFile(BlockType_STRING[cfg->blocktype], file, cfg);
 			fprintf(file, "    n%p -> n%p\n", start, cfg);
-			return ;
+			return;
 		}
-		writeDotGraphBaseStatement( cfg, file,start);
+		writeDotGraphBaseStatement(cfg, file, start);
 		break;
 	}
 	return;
@@ -1205,7 +1198,7 @@ void CFGToDotFile(controlFlowGraphBlock* cfg, char* fileName) {
 		"\n"
 		"edge [arrowsize=.5, color=\"black\", style=\"bold\"]";
 	fprintf(file, "% s", graphSettings);
-	writeDotGraph(cfg, file,NULL);
+	writeDotGraph(cfg, file, NULL);
 	// Write each control flow graph to the dot file
 	fprintf(file, "}\n");
 
@@ -1311,7 +1304,7 @@ char* remove_last_three_chars(const char* fileName) {
 #pragma region class
 classDef* createClassDef(const char* name) {
 	classDef* cls = (classDef*)malloc(sizeof(classDef));
-	
+
 	cls->name = name;
 
 	cls->baseType = NULL;
@@ -1332,9 +1325,9 @@ classDef* createClassDef(const char* name) {
 }
 void addFunctionToClass(classDef* cls, FunctionInfo* funcInfo) {
 	++cls->functionCount;
-	cls->functions = (FunctionInfo**)realloc(cls->functions, sizeof(FunctionInfo*) * (cls->functionCount ));
-	
-	cls->functions[cls->functionCount-1] = funcInfo;
+	cls->functions = (FunctionInfo**)realloc(cls->functions, sizeof(FunctionInfo*) * (cls->functionCount));
+
+	cls->functions[cls->functionCount - 1] = funcInfo;
 }
 ArgumentInfo* createArgumentInfo(AccessModifier modifier, int offset, ArgumentDef* argument) {
 	ArgumentInfo* info = (ArgumentInfo*)malloc(sizeof(ArgumentInfo));
@@ -1346,9 +1339,9 @@ ArgumentInfo* createArgumentInfo(AccessModifier modifier, int offset, ArgumentDe
 
 void addArgumentToClass(classDef* cls, ArgumentInfo* argInfo) {
 	++cls->argumentCount;
-	cls->arguments = (ArgumentInfo**)realloc(cls->arguments, sizeof(ArgumentInfo*) *( cls->argumentCount));
-	
-	cls->arguments[cls->argumentCount-1] = argInfo;
+	cls->arguments = (ArgumentInfo**)realloc(cls->arguments, sizeof(ArgumentInfo*) * (cls->argumentCount));
+
+	cls->arguments[cls->argumentCount - 1] = argInfo;
 }
 void freeClassDef(classDef* cls) {
 	if (!cls) return;
@@ -1374,7 +1367,7 @@ ExternFuncDef* createExternFuncDef(ParseTree* ast) {
 	extFunc->dllName = ast->children[1];
 	if (ast->childrenCount > 2) {
 		extFunc->dllEntryName = ast->children[2];
-		
+
 	}
 	extFunc->signatureDetails = createSignatureDetails(ast);
 	return extFunc;
@@ -1383,27 +1376,27 @@ ExternFuncDef* createExternFuncDef(ParseTree* ast) {
 SignatureDetails* createSignatureDetails(ParseTree* ast) {
 
 	SignatureDetails* signatureDetails;
-	 signatureDetails = (SignatureDetails*)malloc(sizeof(SignatureDetails));
+	signatureDetails = (SignatureDetails*)malloc(sizeof(SignatureDetails));
 	if (ast->children[0]->childrenCount > 1) {
-		 signatureDetails->returnType = HandleType(ast->children[0]->children[1]);
+		signatureDetails->returnType = HandleType(ast->children[0]->children[1]);
 	}
 	//list arg defs
 	if (ast->children[0]->childrenCount != 0) {
 		ParseTree* argsTree = ast->children[0]->children[0];
 		if (argsTree) {
-			 signatureDetails->arguments = (ArgumentDef**)malloc(sizeof(ArgumentDef*) * argsTree->childrenCount);
-			 signatureDetails->cntArgs = argsTree->childrenCount;
+			signatureDetails->arguments = (ArgumentDef**)malloc(sizeof(ArgumentDef*) * argsTree->childrenCount);
+			signatureDetails->cntArgs = argsTree->childrenCount;
 			for (int j = 0; j < argsTree->childrenCount; j++) {
-				 signatureDetails->arguments[j] = (ArgumentDef*)malloc(sizeof(ArgumentDef));
-				 signatureDetails->arguments[j]->name = argsTree->children[j]->children[0]->token;
+				signatureDetails->arguments[j] = (ArgumentDef*)malloc(sizeof(ArgumentDef));
+				signatureDetails->arguments[j]->name = argsTree->children[j]->children[0]->token;
 				if (argsTree->childrenCount > 0) {
 					if (argsTree->children[j]->childrenCount > 1) {
 
-						 signatureDetails->arguments[j]->type = HandleType(argsTree->children[j]->children[1]);
+						signatureDetails->arguments[j]->type = HandleType(argsTree->children[j]->children[1]);
 					}
 					else {
-						 signatureDetails->arguments[j]->type = malloc(sizeof(Type));
-						 signatureDetails->arguments[j]->type->kind = TYPE_NONE;
+						signatureDetails->arguments[j]->type = malloc(sizeof(Type));
+						signatureDetails->arguments[j]->type->kind = TYPE_NONE;
 
 					}
 				}
@@ -1414,8 +1407,8 @@ SignatureDetails* createSignatureDetails(ParseTree* ast) {
 			}
 		}
 	}
-	 signatureDetails->position = 0;
-	 return signatureDetails;
+	signatureDetails->position = 0;
+	return signatureDetails;
 
 }
 FunctionInfo* createFunctionInfo(AccessModifier modifier, int offset, Subroutine* subroutine) {
@@ -1445,9 +1438,9 @@ ExternalFunctionInfo* createExternalFunctionInfo(AccessModifier modifier, int of
 // Add external function to class
 void addExternalFunctionToClass(classDef* cls, ExternalFunctionInfo* extFuncInfo) {
 	++cls->externalFunctionCount;
-	cls->externalFunctions= (ExternalFunctionInfo**)realloc(cls->externalFunctions, sizeof(ExternalFunctionInfo*) * (cls->externalFunctionCount ));
+	cls->externalFunctions = (ExternalFunctionInfo**)realloc(cls->externalFunctions, sizeof(ExternalFunctionInfo*) * (cls->externalFunctionCount));
 
-	cls->externalFunctions[cls->externalFunctionCount-1] = extFuncInfo;
+	cls->externalFunctions[cls->externalFunctionCount - 1] = extFuncInfo;
 	return;
 }
 classDefInfo* createClassDefInfo() {
@@ -1459,8 +1452,8 @@ classDefInfo* createClassDefInfo() {
 classDefInfo* addClassDefInfo(classDefInfo* classes, classDef* classdef) {
 	classes->classCount++;
 	classes->classes = (classDef**)realloc(classes->classes, sizeof(classDef*) * (classes->classCount));
-	
-	classes->classes[classes->classCount-1]= classdef;
+
+	classes->classes[classes->classCount - 1] = classdef;
 	return classes;
 }
 int addParameterName(classDef* cls, const char* paramName) {
