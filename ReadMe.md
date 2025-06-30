@@ -1,3 +1,4 @@
+This is a monkey project for a monkey subject called SPO (Системное программное обеспечение , СПО  ). May this be a tribute to the health conditions I developed while trying to pass this subject, may this be a shield to you dear reader so you can pass it easier than I had to. 
 ﻿MonKeys Programming Language Compiler
 This project is a custom compiler for a dynamically typed programming language with support for user-defined types, inheritance, method overriding, and templating. It compiles source code written in a high-level custom language into linear intermediate code, and then assembles it for execution on a stack-based virtual machine with shared memory (common RAM).
 
